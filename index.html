@@ -14,41 +14,39 @@
 	</head>
 
 	<body>
-		<div class="mui-content">
-			<ul id="OA_task_1" class="mui-table-view">
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red">删除</a>
+		<!-- 侧滑导航根容器 -->
+		<div class="mui-off-canvas-wrap mui-draggable">
+			<!-- 菜单容器 -->
+			<aside class="mui-off-canvas-left">
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<!-- 菜单具体展示内容 -->
+						...
+					<div>
+				</div>
+			</aside>
+			<!-- 主页面容器 -->
+			<div class="mui-inner-wrap">
+				<!-- 主页面标题 -->
+				<header class="mui-bar mui-bar-nav">
+					<a class="mui-icon mui-action-menu mui-icon-bars mui-pull-left"></a>
+					<h1 class="mui-title">标题</h1>
+				</header>
+				<div class="mui-content mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul id="my_task_list" class="mui-table-view">
+							<li class="mui-table-view-cell">
+								<div class="mui-slider-right mui-disabled">
+									<a class="mui-btn mui-btn-red">删除</a>
+								</div>
+								<div class="mui-slider-handle">
+									待办事项1
+								</div>
+							</li>
+						</ul>
 					</div>
-					<div class="mui-slider-handle">
-						待办事项1
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red">删除</a>
-					</div>
-					<div class="mui-slider-handle">
-						待办事项2
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red">删除</a>
-					</div>
-					<div class="mui-slider-handle">
-						待办事项3
-					</div>
-				</li>
-				<li class="mui-table-view-cell">
-					<div class="mui-slider-right mui-disabled">
-						<a class="mui-btn mui-btn-red">删除</a>
-					</div>
-					<div class="mui-slider-handle">
-						待办事项4
-					</div>
-				</li>
-			</ul>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
