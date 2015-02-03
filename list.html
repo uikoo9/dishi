@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!-- mui -->
+		<script src="js/mui.min.js"></script>
+		<link href="css/mui.min.css" rel="stylesheet"/>
+		<style type="text/css">
+			#my_task_list {
+				margin-top: -1px;
+			}
+			#my_task_list li{
+				height: 80px;
+				line-height: 60px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="mui-content">
+			<ul class="mui-table-view" id="my_task_list">
+				<li class="mui-table-view-cell">
+					<div class="mui-slider-right mui-disabled">
+						<a class="mui-btn mui-btn-red">删除</a>
+					</div>
+					<div class="mui-slider-handle">
+						待办事项1
+					</div>
+				</li>
+			</ul>
+		</div>
+		<script>
+			//只有ios支持的功能需要在Android平台隐藏；
+			if (mui.os.android) {
+				var list = document.querySelectorAll('.ios-only');
+				if (list) {
+					for (var i = 0; i < list.length; i++) {
+						list[i].style.display = 'none';
+					}
+				}
+			}
+			
+			mui.plusReady(function() {
+				//关闭splash页面；
+				plus.navigator.closeSplashscreen();
+			});
+
+			//在android4.4.2中的swipe事件，需要preventDefault一下，否则触发不正常
+			window.addEventListener('dragright', function(e) {
+				e.detail.gesture.preventDefault();
+			});
+			
+			var index = null;//主页面
+			function openMenu () {
+				!index&&(index = mui.currentWebview.parent());
+				mui.fire(index,"menu:open");	
+			}
+
+			//监听右滑事件，若侧滑菜单未显示，右滑要显示菜单；
+			window.addEventListener("swiperight",function (e) {
+				//默认滑动角度在-45度到45度之间，都会触发右滑菜单，为避免误操作，可自定义限制滑动角度；
+				if(Math.abs(e.detail.angle)<4){
+					openMenu();
+				}
+			});
+		</script>
+	</body>
+</html>
