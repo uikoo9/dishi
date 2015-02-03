@@ -1,0 +1,17 @@
+html,
+body {
+	background-color: #efeff4;
+}
+header.mui-bar {
+	display: none;
+}
+.mui-bar-nav~.mui-content {
+	padding: 0;
+}
+#OA_task_1 {
+	margin-top: 0;
+}
+#OA_task_1 li {
+	height: 80px;
+	line-height: 60px;
+}
