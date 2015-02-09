@@ -108,6 +108,7 @@ qiao.eventUtil = {
  * 1.提示框
  * 2.本地存储
  * 3.退出
+ * 4.websql
  */
 qiao.h = {};
 
@@ -214,4 +215,24 @@ qiao.h.exit = function(){
 			}
 		}
 	};
+};
+
+// web sql
+qiao.h.db = function(name, size){
+	var db_name = name ? name : 'db_test';
+	var db_size = size ? size : 2;
+	
+	return openDatabase(db_name, '1.0', 'db_test', db_size * 1024 * 1024);
+};
+qiao.h.update = function(db, sql){
+	if(db &&sql) db.transaction(function(tx){tx.executeSql(sql);});
+};
+qiao.h.query = function(db, sql, func){
+	if(db && sql){
+		db.transaction(function(tx){
+			tx.executeSql(sql, [], function(tx, results) {
+				func(results);
+			}, null);
+		});
+	}
 };

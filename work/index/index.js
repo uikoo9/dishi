@@ -3,8 +3,24 @@ $(function(){
 	mui.plusReady(function(){
 		initList();
 		initMenu();
+		test();
 	});
 });
+
+function test(){
+	var db = qiao.h.db();
+	
+	qiao.h.update(db, 'CREATE TABLE IF NOT EXISTS t_test (id unique, test_msg)');
+	qiao.h.update(db, 'INSERT INTO t_test (id, test_msg) VALUES (3, "foo1bar")');	
+	qiao.h.update(db, 'INSERT INTO t_test (id, test_msg) VALUES (4, "log1msg")');
+	
+	qiao.h.query(db, 'select * from t_test', function(results){
+		for (i = 0; i < results.rows.length; i++) {
+			msg = "<p><b>" + results.rows.item(i).test_msg + "</b></p>";
+			document.getElementById("status").innerHTML += msg;
+		}
+	});
+}
 
 /**
  * 初始化待办事项
