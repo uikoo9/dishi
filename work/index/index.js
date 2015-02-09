@@ -63,7 +63,7 @@ function genLi(key, value){
 	var li = 
 		'<li class="mui-table-view-cell">' +
 			'<div class="mui-slider-right mui-disabled">' + 
-				'<a class="mui-btn mui-btn-green dela" data-key="' + key + '">完成</a>' + 
+				'<a class="mui-btn mui-btn-green dela" data-key="' + key + '" data-value="' + value + '">完成</a>' + 
 			'</div>' + 
 			'<div class="mui-slider-handle">' + 
 				value + 
@@ -101,7 +101,7 @@ function addItem(){
 $(document).off('click','.dela').on('click','.dela',delItem);
 function delItem(){
 	var key = $(this).data('key');
-	var value = $.trim($(this).text());
+	var value = $(this).data('value');
 	var menukey = 'donelist-' + qiao.h.length();
 	qiao.h.confirm('确定完成了？', function(){
 		qiao.h.delItem(key);
@@ -127,5 +127,5 @@ function initMenu(){
 	}
 }
 function genMenu(value){
-	return '<li class="mui-table-view-cell"><a class="mui-navigate-right">' + value + '</a></li>';
+	return '<li class="mui-table-view-cell"><a>' + value + '</a></li>';
 }
