@@ -1,52 +1,46 @@
 mui.init();
 $(function(){
+	initDb();
+	
 	mui.plusReady(function(){
 		initList();
 		initMenu();
-		test();
 	});
 });
 
-function test(){
-	var db = qiao.h.db();
-	
-	qiao.h.update(db, 'CREATE TABLE IF NOT EXISTS t_test (id unique, test_msg)');
-	qiao.h.update(db, 'INSERT INTO t_test (id, test_msg) VALUES (3, "foo1bar")');	
-	qiao.h.update(db, 'INSERT INTO t_test (id, test_msg) VALUES (4, "log1msg")');
-	
-	qiao.h.query(db, 'select * from t_test', function(results){
-		for (i = 0; i < results.rows.length; i++) {
-			msg = "<p><b>" + results.rows.item(i).test_msg + "</b></p>";
-			document.getElementById("status").innerHTML += msg;
-		}
-	});
+// 初始化数据库
+function initDb(){
+	db = qiao.h.db();
+//	qiao.h.update(db, 'drop table t_plan_day');
+//	qiao.h.update(db, 'drop table t_plan_day_done');
+	qiao.h.update(db, 'create table if not exists t_plan_day (id unique, plan_content)');
+	qiao.h.update(db, 'create table if not exists t_plan_day_done (id unique, plan_content)');
 }
 
 /**
  * 初始化待办事项
  */
 function initList(){
-	var $ul = $('#my_task_list');
-	$ul.empty();
-	for(var i=0; i<qiao.h.length(); i++){
-		var key = qiao.h.key(i);
-		if(key.indexOf('todolist') > -1){
-			$ul.append(genLi(key, qiao.h.getItem(key)));
+	var $ul = $('#my_task_list').empty();
+	qiao.h.query(db, 'select * from t_plan_day order by id desc', function(res){
+		for (i = 0; i < res.rows.length; i++) {
+			$ul.append(genLi(res.rows.item(i)));
 		}
-	}
-	
-	showList($ul);
+
+		showList($ul);
+	});
 }
-function genLi(key, value){
+function genLi(data){
 	var li = 
 		'<li class="mui-table-view-cell">' +
 			'<div class="mui-slider-right mui-disabled">' + 
-				'<a class="mui-btn mui-btn-green dela" data-key="' + key + '" data-value="' + value + '">完成</a>' + 
+				'<a class="mui-btn mui-btn-green dela" data-id="' + data.id + '" data-content="' + data.plan_content + '">完成</a>' + 
 			'</div>' + 
 			'<div class="mui-slider-handle">' + 
-				value + 
+				data.plan_content + 
 			'</div>' + 
 		'</li>';
+		
 	return li;
 }
 function showList(ul){
@@ -60,10 +54,11 @@ function addItem(value){
 	var $ul = $('#my_task_list');
 	
 	if(value){
-		var key = 'todolist-' + qiao.h.length();
-		$ul.prepend(genLi(key, value));
-		showList($ul);
-		qiao.h.insertItem(key, ''+value);
+		qiao.h.query(db, 'select max(id) mid from t_plan_day', function(res){
+			var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
+			qiao.h.update(db, 'insert into t_plan_day (id, plan_content) values (' + (id+1) + ', "' + value + '")');
+			initList();
+		});
 	}else{
 		qiao.h.tip('请填写待办事项内容！');
 	}
@@ -73,15 +68,17 @@ function addItem(value){
  * 删除待办事项
  */
 function delItem(target){
-	var key = $(target).data('key');
-	var value = $(target).data('value');
-	var menukey = 'donelist-' + qiao.h.length();
+	var id = $(target).data('id');
+	var content = $(target).data('content');
 	qiao.h.confirm('确定完成了？', function(){
-		qiao.h.delItem(key);
+		qiao.h.update(db, 'delete from t_plan_day where id=' + id);
 		initList();
 		
-		qiao.h.insertItem(menukey, ''+value);
-		initMenu();
+		qiao.h.query(db, 'select max(id) mid from t_plan_day_done', function(res){
+			var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
+			qiao.h.update(db, 'insert into t_plan_day_done (id, plan_content) values (' + (id+1) + ', "' + content + '")');
+			initMenu();
+		});
 	});
 }
 
@@ -89,15 +86,12 @@ function delItem(target){
  * 初始化侧滑菜单
  */
 function initMenu(){
-	var $ul = $('#done_list');
-	
-	$ul.empty();
-	for(var i=0; i<qiao.h.length(); i++){
-		var key = qiao.h.key(i);
-		if(key.indexOf('donelist') > -1){
-			$ul.append(genMenu(qiao.h.getItem(key)));
+	var $ul = $('#done_list').empty();
+	qiao.h.query(db, 'select * from t_plan_day_done order by id desc', function(res){
+		for (i = 0; i < res.rows.length; i++) {
+			$ul.append(genMenu(res.rows.item(i).plan_content));
 		}
-	}
+	});
 }
 function genMenu(value){
 	return '<li class="mui-table-view-cell"><a>' + value + '</a></li>';
