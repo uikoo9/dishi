@@ -102,3 +102,31 @@ qiao.eventUtil = {
 		}
 	}
 };
+
+/**
+ * 对mui以及nativejs相关封装
+ */
+qiao.h = {};
+qiao.h.length = function(){
+	return plus.storage.getLength();
+};
+qiao.h.key = function(i){
+	return plus.storage.key(i);
+};
+qiao.h.insertItem = function(key, value){
+	plus.storage.setItem(key, value);
+};
+qiao.h.getItem = function(key){
+	if(key){
+		for(var i=0; i<qiao.h.length(); i++) {
+			if(key == plus.storage.key(i)){
+				return plus.storage.getItem(key);
+			}
+		};
+	}
+	
+	return null;
+};
+qiao.h.clear = function(){
+	plus.storage.clear();
+};
