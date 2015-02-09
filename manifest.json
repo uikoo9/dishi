@@ -1,9 +1,9 @@
 ﻿{
-    "@platforms": ["android", "iPhone", "iPad"],
+    "@platforms": ["android"],
     "id": "H56296BDF",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "note",/*应用名称，程序桌面图标名称*/
     "version": {
-        "name": "1.0",/*应用版本名称*/
+        "name": "0.0.1",/*应用版本名称*/
         "code": ""
     },
     "description": "",/*应用描述信息*/
@@ -119,7 +119,7 @@
                 "mobileprovision": "",/*iOS应用打包配置文件*/
                 "password": "",/*iOS应用打包个人证书导入密码*/
                 "p12": "",/*iOS应用打包个人证书，打包配置文件关联的个人证书*/
-                "devices": "universal",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
+                "devices": "",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
                 "frameworks":[
                 ]/*调用Native.js调用原生Objective-c API需要引用的FrameWork，如需调用GameCenter，则添加"GameKit.framework"*/
             },
@@ -131,9 +131,7 @@
                 "permissions": [
                 ]/*使用Native.js调用原生安卓API需要使用到的系统权限*/
             },
-            "orientation": [
-                "portrait-primary"
-            ],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+            "orientation": ["portrait-primary","portrait-secondary","landscape-primary","landscape-secondary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
             "icons": {
                 "ios": {
                     "prerendered": true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
