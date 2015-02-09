@@ -48,20 +48,21 @@ $(function(){
  */
 function initList(){
 	var $ul = $('#my_task_list');
+	$ul.empty();
 	for(var i=0; i<qiao.h.length(); i++){
 		var key = qiao.h.key(i);
 		if(key.indexOf('todolist') > -1){
-			$ul.append(genLi(qiao.h.getItem(key)));
+			$ul.append(genLi(key, qiao.h.getItem(key)));
 		}
 	}
 	
 	showList($ul);
 }
-function genLi(value){
+function genLi(key, value){
 	var li = 
 		'<li class="mui-table-view-cell">' +
 			'<div class="mui-slider-right mui-disabled">' + 
-				'<a class="mui-btn mui-btn-red dela">删除</a>' + 
+				'<a class="mui-btn mui-btn-green dela" data-key="' + key + '">完成</a>' + 
 			'</div>' + 
 			'<div class="mui-slider-handle">' + 
 				value + 
@@ -82,10 +83,11 @@ function addItem(){
 	var value = $.trim($input.val());
 	
 	if(value){
+		var key = 'todolist-' + qiao.h.length();
 		$('#addDiv').slideUp(function(){
-			$ul.prepend(genLi(value));
+			$ul.prepend(genLi(key, value));
 			showList($ul);
-			qiao.h.insertItem('todolist-' + qiao.h.length(), ''+value);
+			qiao.h.insertItem(key, ''+value);
 		});
 	}else{
 		alert('请填写待办事项内容！');
@@ -94,7 +96,9 @@ function addItem(){
 
 $(document).off('click','.dela').on('click','.dela',delItem);
 function delItem(){
+	var key = $(this).data('key'); 
 	qiao.h.confirm('确定完成了？', function(){
-		alert(1);
+		qiao.h.delItem(key);
+		initList();
 	});
 }

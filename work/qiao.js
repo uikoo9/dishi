@@ -154,9 +154,6 @@ qiao.h.length = function(){
 qiao.h.key = function(i){
 	return plus.storage.key(i);
 };
-qiao.h.insertItem = function(key, value){
-	plus.storage.setItem(key, value);
-};
 qiao.h.getItem = function(key){
 	if(key){
 		for(var i=0; i<qiao.h.length(); i++) {
@@ -167,6 +164,12 @@ qiao.h.getItem = function(key){
 	}
 	
 	return null;
+};
+qiao.h.insertItem = function(key, value){
+	plus.storage.setItem(key, value);
+};
+qiao.h.delItem = function(key){
+	plus.storage.removeItem(key);
 };
 qiao.h.clear = function(){
 	plus.storage.clear();
