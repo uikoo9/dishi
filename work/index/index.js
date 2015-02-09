@@ -14,16 +14,19 @@ function closeMenu(){
 }
 window.addEventListener("tap", function(event){
 	var target = qiao.eventUtil.getTarget(event);
-	if(target.className.indexOf('mui-icon-bars') > -1){
+	var className = target.className;
+	if(className.indexOf('mui-icon-bars') > -1){
 		if(showMenu){
 			closeMenu();
 		}else{
 			openMenu();
 		}
-	}else if(target.className.indexOf('mui-icon-plus') > -1){
+	}else if(className.indexOf('mui-icon-plus') > -1){
 		qiao.h.prompt('待办事项', function(v){
 			addItem(v);
 		});
+	}else if(className.indexOf('dela') > -1){
+		delItem(target);
 	}else{
 		if(showMenu){
 			closeMenu();
@@ -91,17 +94,16 @@ function addItem(value){
 		showList($ul);
 		qiao.h.insertItem(key, ''+value);
 	}else{
-		alert('请填写待办事项内容！');
+		qiao.h.alert('请填写待办事项内容！');
 	}
 }
 
 /**
  * 删除待办事项
  */
-$(document).off('click','.dela').on('click','.dela',delItem);
-function delItem(){
-	var key = $(this).data('key');
-	var value = $(this).data('value');
+function delItem(target){
+	var key = $(target).data('key');
+	var value = $(target).data('value');
 	var menukey = 'donelist-' + qiao.h.length();
 	qiao.h.confirm('确定完成了？', function(){
 		qiao.h.delItem(key);
