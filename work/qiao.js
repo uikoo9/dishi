@@ -107,6 +107,47 @@ qiao.eventUtil = {
  * 对mui以及nativejs相关封装
  */
 qiao.h = {};
+// 提示框相关
+qiao.h.modaloptions = {
+	title 	: 'title',
+	abtn	: ['确定'],
+	cbtn	: ['确定','取消'],
+	conetnt	: 'content'
+	
+};
+qiao.h.alert = function(options, ok){
+	var opt = $.extend({}, qiao.h.modaloptions);
+	
+	opt.title = '提示';
+	if(typeof options == 'string'){
+		opt.conetnt = options;
+	}else{
+		$.extend(opt, options);
+	}
+	
+	plus.nativeUI.confirm(opt.conetnt, function(e){
+		var i = e.index;
+		if(i == 0 && ok) ok();
+	}, opt.title, opt.abtn);
+};
+qiao.h.confirm = function(options, ok, cancel){
+	var opt = $.extend({}, qiao.h.modaloptions);
+	
+	opt.title = '确认操作';
+	if(typeof options == 'string'){
+		opt.conetnt = options;
+	}else{
+		$.extend(opt, options);
+	}
+	
+	plus.nativeUI.confirm(opt.conetnt, function(e){
+		var i = e.index;
+		if(i == 0 && ok) ok();
+		if(i == 1 && cancel) cancel();
+	}, opt.title, opt.cbtn);
+};
+
+// 本地存储相关
 qiao.h.length = function(){
 	return plus.storage.getLength();
 };

@@ -61,7 +61,7 @@ function genLi(value){
 	var li = 
 		'<li class="mui-table-view-cell">' +
 			'<div class="mui-slider-right mui-disabled">' + 
-				'<a class="mui-btn mui-btn-red">删除</a>' + 
+				'<a class="mui-btn mui-btn-red dela">删除</a>' + 
 			'</div>' + 
 			'<div class="mui-slider-handle">' + 
 				value + 
@@ -90,4 +90,11 @@ function addItem(){
 	}else{
 		alert('请填写待办事项内容！');
 	}
+}
+
+$(document).off('click','.dela').on('click','.dela',delItem);
+function delItem(){
+	qiao.h.confirm('确定完成了？', function(){
+		alert(1);
+	});
 }
