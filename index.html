@@ -9,7 +9,7 @@
 		<link href="css/mui.min.css" rel="stylesheet"/>
 		
 		<!-- jquery -->
-		<script type="text/javascript" src="http://cdn.staticfile.org/jquery/1.11.1/jquery.min.js"></script>
+		<script type="text/javascript" src="js/jquery-1.11.2.min.js"></script>
 		<!-- qiao.js -->
 		<script type="text/javascript" src="work/qiao.js"></script>
 		
@@ -35,9 +35,20 @@
 				</aside>
 				<header class="mui-bar mui-bar-nav">
 					<a class="mui-icon mui-icon-bars mui-pull-left"></a>
+					<a class="mui-icon mui-icon-plus mui-pull-right"></a>
 					<h1 class="mui-title">待办事项</h1>
 				</header>
 				<div class="mui-content" id="maincontent">
+					<div class="mui-content-padded" style="display: none;" id="addDiv">
+						<form class="mui-input-group">
+							<div class="mui-input-row">
+								<input type="text" class="mui-input-clear" placeholder="添加一条待办事项~" />
+							</div>
+							<div class="mui-button-row">
+								<button class="mui-btn mui-btn-primary" onclick="return false;">添加</button>
+							</div>
+						</form>
+					</div>
 					<ul class="mui-table-view" id="my_task_list">
 					</ul>
 				</div>

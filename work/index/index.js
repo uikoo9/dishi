@@ -18,6 +18,8 @@ window.addEventListener("tap", function(event){
 		}else{
 			openMenu();
 		}
+	}else if(target.className.indexOf('mui-icon-plus') > -1){
+		$('#addDiv').slideToggle();
 	}else{
 		if(showMenu){
 			closeMenu();
