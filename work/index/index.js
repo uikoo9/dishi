@@ -1,5 +1,5 @@
 /**
- * 以下为处理策划菜单的事件
+ * 侧滑菜单
  */
 var showMenu = false;
 function openMenu(){
@@ -19,7 +19,7 @@ window.addEventListener("tap", function(event){
 			openMenu();
 		}
 	}else if(target.className.indexOf('mui-icon-plus') > -1){
-		$('#addDiv').slideToggle();
+		$('#addDiv').slideToggle().find('input').val('');
 	}else{
 		if(showMenu){
 			closeMenu();
@@ -43,21 +43,21 @@ $(function(){
 	});
 });
 
+/**
+ * 初始化待办事项
+ */
 function initList(){
-	qiao.h.clear();
 	var $ul = $('#my_task_list');
 	for(var i=0; i<qiao.h.length(); i++){
 		var key = qiao.h.key(i);
 		if(key.indexOf('todolist') > -1){
-			genLi($ul, qiao.h.getItem(key));
+			$ul.append(genLi(qiao.h.getItem(key)));
 		}
 	}
 	
-	if($ul.find('li').size() == 0){
-		genLi($ul, '没有待办事项！');
-	}
+	showList($ul);
 }
-function genLi(ul, value){
+function genLi(value){
 	var li = 
 		'<li class="mui-table-view-cell">' +
 			'<div class="mui-slider-right mui-disabled">' + 
@@ -67,6 +67,27 @@ function genLi(ul, value){
 				value + 
 			'</div>' + 
 		'</li>';
+	return li;
+}
+function showList(ul){
+	if(ul.find('li').size() > 0 &&  ul.is(':hidden')) ul.show();
+}
+
+/**
+ * 添加待办事项
+ */
+function addItem(){
+	var $ul = $('#my_task_list');
+	var $input = $('#addDiv input');
+	var value = $.trim($input.val());
 	
-	ul.append(li);
+	if(value){
+		$('#addDiv').slideUp(function(){
+			$ul.prepend(genLi(value));
+			showList($ul);
+			qiao.h.insertItem('todolist-' + qiao.h.length(), ''+value);
+		});
+	}else{
+		alert('请填写待办事项内容！');
+	}
 }

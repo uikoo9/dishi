@@ -1,5 +1,6 @@
 #my_task_list {
 	margin-top: -1px;
+	display: none;
 }
 #my_task_list li{
 	height: 80px;
