@@ -110,9 +110,9 @@ qiao.h = {};
 // 提示框相关
 qiao.h.modaloptions = {
 	title 	: 'title',
-	abtn	: ['确定'],
+	abtn	: '确定',
 	cbtn	: ['确定','取消'],
-	conetnt	: 'content'
+	content	: 'content'
 	
 };
 qiao.h.alert = function(options, ok){
@@ -120,14 +120,13 @@ qiao.h.alert = function(options, ok){
 	
 	opt.title = '提示';
 	if(typeof options == 'string'){
-		opt.conetnt = options;
+		opt.content = options;
 	}else{
 		$.extend(opt, options);
 	}
 	
-	plus.nativeUI.confirm(opt.conetnt, function(e){
-		var i = e.index;
-		if(i == 0 && ok) ok();
+	plus.nativeUI.alert(opt.content, function(e){
+		if(ok) ok();
 	}, opt.title, opt.abtn);
 };
 qiao.h.confirm = function(options, ok, cancel){
@@ -135,16 +134,32 @@ qiao.h.confirm = function(options, ok, cancel){
 	
 	opt.title = '确认操作';
 	if(typeof options == 'string'){
-		opt.conetnt = options;
+		opt.content = options;
 	}else{
 		$.extend(opt, options);
 	}
 	
-	plus.nativeUI.confirm(opt.conetnt, function(e){
+	plus.nativeUI.confirm(opt.content, function(e){
 		var i = e.index;
 		if(i == 0 && ok) ok();
 		if(i == 1 && cancel) cancel();
 	}, opt.title, opt.cbtn);
+};
+qiao.h.prompt = function(options, ok, cancel){
+	var opt = $.extend({}, qiao.h.modaloptions);
+	
+	opt.title = '输入内容';
+	if(typeof options == 'string'){
+		opt.content = options;
+	}else{
+		$.extend(opt, options);
+	}
+	
+	plus.nativeUI.prompt(opt.content, function(e){
+		var i = e.index;
+		if(i == 0 && ok) ok(e.value);
+		if(i == 1 && cancel) cancel(e.value);
+	}, opt.title, opt.content, opt.cbtn);
 };
 
 // 本地存储相关

@@ -1,3 +1,5 @@
+mui.init();
+
 /**
  * 侧滑菜单
  */
@@ -19,7 +21,9 @@ window.addEventListener("tap", function(event){
 			openMenu();
 		}
 	}else if(target.className.indexOf('mui-icon-plus') > -1){
-		$('#addDiv').slideToggle().find('input').val('');
+		qiao.h.prompt('待办事项', function(v){
+			addItem(v);
+		});
 	}else{
 		if(showMenu){
 			closeMenu();
@@ -78,18 +82,14 @@ function showList(ul){
 /**
  * 添加待办事项
  */
-function addItem(){
+function addItem(value){
 	var $ul = $('#my_task_list');
-	var $input = $('#addDiv input');
-	var value = $.trim($input.val());
 	
 	if(value){
 		var key = 'todolist-' + qiao.h.length();
-		$('#addDiv').slideUp(function(){
-			$ul.prepend(genLi(key, value));
-			showList($ul);
-			qiao.h.insertItem(key, ''+value);
-		});
+		$ul.prepend(genLi(key, value));
+		showList($ul);
+		qiao.h.insertItem(key, ''+value);
 	}else{
 		alert('请填写待办事项内容！');
 	}
