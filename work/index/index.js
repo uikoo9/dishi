@@ -49,7 +49,7 @@ function addItem(value){
 		showList($ul);
 		qiao.h.insertItem(key, ''+value);
 	}else{
-		qiao.h.alert('请填写待办事项内容！');
+		qiao.h.tip('请填写待办事项内容！');
 	}
 }
 
@@ -101,24 +101,23 @@ function closeMenu(){
 }
 window.addEventListener("tap", function(event){
 	var target = qiao.eventUtil.getTarget(event);
-	if(target.className.indexOf('mui-icon-bars') > -1){
-		alert(showMenu);
-		if(showMenu){
-			closeMenu();
+	setTimeout(function(){
+		if(target.className.indexOf('mui-icon-bars') > -1){
+			if(showMenu){
+				closeMenu();
+			}else{
+				openMenu();
+			}
+		}else if(target.className.indexOf('mui-icon-plus') > -1){
+			qiao.h.prompt('待办事项', function(v){addItem(v);});
+		}else if(target.className.indexOf('dela') > -1){
+			delItem(target);
 		}else{
-			openMenu();
+			if(showMenu) closeMenu();
 		}
-	}else if(target.className.indexOf('mui-icon-plus') > -1){
-		qiao.h.prompt('待办事项', function(v){
-			addItem(v);
-		});
-	}else if(target.className.indexOf('dela') > -1){
-		delItem(target);
-	}else{
-		if(showMenu){
-			closeMenu();
-		}
-	}
+	},100);
 });
 window.addEventListener("swiperight", function(){if(!showMenu) openMenu();});
 window.addEventListener("swipeleft", function(){if(showMenu) closeMenu();});
+
+qiao.h.exit();

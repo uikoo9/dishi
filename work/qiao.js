@@ -105,9 +105,16 @@ qiao.eventUtil = {
 
 /**
  * 对mui以及nativejs相关封装
+ * 1.提示框
+ * 2.本地存储
+ * 3.退出
  */
 qiao.h = {};
+
 // 提示框相关
+qiao.h.tip = function(msg){
+	mui.toast(msg);
+};
 qiao.h.modaloptions = {
 	title 	: 'title',
 	abtn	: '确定',
@@ -188,4 +195,23 @@ qiao.h.delItem = function(key){
 };
 qiao.h.clear = function(){
 	plus.storage.clear();
+};
+
+// 退出
+qiao.h.exittime = null;
+qiao.h.exit = function(){
+	mui.back = function() {
+		//首次按键，提示‘再按一次退出应用’
+		if(!qiao.h.exittime){
+			qiao.h.exittime = new Date().getTime();
+			mui.toast('再按一次退出应用');
+			setTimeout(function() {
+				qiao.h.exittime = null;
+			}, 1000);
+		}else{
+			if(new Date().getTime() - qiao.h.exittime < 1000){
+				plus.runtime.quit();
+			}
+		}
+	};
 };
