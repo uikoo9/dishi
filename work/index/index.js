@@ -1,49 +1,4 @@
 mui.init();
-
-/**
- * 侧滑菜单
- */
-var showMenu = false;
-function openMenu(){
-	mui('.mui-off-canvas-wrap').offCanvas('show');
-	showMenu = true;
-}
-function closeMenu(){
-	mui('.mui-off-canvas-wrap').offCanvas('close');
-	showMenu = false;
-}
-window.addEventListener("tap", function(event){
-	var target = qiao.eventUtil.getTarget(event);
-	var className = target.className;
-	if(className.indexOf('mui-icon-bars') > -1){
-		if(showMenu){
-			closeMenu();
-		}else{
-			openMenu();
-		}
-	}else if(className.indexOf('mui-icon-plus') > -1){
-		qiao.h.prompt('待办事项', function(v){
-			addItem(v);
-		});
-	}else if(className.indexOf('dela') > -1){
-		delItem(target);
-	}else{
-		if(showMenu){
-			closeMenu();
-		}
-	}
-});
-window.addEventListener("swiperight", function(){
-	if(!showMenu){
-		openMenu();
-	}
-});
-window.addEventListener("swipeleft", function(){
-	if(showMenu){
-		closeMenu();
-	}
-});
-
 $(function(){
 	mui.plusReady(function(){
 		initList();
@@ -131,3 +86,39 @@ function initMenu(){
 function genMenu(value){
 	return '<li class="mui-table-view-cell"><a>' + value + '</a></li>';
 }
+
+/**
+ * 侧滑菜单
+ */
+var showMenu = false;
+function openMenu(){
+	mui('.mui-off-canvas-wrap').offCanvas('show');
+	showMenu = true;
+}
+function closeMenu(){
+	mui('.mui-off-canvas-wrap').offCanvas('close');
+	showMenu = false;
+}
+window.addEventListener("tap", function(event){
+	var target = qiao.eventUtil.getTarget(event);
+	if(target.className.indexOf('mui-icon-bars') > -1){
+		alert(showMenu);
+		if(showMenu){
+			closeMenu();
+		}else{
+			openMenu();
+		}
+	}else if(target.className.indexOf('mui-icon-plus') > -1){
+		qiao.h.prompt('待办事项', function(v){
+			addItem(v);
+		});
+	}else if(target.className.indexOf('dela') > -1){
+		delItem(target);
+	}else{
+		if(showMenu){
+			closeMenu();
+		}
+	}
+});
+window.addEventListener("swiperight", function(){if(!showMenu) openMenu();});
+window.addEventListener("swipeleft", function(){if(showMenu) closeMenu();});
