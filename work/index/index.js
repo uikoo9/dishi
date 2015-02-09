@@ -40,6 +40,7 @@ window.addEventListener("swipeleft", function(){
 $(function(){
 	mui.plusReady(function(){
 		initList();
+		initMenu();
 	});
 });
 
@@ -94,11 +95,37 @@ function addItem(){
 	}
 }
 
+/**
+ * 删除待办事项
+ */
 $(document).off('click','.dela').on('click','.dela',delItem);
 function delItem(){
-	var key = $(this).data('key'); 
+	var key = $(this).data('key');
+	var value = $.trim($(this).text());
+	var menukey = 'donelist-' + qiao.h.length();
 	qiao.h.confirm('确定完成了？', function(){
 		qiao.h.delItem(key);
 		initList();
+		
+		qiao.h.insertItem(menukey, ''+value);
+		initMenu();
 	});
+}
+
+/**
+ * 初始化侧滑菜单
+ */
+function initMenu(){
+	var $ul = $('#done_list');
+	
+	$ul.empty();
+	for(var i=0; i<qiao.h.length(); i++){
+		var key = qiao.h.key(i);
+		if(key.indexOf('donelist') > -1){
+			$ul.append(genMenu(qiao.h.getItem(key)));
+		}
+	}
+}
+function genMenu(value){
+	return '<li class="mui-table-view-cell"><a class="mui-navigate-right">' + value + '</a></li>';
 }
