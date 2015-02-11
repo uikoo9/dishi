@@ -6,13 +6,15 @@ mui.plusReady(function(){
 	initDb();
 	initList();
 	
-	qiao.on('dela', 'tap', function(){
-		qiao.h.update(db, 'delete from t_plan_day_todo where id=' + $(this).data('id'));
-		initList();
+	qiao.on('.dela', 'tap', function(){
+		var todoId = $(this).data('id');
+		var title = $(this).data('title');
+		$(this).parent().parent().remove();
 		
+		qiao.h.update(db, 'delete from t_plan_day_todo where id=' + todoId);
 		qiao.h.query(db, 'select max(id) mid from t_plan_day_done', function(res){
 			var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
-			qiao.h.update(db, 'insert into t_plan_day_done (id, plan_title) values (' + (id+1) + ', "' + $(target).data('title') + '")');
+			qiao.h.update(db, 'insert into t_plan_day_done (id, plan_title) values (' + (id+1) + ', "' + title + '")');
 		});
 	});
 });
@@ -27,7 +29,7 @@ function initDb(){
 // 初始化待办事项
 function initList(){
 	var $ul = $('#todolist').empty();
-	qiao.h.query(db, 'select * from t_plan_day order by id desc', function(res){
+	qiao.h.query(db, 'select * from t_plan_day_todo order by id desc', function(res){
 		for (i = 0; i < res.rows.length; i++) {
 			$ul.append(genLi(res.rows.item(i)));
 		}

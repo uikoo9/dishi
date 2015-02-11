@@ -138,8 +138,15 @@ qiao.h.currentPage = function(){
 qiao.h.getPage = function(id){
 	return id ? plus.webview.getWebviewById(id) : null;
 };
-qiao.h.createPage = function(ids){
-	if(ids && ids.length > 0){
-		
+qiao.h.show = function(id ,flag){
+	if(id){
+		var view = plus.webview.getWebviewById(id);
+		view.show();
+		if(flag) view.reload(true);
+	}
+};
+qiao.h.hide = function(id){
+	if(id){
+		plus.webview.hide(id);
 	}
 };

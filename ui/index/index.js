@@ -16,8 +16,12 @@ mui.plusReady(function(){
 		if(targetTab == activeTab){
 			return;	
 		}else{
-			plus.webview.show(targetTab);
-			plus.webview.hide(activeTab);
+			qiao.h.hide(activeTab);
+			if(targetTab == 'add'){
+				qiao.h.show(targetTab);
+			}else{
+				qiao.h.show(targetTab, true);
+			}
 	
 			activeTab = targetTab;
 		}
@@ -27,7 +31,7 @@ mui.plusReady(function(){
 // 创建页面
 function createPages(ids){
 	var self = qiao.h.currentPage();
-	for(var i=0;i<2;i++){
+	for(var i=0;i<3;i++){
 		var id = ids[i];
 		var url = 'view/' + id + '.html';
 		var sub = plus.webview.create(url, id, {

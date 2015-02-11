@@ -10,7 +10,7 @@ mui.plusReady(function(){
 // 初始化数据库
 function initDb(){
 	db = qiao.h.db();
-//	qiao.h.update(db, 'drop table t_plan_day_done');
+	qiao.h.update(db, 'drop table t_plan_day_done');
 	qiao.h.update(db, 'create table if not exists t_plan_day_done (id unique, plan_title, plan_content)');
 }
 
