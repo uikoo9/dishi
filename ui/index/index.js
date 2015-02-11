@@ -16,8 +16,8 @@ mui.plusReady(function(){
 		if(targetTab == activeTab){
 			return;	
 		}else{
-			qiao.h.hide(activeTab);
 			qiao.h.show(targetTab);
+			qiao.h.hide(activeTab);
 	
 			activeTab = targetTab;
 		}
