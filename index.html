@@ -16,9 +16,22 @@
 
 	<body>
 		<header class="mui-bar mui-bar-nav">
-			<a class="mui-icon mui-icon-plus mui-pull-right"></a>
 			<h1 class="mui-title">滴石</h1>
 		</header>
+		<nav class="mui-bar mui-bar-tab">
+			<div class="mui-tab-item mytab" data-id="done">
+				<span class="mui-icon mui-icon-checkmarkempty"></span>
+				<span class="mui-tab-label">已完成</span>
+			</div>
+			<div class="mui-tab-item mytab mui-active" data-id="list">
+				<span class="mui-icon mui-icon-bars"></span>
+				<span class="mui-tab-label">未完成</span>
+			</div>
+			<div class="mui-tab-item mytab" data-id="add">
+				<span class="mui-icon mui-icon-plusempty"></span>
+				<span class="mui-tab-label">添加</span>
+			</div>
+		</nav>
 		<script type="text/javascript" src="ui/index/index.js"></script>
 	</body>
 </html>

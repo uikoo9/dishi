@@ -12,20 +12,15 @@
 		<script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
 		<!-- qiao.js -->
 		<script type="text/javascript" src="../ui/qiao.js"></script>
+		
+		<!-- list -->
+		<link rel="stylesheet" href="../ui/list/list.css" />
 	</head>
 
 	<body>
-		<div class="mui-content-padded">
-			<div class="mui-input-row">
-				<input type="text" class="mui-input-speech mui-input-clear" placeholder="待办事项标题" id="addTitle">
-			</div>
-			<div class="mui-input-row">
-				<textarea rows="14" placeholder="待办事项内容" id="addContent"></textarea>
-			</div>
-			<div class="mui-button-row">
-				<button class="mui-btn mui-btn-block mui-btn-primary addItemBtn">添加</button>
-			</div>
+		<div class="mui-content">
+			<ul class="mui-table-view" id="donelist"></ul>
 		</div>
-		<script type="text/javascript" src="../ui/add/add.js"></script>
+		<script type="text/javascript" src="../ui/done/done.js"></script>
 	</body>
 </html>
