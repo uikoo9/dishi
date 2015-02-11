@@ -16,19 +16,23 @@ mui.plusReady(function(){
 	qiao.h.exit();
 	
 	// tap事件
-	window.addEventListener("tap", addItemHandler);
+	window.addEventListener("tap", function(event){
+		var target = qiao.eventUtil.getTarget(event);
+		if(target.className.indexOf('mui-icon-plus') > -1){
+			openAddPage();
+		}
+	});
 });
 
-// 添加待办事项Handler
-function addItemHandler(event){
-	var listPage = qiao.h.getPage('list');
-	
-	var target = qiao.eventUtil.getTarget(event);
-	if(target.className.indexOf('mui-icon-plus') > -1){
-		qiao.h.prompt('待办事项', function(v){
-			mui.fire(listPage, 'addItem', {
-				value : v
-			});
-		});
-	}
+// 打开添加页面
+function openAddPage(event){
+	var addPage = mui.preload({
+		id : 'addPage',
+		url : 'view/add.html',
+		styles 	: {
+			top : '45px',
+			bottom : 0
+		}
+	});
+	addPage.show();
 }

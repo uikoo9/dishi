@@ -52,12 +52,15 @@ function showList(ul){
 
 // 添加待办事项
 function addItemHandler(event){
-	var value = event.detail.value;	
-	if(value){
+	var title = event.detail.title;	
+	var content = event.detail.content;	
+	if(title){
 		qiao.h.query(db, 'select max(id) mid from t_plan_day', function(res){
 			var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
-			qiao.h.update(db, 'insert into t_plan_day (id, plan_content) values (' + (id+1) + ', "' + value + '")');
+			qiao.h.update(db, 'insert into t_plan_day (id, plan_content) values (' + (id+1) + ', "' + title + '")');
 			initList();
+			
+			qiao.h.getPage('addPage').hide();
 		});
 	}else{
 		qiao.h.tip('请填写待办事项内容！');
