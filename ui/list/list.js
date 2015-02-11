@@ -3,8 +3,12 @@ mui.init();
 
 // 所有的方法都放到这里
 mui.plusReady(function(){
-	initDb();
 	initList();
+	
+	qiao.on('.detaildiv', 'tap', function(){
+		var id = $(this).data('id');
+		mui.fire(qiao.h.getPage('detail'), 'detailItem', {id:id});
+	});
 	
 	qiao.on('.dela', 'tap', function(){
 		var todoId = $(this).data('id');
@@ -17,17 +21,10 @@ mui.plusReady(function(){
 	window.addEventListener('addItem', addItemHandler);
 });
 
-// 初始化数据库
-function initDb(){
-	db = qiao.h.db();
-//	qiao.h.update(db, 'drop table t_plan_day');
-	qiao.h.update(db, 'create table if not exists t_plan_day_todo (id unique, plan_title, plan_content)');
-}
-
 // 初始化待办事项
 function initList(){
 	var $ul = $('#todolist').empty();
-	qiao.h.query(db, 'select * from t_plan_day_todo order by id desc', function(res){
+	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo order by id desc', function(res){
 		for (i = 0; i < res.rows.length; i++) {
 			$ul.append(genLi(res.rows.item(i)));
 		}
@@ -41,7 +38,7 @@ function genLi(data){
 			'<div class="mui-slider-right mui-disabled">' + 
 				'<a class="mui-btn mui-btn-green dela" data-id="' + data.id + '" data-title="' + data.plan_title + '">完成</a>' + 
 			'</div>' + 
-			'<div class="mui-slider-handle">' + 
+			'<div class="mui-slider-handle detaildiv" data-id="' + data.id + '">' + 
 				data.plan_title + 
 			'</div>' + 
 		'</li>';
@@ -54,11 +51,13 @@ function showList(ul){
 
 // 添加待办事项
 function addItemHandler(event){
+	var db = qiao.h.db();
 	var title = event.detail.title;
+	var content = event.detail.content;
 	
 	qiao.h.query(db, 'select max(id) mid from t_plan_day_todo', function(res){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
-		qiao.h.update(db, 'insert into t_plan_day_todo (id, plan_title) values (' + (id+1) + ', "' + title + '")');
+		qiao.h.update(db, 'insert into t_plan_day_todo (id, plan_title, plan_content) values (' + (id+1) + ', "' + title + '", "' + content + '")');
 		
 		$('#todolist').prepend(genLi({id:id, 'plan_title':title})).show();
 	});

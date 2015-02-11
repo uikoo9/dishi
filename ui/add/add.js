@@ -16,11 +16,13 @@ function resetPage(){
 // 添加待办事项
 function addItem(){
 	var title = $.trim($('#addTitle').val());
+	var content = $.trim($('#addContent').val());
+	
 	if(!title){
 		qiao.h.tip('请填写待办事项标题！');		
 	}else{
 		qiao.h.alert('添加成功！');
 		resetPage();
-		mui.fire(qiao.h.getPage('list'), 'addItem', {title : title});
+		mui.fire(qiao.h.getPage('list'), 'addItem', {title:title, content:content});
 	}
 }
