@@ -1,6 +1,6 @@
 // 初始化
 mui.init();
-alert(1);
+
 // 所有方法都放到这里
 mui.plusReady(function(){
 	// tap事件
@@ -9,7 +9,7 @@ mui.plusReady(function(){
 		if(target.className.indexOf('addItemBtn') > -1){
 			addItem();
 		}else if(target.className.indexOf('cancelItemBtn') > -1){
-			toIndex();
+			qiao.h.getPage('addPage').hide();
 		}else{
 			
 		}
@@ -20,16 +20,11 @@ mui.plusReady(function(){
 function addItem(){
 	var title = $.trim($('#addTitle').val());
 	if(title){
-		mui.fire(qiao.h.getPage('list'), 'addItem', {
+		mui.fire(qiao.h.getPage('listPage'), 'addItem', {
 			title : title,
 			content : $('#addContent').val()
 		});
 	}else{
 		qiao.h.tip('请填写待办事项标题！');		
 	}
-}
-
-// 返回到主页面
-function toIndex(){
-	alert(1);
 }

@@ -1,8 +1,16 @@
 // 初始化
 mui.init({
 	subpages : [{
-		id 		: 'list',
+		id 		: 'listPage',
 		url 	: 'view/list.html',
+		styles 	: {
+			top : '45px',
+			bottom : 0
+		}
+	}],
+	preloadPages : [{
+		id : 'addPage',
+		url : 'view/add.html',
 		styles 	: {
 			top : '45px',
 			bottom : 0
@@ -19,20 +27,7 @@ mui.plusReady(function(){
 	window.addEventListener("tap", function(event){
 		var target = qiao.eventUtil.getTarget(event);
 		if(target.className.indexOf('mui-icon-plus') > -1){
-			openAddPage();
+			qiao.h.getPage('addPage').show();
 		}
 	});
 });
-
-// 打开添加页面
-function openAddPage(event){
-	var addPage = mui.preload({
-		id : 'addPage',
-		url : 'view/add.html',
-		styles 	: {
-			top : '45px',
-			bottom : 0
-		}
-	});
-	addPage.show();
-}
