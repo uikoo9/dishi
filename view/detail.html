@@ -12,13 +12,32 @@
 		<script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
 		<!-- qiao.js -->
 		<script type="text/javascript" src="../ui/qiao.js"></script>
+		
+		<style type="text/css">
+			#backItemBtn {
+				position: fixed;
+				top: 5px;
+				right: 10px;
+				height: 50px;
+				width: 50px;
+				line-height: 50px;
+				background-color: #fff;
+				border: 1px solid #ddd;
+				border-radius: 25px;
+				font-size: 24px;
+				text-align: center;
+				margin: 3px 1px;
+			}
+		</style>
 	</head>
 
 	<body>
 		<div class="mui-content-padded">
-			<h1 id="detailTitle"></h1>
-			<p id="detailContent"></p>
+			<h1 id="detailTitle">title</h1>
+			<p id="detailContent">content</p>
 		</div>
+		
+		<span class="mui-icon mui-icon-closeempty" id="backItemBtn"></span>
 		
 		<script type="text/javascript" src="../ui/detail/detail.js" ></script>
 	</body>

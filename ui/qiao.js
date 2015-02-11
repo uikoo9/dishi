@@ -6,10 +6,12 @@ qiao.on = function(obj, event, func){
 // 对mui以及nativejs相关封装
 qiao.h = {};
 
-// 提示框相关
+// nativeui相关
 qiao.h.tip = function(msg, options){
 	mui.toast(msg, options);
 };
+
+// 提示框相关
 qiao.h.modaloptions = {
 	title 	: 'title',
 	abtn	: '确定',

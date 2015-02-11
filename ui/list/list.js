@@ -6,8 +6,7 @@ mui.plusReady(function(){
 	initList();
 	
 	qiao.on('.detaildiv', 'tap', function(){
-		var id = $(this).data('id');
-		mui.fire(qiao.h.getPage('detail'), 'detailItem', {id:id});
+		mui.fire(qiao.h.getPage('detail'), 'detailItem', {id:$(this).data('id')});
 	});
 	
 	qiao.on('.dela', 'tap', function(){
@@ -59,6 +58,6 @@ function addItemHandler(event){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
 		qiao.h.update(db, 'insert into t_plan_day_todo (id, plan_title, plan_content) values (' + (id+1) + ', "' + title + '", "' + content + '")');
 		
-		$('#todolist').prepend(genLi({id:id, 'plan_title':title})).show();
+		$('#todolist').prepend(genLi({id:id+1, 'plan_title':title})).show();
 	});
 }
