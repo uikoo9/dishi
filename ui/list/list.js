@@ -45,7 +45,11 @@ function genLi(data){
 	return li;
 }
 function showList(ul){
-	if(ul.find('li').size() > 0 &&  ul.is(':hidden')) ul.show();
+	if(ul.find('li').size() > 0 &&  ul.is(':hidden')){
+		ul.show(function(){
+			plus.nativeUI.closeWaiting();
+		});	
+	}
 }
 
 // 添加待办事项
