@@ -44,6 +44,6 @@ function delItemHandler(event){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
 		qiao.h.update(db, 'insert into t_plan_day_done (id, plan_title) values (' + (id+1) + ', "' + title + '")');
 		
-		$('#donelist').prepend(genLi({'plan_title':title}));
+		$('#donelist').prepend(genLi({'plan_title':title})).show();
 	});
 }

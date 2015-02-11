@@ -60,6 +60,6 @@ function addItemHandler(event){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
 		qiao.h.update(db, 'insert into t_plan_day_todo (id, plan_title) values (' + (id+1) + ', "' + title + '")');
 		
-		$('#todolist').prepend(genLi({id:id, 'plan_title':title}));
+		$('#todolist').prepend(genLi({id:id, 'plan_title':title})).show();
 	});
 }
