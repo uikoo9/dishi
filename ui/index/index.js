@@ -16,13 +16,11 @@ mui.plusReady(function(){
 	qiao.h.exit();
 	
 	// tap事件
-	window.addEventListener("tap", function(event){
-		addItem(event);
-	});
+	window.addEventListener("tap", addItemHandler);
 });
 
-// 添加待办事项
-function addItem(event){
+// 添加待办事项Handler
+function addItemHandler(event){
 	var listPage = qiao.h.getPage('list');
 	
 	var target = qiao.eventUtil.getTarget(event);
