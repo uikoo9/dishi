@@ -6,8 +6,14 @@ mui.plusReady(function(){
 	initDb();
 	initList();
 	
+	// index页面的添加事件
 	window.addEventListener('addItem', function(event) {
 		addItem(event.detail.value);
+	});
+	
+	// tap事件
+	window.addEventListener("tap", function(event){
+		delItem(event);
 	});
 });
 
@@ -15,7 +21,9 @@ mui.plusReady(function(){
 function initDb(){
 	db = qiao.h.db();
 //	qiao.h.update(db, 'drop table t_plan_day');
+//	qiao.h.update(db, 'drop table t_plan_day_done');
 	qiao.h.update(db, 'create table if not exists t_plan_day (id unique, plan_content)');
+	qiao.h.update(db, 'create table if not exists t_plan_day_done (id unique, plan_content)');
 }
 
 // 初始化待办事项
@@ -61,20 +69,18 @@ function addItem(value){
 	}
 }
 
-/**
- * 删除待办事项
- */
-function delItem(target){
-	var id = $(target).data('id');
-	var content = $(target).data('content');
-	qiao.h.confirm('确定完成了？', function(){
+// 删除待办事项
+function delItem(event){
+	var target = qiao.eventUtil.getTarget(event);
+	if(target.className.indexOf('dela') > -1){
+		var id = $(target).data('id');
 		qiao.h.update(db, 'delete from t_plan_day where id=' + id);
 		initList();
 		
+		var content = $(target).data('content');
 		qiao.h.query(db, 'select max(id) mid from t_plan_day_done', function(res){
 			var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
 			qiao.h.update(db, 'insert into t_plan_day_done (id, plan_content) values (' + (id+1) + ', "' + content + '")');
-			initMenu();
 		});
-	});
+	}
 }

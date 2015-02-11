@@ -4,30 +4,33 @@ mui.init({
 		id 		: 'list',
 		url 	: 'view/list.html',
 		styles 	: {
-			top : '45px'
+			top : '45px',
+			bottom : 0
 		}
 	}]
 });
 
-// 所有的方法最好到放到这个里边
+// 所有方法都放到这里
 mui.plusReady(function(){
 	// 退出
 	qiao.h.exit();
 	
-	// 事件
-	var listPage = null;
+	// tap事件
 	window.addEventListener("tap", function(event){
-		listPage = listPage ? listPage : qiao.h.getPage('list');
-		
-		var target = qiao.eventUtil.getTarget(event);
-		setTimeout(function(){
-			if(target.className.indexOf('mui-icon-plus') > -1){
-				qiao.h.prompt('待办事项', function(v){
-					mui.fire(listPage, 'addItem', {
-						value : v
-					});
-				});
-			}
-		},100);
+		addItem(event);
 	});
 });
+
+// 添加待办事项
+function addItem(event){
+	var listPage = qiao.h.getPage('list');
+	
+	var target = qiao.eventUtil.getTarget(event);
+	if(target.className.indexOf('mui-icon-plus') > -1){
+		qiao.h.prompt('待办事项', function(v){
+			mui.fire(listPage, 'addItem', {
+				value : v
+			});
+		});
+	}
+}
