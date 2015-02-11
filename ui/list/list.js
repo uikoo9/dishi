@@ -30,6 +30,8 @@ function initList(){
 
 		showList($ul);
 	});
+	
+	plus.nativeUI.closeWaiting();
 }
 function genLi(data){
 	var li = 
@@ -45,11 +47,7 @@ function genLi(data){
 	return li;
 }
 function showList(ul){
-	if(ul.find('li').size() > 0 &&  ul.is(':hidden')){
-		ul.show(function(){
-			plus.nativeUI.closeWaiting();
-		});	
-	}
+	if(ul.find('li').size() > 0 &&  ul.is(':hidden')) ul.show();	
 }
 
 // 添加待办事项
