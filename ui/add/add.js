@@ -3,15 +3,14 @@ mui.init();
 
 // 所有方法都放到这里
 mui.plusReady(function(){
-	initDb();
+	resetPage();
 	qiao.on('.addItemBtn', 'tap', addItem);
 });
 
-// 初始化数据库
-function initDb(){
-	db = qiao.h.db();
-//	qiao.h.update(db, 'drop table t_plan_day');
-	qiao.h.update(db, 'create table if not exists t_plan_day_todo (id unique, plan_title, plan_content)');
+// 重置页面
+function resetPage(){
+	$('#addContent').val('');
+	$('#addTitle').val('').focus();
 }
 
 // 添加待办事项
@@ -20,12 +19,8 @@ function addItem(){
 	if(!title){
 		qiao.h.tip('请填写待办事项标题！');		
 	}else{
-		qiao.h.query(db, 'select max(id) mid from t_plan_day_todo', function(res){
-			var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
-			qiao.h.update(db, 'insert into t_plan_day_todo (id, plan_title) values (' + (id+1) + ', "' + title + '")');
-			
-			qiao.h.hide('add');
-			qiao.h.show('list', true);
-		});
+		qiao.h.tip('添加成功！');
+		resetPage();
+		mui.fire(qiao.h.getPage('list'), 'addItem', {title : title});
 	}
 }

@@ -17,11 +17,7 @@ mui.plusReady(function(){
 			return;	
 		}else{
 			qiao.h.hide(activeTab);
-			if(targetTab == 'add'){
-				qiao.h.show(targetTab);
-			}else{
-				qiao.h.show(targetTab, true);
-			}
+			qiao.h.show(targetTab);
 	
 			activeTab = targetTab;
 		}
