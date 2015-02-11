@@ -236,3 +236,8 @@ qiao.h.query = function(db, sql, func){
 		});
 	}
 };
+
+// 页面相关
+qiao.h.getPage = function(id){
+	return id ? plus.webview.getWebviewById(id) : null;
+}
