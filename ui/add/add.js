@@ -10,7 +10,7 @@ mui.plusReady(function(){
 // 重置页面
 function resetPage(){
 	$('#addContent').val('');
-	$('#addTitle').val('').focus();
+	$('#addTitle').val('');
 }
 
 // 添加待办事项
