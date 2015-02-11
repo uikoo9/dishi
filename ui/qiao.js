@@ -7,8 +7,8 @@ qiao.on = function(obj, event, func){
 qiao.h = {};
 
 // 提示框相关
-qiao.h.tip = function(msg){
-	mui.toast(msg);
+qiao.h.tip = function(msg, options){
+	mui.toast(msg, options);
 };
 qiao.h.modaloptions = {
 	title 	: 'title',

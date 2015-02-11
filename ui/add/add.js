@@ -19,7 +19,7 @@ function addItem(){
 	if(!title){
 		qiao.h.tip('请填写待办事项标题！');		
 	}else{
-		qiao.h.tip('添加成功！');
+		qiao.h.alert('添加成功！');
 		resetPage();
 		mui.fire(qiao.h.getPage('list'), 'addItem', {title : title});
 	}
