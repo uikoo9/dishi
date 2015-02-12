@@ -6,9 +6,43 @@ qiao.on = function(obj, event, func){
 // 对mui以及nativejs相关封装
 qiao.h = {};
 
+// page相关
+qiao.h.page = function(id, style){
+	var url = 'view/' + id + '.html';
+	var styles = style ? style : {top:'45px',bottom:'50px'};
+	return {
+		id : id,
+		url : url,
+		styles : styles
+	};
+};
+qiao.h.currentPage = function(){
+	return plus.webview.currentWebview();
+};
+qiao.h.getPage = function(id){
+	return id ? plus.webview.getWebviewById(id) : null;
+};
+qiao.h.show = function(id ,flag){
+	if(id){
+		var view = plus.webview.getWebviewById(id);
+		view.show();
+		if(flag) view.reload(true);
+	}
+};
+qiao.h.hide = function(id){
+	if(id) plus.webview.hide(id);
+};
+
+// 以下为UI封装------------------------------------------------------------------------------
 // nativeui相关
 qiao.h.tip = function(msg, options){
 	mui.toast(msg, options);
+};
+qiao.h.waiting = function(titile, options){
+	plus.nativeUI.showWaiting(titile, options);
+};
+qiao.h.closeWaiting = function(){
+	plus.nativeUI.closeWaiting();
 };
 
 // 提示框相关
@@ -66,6 +100,7 @@ qiao.h.prompt = function(options, ok, cancel){
 	}, opt.title, opt.content, opt.cbtn);
 };
 
+// 以下为插件封装------------------------------------------------------------------------------
 // 本地存储相关
 qiao.h.length = function(){
 	return plus.storage.getLength();
@@ -94,25 +129,6 @@ qiao.h.clear = function(){
 	plus.storage.clear();
 };
 
-// 退出
-qiao.h.exittime = null;
-qiao.h.exit = function(){
-	mui.back = function() {
-		//首次按键，提示‘再按一次退出应用’
-		if(!qiao.h.exittime){
-			qiao.h.exittime = new Date().getTime();
-			mui.toast('再按一次退出应用');
-			setTimeout(function() {
-				qiao.h.exittime = null;
-			}, 1000);
-		}else{
-			if(new Date().getTime() - qiao.h.exittime < 1000){
-				plus.runtime.quit();
-			}
-		}
-	};
-};
-
 // web sql
 qiao.h.db = function(name, size){
 	var db_name = name ? name : 'db_test';
@@ -133,22 +149,22 @@ qiao.h.query = function(db, sql, func){
 	}
 };
 
-// 页面相关
-qiao.h.currentPage = function(){
-	return plus.webview.currentWebview();
-};
-qiao.h.getPage = function(id){
-	return id ? plus.webview.getWebviewById(id) : null;
-};
-qiao.h.show = function(id ,flag){
-	if(id){
-		var view = plus.webview.getWebviewById(id);
-		view.show();
-		if(flag) view.reload(true);
-	}
-};
-qiao.h.hide = function(id){
-	if(id){
-		plus.webview.hide(id);
-	}
+// 以下为功能封装------------------------------------------------------------------------------
+// 退出
+qiao.h.exittime = null;
+qiao.h.exit = function(){
+	mui.back = function() {
+		//首次按键，提示‘再按一次退出应用’
+		if(!qiao.h.exittime){
+			qiao.h.exittime = new Date().getTime();
+			mui.toast('再按一次退出应用');
+			setTimeout(function() {
+				qiao.h.exittime = null;
+			}, 1000);
+		}else{
+			if(new Date().getTime() - qiao.h.exittime < 1000){
+				plus.runtime.quit();
+			}
+		}
+	};
 };

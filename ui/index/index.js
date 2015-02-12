@@ -37,6 +37,11 @@ mui.plusReady(function(){
 			activeTab = targetTab;
 		}
 	});
+	
+	// 关闭等待界面
+	window.addEventListener('closeWaiting', function(){
+		qiao.h.closeWaiting();
+	});
 });
 
 // 初始化数据库

@@ -31,7 +31,7 @@ function initList(){
 		showList($ul);
 	});
 	
-	plus.nativeUI.closeWaiting();
+	mui.fire(qiao.h.getPage('HBuilder'), 'closeWaiting');
 }
 function genLi(data){
 	var li = 
