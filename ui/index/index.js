@@ -12,7 +12,7 @@ mui.init({
 
 // 所有方法都放到这里
 mui.plusReady(function(){
-	plus.nativeUI.showWaiting();
+	qiao.h.waiting();
 	
 	// 退出
 	qiao.h.exit();
@@ -36,11 +36,6 @@ mui.plusReady(function(){
 	
 			activeTab = targetTab;
 		}
-	});
-	
-	// 关闭等待界面
-	window.addEventListener('closeWaiting', function(){
-		qiao.h.closeWaiting();
 	});
 });
 
