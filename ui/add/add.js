@@ -5,6 +5,13 @@ mui.init();
 mui.plusReady(function(){
 	resetPage();
 	qiao.on('.addItemBtn', 'tap', addItem);
+	
+	// 滑动
+	window.addEventListener('swiperight', function(){
+		qiao.h.show('list');
+		qiao.h.hide('add');
+		qiao.h.fire('HBuilder', 'changeTab', {page:'list'});
+	});
 });
 
 // 重置页面

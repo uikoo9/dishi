@@ -10,7 +10,15 @@ mui.plusReady(function(){
 		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'done'});
 	});
 	
+	// 删除
 	window.addEventListener('delItem', delItemHandler);
+	
+	// 滑动
+	window.addEventListener('swipeleft', function(){
+		qiao.h.show('list');
+		qiao.h.hide('done');
+		qiao.h.fire('HBuilder', 'changeTab', {page:'list'});
+	});
 });
 
 // 初始化待办事项

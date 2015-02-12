@@ -53,6 +53,9 @@ mui.plusReady(function(){
 			qiao.h.hide('detail');
 		});
 	});
+	
+	// 滑动切换tab
+	window.addEventListener('changeTab', changeTabHandler);
 });
 
 // 初始化数据库
@@ -69,5 +72,14 @@ function createPages(id){
 		sub.show();	
 	}else{
 		sub.hide();
+	}
+}
+
+// 滑动切换tab
+function changeTabHandler(event){
+	var page = event.detail.page;
+	if(page && $('.mui-active').data('id') != page){
+		$('.mui-active').removeClass('mui-active');
+		$('.mytab[data-id="'+page+'"]').addClass('mui-active');
 	}
 }

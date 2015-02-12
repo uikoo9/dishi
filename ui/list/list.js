@@ -32,6 +32,18 @@ mui.plusReady(function(){
 	
 	// 添加
 	window.addEventListener('addItem', addItemHandler);
+	
+	// 滑动
+	window.addEventListener('swipeleft', function(){
+		qiao.h.show('add');
+		qiao.h.hide('list');
+		qiao.h.fire('HBuilder', 'changeTab', {page:'add'});
+	});
+	window.addEventListener('swiperight', function(){
+		qiao.h.show('done');
+		qiao.h.hide('list');
+		qiao.h.fire('HBuilder', 'changeTab', {page:'done'});
+	});
 });
 
 // 初始化待办事项
