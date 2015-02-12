@@ -3,10 +3,6 @@ mui.init({gestureConfig:{longtap:true}});
 
 // 所有的方法都放到这里
 mui.plusReady(function(){
-	var index = qiao.h.getPage('HBuilder');
-	alert(index);
-	
-	
 	initList();
 	
 	// 查看详情
@@ -41,12 +37,12 @@ mui.plusReady(function(){
 	window.addEventListener('swipeleft', function(){
 		qiao.h.show('add');
 		qiao.h.hide('list');
-		qiao.h.getPage('HBuilder').evalJS("changeTabHandler('add');");
+		qiao.h.getPage('H56296BDF').evalJS("changeTabHandler('add');");
 	});
 	window.addEventListener('swiperight', function(){
 		qiao.h.show('done');
 		qiao.h.hide('list');
-		qiao.h.getPage('HBuilder').evalJS("changeTabHandler('done');");
+		qiao.h.getPage('H56296BDF').evalJS("changeTabHandler('done');");
 	});
 });
 

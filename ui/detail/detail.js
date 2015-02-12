@@ -8,7 +8,7 @@ mui.plusReady(function(){
 
 // 展示待办事项
 function detailItemHandler(event){
-	qiao.h.getPage('HBuilder').evalJS("$('#backBtn').show();");
+	qiao.h.getPage('H56296BDF').evalJS("$('#backBtn').show();");
 
 	var page = event.detail.page;
 	var detailId =event.detail.id;
