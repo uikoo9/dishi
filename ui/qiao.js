@@ -39,7 +39,7 @@ qiao.h.fire = function(id, name, values){
 // 以下为UI封装------------------------------------------------------------------------------
 // nativeui相关
 qiao.h.tip = function(msg, options){
-	mui.toast(msg, options);
+	plus.nativeUI.toast(msg,options);
 };
 qiao.h.waiting = function(titile, options){
 	plus.nativeUI.showWaiting(titile, options);

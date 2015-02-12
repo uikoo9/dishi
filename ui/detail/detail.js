@@ -8,17 +8,20 @@ mui.plusReady(function(){
 
 // 展示待办事项
 function detailItemHandler(event){
-	qiao.h.fire('HBuilder', 'showBackBtn', {page:event.detail.page});
+	var page = event.detail.page;
+	qiao.h.fire('HBuilder', 'showBackBtn', {page:page});
 
 	var detailId =event.detail.id;
-	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo where id=' + detailId, function(res){
+	var tableName = (page == 'list') ? 't_plan_day_todo' : 't_plan_day_done';
+	var sql = 'select * from ' + tableName + ' where id=' + detailId;
+	qiao.h.query(qiao.h.db(), sql, function(res){
 		if(res.rows.length > 0){
 			var data = res.rows.item(0);
 			$('#detailTitle').text(data.plan_title);
 			$('#detailContent').text(data.plan_content);
 			
 			qiao.h.show('detail');
-			qiao.h.hide('list');
+			qiao.h.hide(page);
 		}
 	});
 }

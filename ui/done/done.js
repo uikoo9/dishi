@@ -27,7 +27,7 @@ function initDoneList(){
 function genLi(data){
 	var id = data.id;
 	var title = data.plan_title;
-	var content = data.plan_content ? data.plan_content : '暂无内容！';
+	var content = data.plan_content;
 	
 	var li = 
 		'<li class="mui-table-view-cell mui-media" id="doneli_' + id + '" data-id="' + id + '" data-title="' + title + '" data-content="' + content + '">' +
@@ -47,7 +47,7 @@ function delItemHandler(event){
 	var db = qiao.h.db();
 	var todoId =event.detail.todoId;
 	var title = event.detail.title;
-	var content = event.detail.content;
+	var content = event.detail.content ? event.detail.content : '暂无内容！';
 	
 	qiao.h.update(db, 'delete from t_plan_day_todo where id=' + todoId);
 	qiao.h.query(db, 'select max(id) mid from t_plan_day_done', function(res){

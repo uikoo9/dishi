@@ -50,7 +50,7 @@ function initList(){
 function genLi(data){
 	var id = data.id;
 	var title = data.plan_title;
-	var content = data.plan_content ? data.plan_content : '暂无内容！';
+	var content = data.plan_content;
 	
 	var li = 
 		'<li class="mui-table-view-cell mui-media" id="todoli_' + id + '" data-id="' + id + '" data-title="' + title + '" data-content="' + content + '">' +
@@ -69,7 +69,7 @@ function showList(ul){
 function addItemHandler(event){
 	var db = qiao.h.db();
 	var title = event.detail.title;
-	var content = event.detail.content;
+	var content = event.detail.content ? event.detail.content : '暂无内容！';
 	
 	qiao.h.query(db, 'select max(id) mid from t_plan_day_todo', function(res){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;

@@ -19,7 +19,7 @@ function addItem(){
 	var content = $.trim($('#addContent').val());
 	
 	if(!title){
-		qiao.h.tip('请填写待办事项标题！');		
+		qiao.h.alert('请填写待办事项标题！');		
 	}else{
 		qiao.h.alert('添加成功！');
 		resetPage();
