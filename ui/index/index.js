@@ -12,20 +12,19 @@ mui.init({
 
 // 所有方法都放到这里
 mui.plusReady(function(){
+	// 等待界面
 	qiao.h.waiting();
-	
-	// 退出
-	qiao.h.exit();
 	
 	// 初始化数据库
 	initDb();
 	
 	// 创建页面
-	var pageIds = ['done', 'list', 'add'];
-	createPages(pageIds);
+	createPages('add');
+	createPages('done');
+	createPages('list');
 	
 	//选项卡点击事件
-	var activeTab = pageIds[1];
+	var activeTab = 'list';
 	qiao.on('.mytab', 'tap', function(){
 		var targetTab = $(this).data('id');
 		if(targetTab == activeTab){
@@ -38,7 +37,22 @@ mui.plusReady(function(){
 		}
 	});
 	
-	window.addEventListener('showBackBtn', showBackBtnHandler);
+	// 显示返回按钮
+	var page = null;
+	window.addEventListener('showBackBtn', function(){
+		if(event.detail.page){
+			$('#backBtn').show();
+			page = event.detail.page;
+		}
+	});
+	
+	// 返回事件
+	qiao.on('#backBtn', 'tap', function(){
+		$(this).hide(50, function(){
+			qiao.h.show(page ? page :'list');
+			qiao.h.hide('detail');
+		});
+	});
 });
 
 // 初始化数据库
@@ -49,22 +63,11 @@ function initDb(){
 }
 
 // 创建页面
-function createPages(ids){
-	var self = qiao.h.currentPage();
-	for(var i=0;i<3;i++){
-		var sub = mui.preload(qiao.h.page(ids[i]));
-		if(i != 1) sub.hide();
-		
-		self.append(sub);
+function createPages(id){
+	var sub = mui.preload(qiao.h.page(id));
+	if(id == 'list'){
+		sub.show();	
+	}else{
+		sub.hide();
 	}
-}
-
-// 显示返回按钮
-function showBackBtnHandler(event){
-	setTimeout(function(){
-		var page = event.detail.page;
-		if(page){
-//			$('#backBtn').show();
-		}
-	}, 100);
 }

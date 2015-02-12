@@ -18,7 +18,7 @@ mui.plusReady(function(){
 //	});
 
 	qiao.on('#todolist li', 'tap', function(){
-		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id')});
+		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
 	});
 	
 	window.addEventListener('addItem', addItemHandler);
