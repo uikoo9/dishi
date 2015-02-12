@@ -21,7 +21,6 @@ function detailItemHandler(event){
 			$('#detailContent').text(data.plan_content);
 			
 			qiao.h.show('detail');
-			qiao.h.hide(page);
 		}
 	});
 }

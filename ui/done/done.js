@@ -7,7 +7,7 @@ mui.plusReady(function(){
 	
 	// 查看详情
 	qiao.on('#donelist li', 'tap', function(){
-		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id')});
+		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'done'});
 	});
 	
 	// 删除
@@ -17,7 +17,7 @@ mui.plusReady(function(){
 	window.addEventListener('swipeleft', function(){
 		qiao.h.show('list');
 		qiao.h.hide('done');
-		qiao.h.fire('index.html', 'changeTab', {page:'list'});
+		qiao.h.getPage('HBuilder').evalJS("changeTabHandler('list');");
 	});
 });
 

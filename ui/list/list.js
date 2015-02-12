@@ -11,7 +11,7 @@ mui.plusReady(function(){
 	
 	// 查看详情
 	qiao.on('#todolist li', 'tap', function(){
-		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id')});
+		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
 	});
 	
 	// 长按
@@ -41,12 +41,12 @@ mui.plusReady(function(){
 	window.addEventListener('swipeleft', function(){
 		qiao.h.show('add');
 		qiao.h.hide('list');
-		qiao.h.fire('index.html', 'changeTab', {page:'add'});
+		qiao.h.getPage('HBuilder').evalJS("changeTabHandler('add');");
 	});
 	window.addEventListener('swiperight', function(){
 		qiao.h.show('done');
 		qiao.h.hide('list');
-		qiao.h.fire('index.html', 'changeTab', {page:'done'});
+		qiao.h.getPage('HBuilder').evalJS("changeTabHandler('done');");
 	});
 });
 
