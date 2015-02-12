@@ -12,19 +12,22 @@ mui.plusReady(function(){
 	
 	// 长按
 	var tapId = null;
-	var tapTitle = null;
-	var tapContent = null;
 	qiao.on('#todolist li', 'longtap', function(){
 		mui('.mui-popover').popover('toggle');
 		tapId = $(this).data('id');
-		tapTitle = $(this).data('title');
-		tapContent = $(this).data('content');
 	});
 	
 	// 完成
 	qiao.on('#doneBtn', 'tap', function(){
 		mui('.mui-popover').popover('toggle');
-		qiao.h.fire('done', 'delItem', {todoId:tapId, title:tapTitle, content:tapContent});
+		
+		var $li = $('#todoli_'+tapId);
+		var title = $li.data('title');
+		var content = $li.data('content');
+		$li.remove();
+		showList($('#todolist'));
+		
+		qiao.h.fire('done', 'delItem', {todoId:tapId, title:title, content:content});
 	});
 	
 	// 添加
@@ -45,11 +48,14 @@ function initList(){
 	qiao.h.closeWaiting();
 }
 function genLi(data){
+	var id = data.id;
+	var title = data.plan_title;
+	var content = data.plan_content ? data.plan_content : '暂无内容！';
+	
 	var li = 
-		'<li class="mui-table-view-cell mui-media" data-id="' + data.id + '" data-title="' + data.plan_title + '" data-content="' + data.plan_content + '">' +
+		'<li class="mui-table-view-cell mui-media" id="todoli_' + id + '" data-id="' + id + '" data-title="' + title + '" data-content="' + content + '">' +
 			'<div class="mui-media-body">' + 
-				data.plan_title + 
-				(data.plan_content ? '<p class="mui-ellipsis">' + data.plan_content + '</p>' : '') + 
+				title + '<p class="mui-ellipsis">' + content + '</p>' + 
 			'</div>' + 
 		'</li>';
 		
