@@ -9,7 +9,7 @@ mui.plusReady(function(){
 // 展示待办事项
 function detailItemHandler(event){
 	var page = event.detail.page;
-	qiao.h.fire('HBuilder', 'showBackBtn', {page:page});
+	qiao.h.getPage('HBuilder').evalJS("$('#backBtn').show();");
 
 	var detailId =event.detail.id;
 	var tableName = (page == 'list') ? 't_plan_day_todo' : 't_plan_day_done';

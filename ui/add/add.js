@@ -10,7 +10,7 @@ mui.plusReady(function(){
 	window.addEventListener('swiperight', function(){
 		qiao.h.show('list');
 		qiao.h.hide('add');
-		qiao.h.fire('HBuilder', 'changeTab', {page:'list'});
+		qiao.h.fire('index.html', 'changeTab', {page:'list'});
 	});
 });
 

@@ -37,15 +37,6 @@ mui.plusReady(function(){
 		}
 	});
 	
-	// 显示返回按钮
-	var page = null;
-	window.addEventListener('showBackBtn', function(){
-		if(event.detail.page){
-			$('#backBtn').show();
-			page = event.detail.page;
-		}
-	});
-	
 	// 返回事件
 	qiao.on('#backBtn', 'tap', function(){
 		$(this).hide(50, function(){
@@ -77,9 +68,11 @@ function createPages(id){
 
 // 滑动切换tab
 function changeTabHandler(event){
-	var page = event.detail.page;
-	if(page && $('.mui-active').data('id') != page){
-		$('.mui-active').removeClass('mui-active');
-		$('.mytab[data-id="'+page+'"]').addClass('mui-active');
-	}
+	setTimeout(function(){
+		var page = event.detail.page;
+		if(page && $('.mui-active').data('id') != page){
+			$('.mui-active').removeClass('mui-active');
+			$('.mytab[data-id="'+page+'"]').addClass('mui-active');
+		}
+	}, 100);
 }

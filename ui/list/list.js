@@ -3,11 +3,15 @@ mui.init({gestureConfig:{longtap:true}});
 
 // 所有的方法都放到这里
 mui.plusReady(function(){
+	var index = qiao.h.getPage('HBuilder');
+	alert(index);
+	
+	
 	initList();
 	
 	// 查看详情
 	qiao.on('#todolist li', 'tap', function(){
-		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
+		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id')});
 	});
 	
 	// 长按
@@ -37,12 +41,12 @@ mui.plusReady(function(){
 	window.addEventListener('swipeleft', function(){
 		qiao.h.show('add');
 		qiao.h.hide('list');
-		qiao.h.fire('HBuilder', 'changeTab', {page:'add'});
+		qiao.h.fire('index.html', 'changeTab', {page:'add'});
 	});
 	window.addEventListener('swiperight', function(){
 		qiao.h.show('done');
 		qiao.h.hide('list');
-		qiao.h.fire('HBuilder', 'changeTab', {page:'done'});
+		qiao.h.fire('index.html', 'changeTab', {page:'done'});
 	});
 });
 
