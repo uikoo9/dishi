@@ -37,6 +37,8 @@ mui.plusReady(function(){
 			activeTab = targetTab;
 		}
 	});
+	
+	window.addEventListener('showBackBtn', showBackBtnHandler);
 });
 
 // 初始化数据库
@@ -50,15 +52,19 @@ function initDb(){
 function createPages(ids){
 	var self = qiao.h.currentPage();
 	for(var i=0;i<3;i++){
-		var id = ids[i];
-		var url = 'view/' + id + '.html';
-		var sub = plus.webview.create(url, id, {
-			top: '45px',
-			bottom: '50px'
-		});
-		
+		var sub = mui.preload(qiao.h.page(ids[i]));
 		if(i != 1) sub.hide();
 		
 		self.append(sub);
 	}
+}
+
+// 显示返回按钮
+function showBackBtnHandler(event){
+	setTimeout(function(){
+		var page = event.detail.page;
+		if(page){
+//			$('#backBtn').show();
+		}
+	}, 100);
 }

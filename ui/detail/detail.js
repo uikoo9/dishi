@@ -3,7 +3,7 @@ mui.init();
 
 // 所有方法都放到这里
 mui.plusReady(function(){
-	
+	qiao.h.fire('HBuilder', 'showBackBtn', {page:'detail'});
 	
 	window.addEventListener('detailItem', detailItemHandler);
 });
@@ -11,7 +11,6 @@ mui.plusReady(function(){
 // 展示待办事项
 function detailItemHandler(event){
 	var detailId =event.detail.id;
-	alert(detailId);
 	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo where id=' + detailId, function(res){
 		if(res.rows.length > 0){
 			var data = res.rows.item(0);
