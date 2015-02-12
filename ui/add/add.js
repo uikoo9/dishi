@@ -23,6 +23,6 @@ function addItem(){
 	}else{
 		qiao.h.alert('添加成功！');
 		resetPage();
-		mui.fire(qiao.h.getPage('list'), 'addItem', {title:title, content:content});
+		qiao.h.fire('list', 'addItem', {title:title, content:content});
 	}
 }

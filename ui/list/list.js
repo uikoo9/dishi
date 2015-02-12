@@ -5,16 +5,20 @@ mui.init();
 mui.plusReady(function(){
 	initList();
 	
-	qiao.on('.detaildiv', 'tap', function(){
-		mui.fire(qiao.h.getPage('detail'), 'detailItem', {id:$(this).data('id')});
-	});
+//	qiao.on('.detaildiv', 'tap', function(){
+//		mui.fire(qiao.h.getPage('detail'), 'detailItem', {id:$(this).data('id')});
+//	});
 	
-	qiao.on('.dela', 'tap', function(){
-		var todoId = $(this).data('id');
-		var title = $(this).data('title');
-		$(this).parent().parent().remove();
-		
-		mui.fire(qiao.h.getPage('done'), 'delItem', {todoId:todoId, title:title, content:'123'});
+//	qiao.on('.dela', 'tap', function(){
+//		var todoId = $(this).data('id');
+//		var title = $(this).data('title');
+//		$(this).parent().parent().remove();
+//		
+//		mui.fire(qiao.h.getPage('done'), 'delItem', {todoId:todoId, title:title, content:'123'});
+//	});
+
+	qiao.on('#todolist li', 'tap', function(){
+		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id')});
 	});
 	
 	window.addEventListener('addItem', addItemHandler);
@@ -35,13 +39,12 @@ function initList(){
 }
 function genLi(data){
 	var li = 
-		'<li class="mui-table-view-cell mui-media">' +
+		'<li class="mui-table-view-cell mui-media" data-id="' + data.id + '">' +
 			'<div class="mui-media-body">' + 
 				data.plan_title + 
 				(data.plan_content ? '<p class="mui-ellipsis">' + data.plan_content + '</p>' : '') + 
 			'</div>' + 
 		'</li>';
-	alert(li);
 		
 	return li;
 }

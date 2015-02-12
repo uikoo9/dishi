@@ -32,6 +32,9 @@ qiao.h.show = function(id ,flag){
 qiao.h.hide = function(id){
 	if(id) plus.webview.hide(id);
 };
+qiao.h.fire = function(id, name, values){
+	mui.fire(qiao.h.getPage(id), name, values);
+};
 
 // 以下为UI封装------------------------------------------------------------------------------
 // nativeui相关
