@@ -12,20 +12,6 @@
 		<script type="text/javascript" src="../js/jquery-1.11.2.min.js"></script>
 		<!-- qiao.js -->
 		<script type="text/javascript" src="../ui/qiao.js"></script>
-		
-		<style type="text/css">
-			.mui-popover {
-				position:absolute;
-				top:0;
-				left:0;
-				width: 80%;
-				height: 80%;
-				margin-top: 50px;
-				margin-bottom: 50px;
-				margin-left: 50px;
-				margin-right: 50px;
-			}
-		</style>
 	</head>
 
 	<body>
@@ -33,10 +19,9 @@
 			<ul class="mui-table-view" style="margin-top:0;display:none;" id="todolist"></ul>
 		</div>
 		<div class="mui-popover">
-			<div class="mui-content-padded">
-				<h1 id="detailTitle">title</h1>
-				<p id="detailContent">content</p>
-			</div>
+			<ul class="mui-table-view" style="text-align:center;">
+				<li class="mui-table-view-cell" id="doneBtn">完成</li>
+			</ul>
 		</div>
 		<script type="text/javascript" src="../ui/list/list.js"></script>
 	</body>

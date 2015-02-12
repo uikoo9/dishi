@@ -1,26 +1,33 @@
 // 初始化
-mui.init();
+mui.init({gestureConfig:{longtap:true}});
 
 // 所有的方法都放到这里
 mui.plusReady(function(){
 	initList();
 	
-//	qiao.on('.detaildiv', 'tap', function(){
-//		mui.fire(qiao.h.getPage('detail'), 'detailItem', {id:$(this).data('id')});
-//	});
-	
-//	qiao.on('.dela', 'tap', function(){
-//		var todoId = $(this).data('id');
-//		var title = $(this).data('title');
-//		$(this).parent().parent().remove();
-//		
-//		mui.fire(qiao.h.getPage('done'), 'delItem', {todoId:todoId, title:title, content:'123'});
-//	});
-
+	// 查看详情
 	qiao.on('#todolist li', 'tap', function(){
 		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
 	});
 	
+	// 长按
+	var tapId = null;
+	var tapTitle = null;
+	var tapContent = null;
+	qiao.on('#todolist li', 'longtap', function(){
+		mui('.mui-popover').popover('toggle');
+		tapId = $(this).data('id');
+		tapTitle = $(this).data('title');
+		tapContent = $(this).data('content');
+	});
+	
+	// 完成
+	qiao.on('#doneBtn', 'tap', function(){
+		mui('.mui-popover').popover('toggle');
+		qiao.h.fire('done', 'delItem', {todoId:tapId, title:tapTitle, content:tapContent});
+	});
+	
+	// 添加
 	window.addEventListener('addItem', addItemHandler);
 });
 
@@ -39,7 +46,7 @@ function initList(){
 }
 function genLi(data){
 	var li = 
-		'<li class="mui-table-view-cell mui-media" data-id="' + data.id + '">' +
+		'<li class="mui-table-view-cell mui-media" data-id="' + data.id + '" data-title="' + data.plan_title + '" data-content="' + data.plan_content + '">' +
 			'<div class="mui-media-body">' + 
 				data.plan_title + 
 				(data.plan_content ? '<p class="mui-ellipsis">' + data.plan_content + '</p>' : '') + 

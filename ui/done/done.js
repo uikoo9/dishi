@@ -5,6 +5,11 @@ mui.init();
 mui.plusReady(function(){
 	initDoneList();
 	
+	// 查看详情
+	qiao.on('#donelist li', 'tap', function(){
+		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'done'});
+	});
+	
 	window.addEventListener('delItem', delItemHandler);
 });
 
@@ -21,7 +26,7 @@ function initDoneList(){
 }
 function genLi(data){
 	var li = 
-		'<li class="mui-table-view-cell mui-media">' +
+		'<li class="mui-table-view-cell mui-media" data-id="' + data.id + '" data-title="' + data.plan_title + '" data-content="' + data.plan_content + '">' +
 			'<div class="mui-media-body">' + 
 				data.plan_title + 
 				(data.plan_content ? '<p class="mui-ellipsis">' + data.plan_content + '</p>' : '') + 
@@ -46,6 +51,6 @@ function delItemHandler(event){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
 		qiao.h.update(db, 'insert into t_plan_day_done (id, plan_title, plan_content) values (' + (id+1) + ', "' + title + '", "' + content + '")');
 		
-		$('#donelist').prepend(genLi({'plan_title':title,'plan_content':content})).show();
+		$('#donelist').prepend(genLi({id:(id+1)'plan_title':title,'plan_content':content})).show();
 	});
 }
