@@ -16,6 +16,9 @@ qiao.h.page = function(id, style){
 		styles : styles
 	};
 };
+qiao.h.indexPage = function(){
+	return plus.webview.getWebviewById(plus.runtime.appid);
+};
 qiao.h.currentPage = function(){
 	return plus.webview.currentWebview();
 };

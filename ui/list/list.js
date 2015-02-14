@@ -35,14 +35,17 @@ mui.plusReady(function(){
 	
 	// 滑动
 	window.addEventListener('swipeleft', function(){
-		qiao.h.show('add');
+		qiao.h.show({
+			id : 'add',
+			animation : 'slide-in-right'
+		});
 		qiao.h.hide('list');
-		qiao.h.getPage('H56296BDF').evalJS("changeTabHandler('add');");
+		qiao.h.indexPage().evalJS("changeTabHandler('add');");
 	});
 	window.addEventListener('swiperight', function(){
 		qiao.h.show('done');
 		qiao.h.hide('list');
-		qiao.h.getPage('H56296BDF').evalJS("changeTabHandler('done');");
+		qiao.h.indexPage().evalJS("changeTabHandler('done');");
 	});
 });
 
