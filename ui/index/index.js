@@ -40,7 +40,6 @@ mui.plusReady(function(){
 	// 返回事件
 	qiao.on('#backBtn', 'tap', function(){
 		$(this).hide(50, function(){
-//			qiao.h.show(page ? page :'list');
 			qiao.h.hide('detail');
 		});
 	});

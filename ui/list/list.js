@@ -35,16 +35,13 @@ mui.plusReady(function(){
 	
 	// 滑动
 	window.addEventListener('swipeleft', function(){
-		qiao.h.show({
-			id : 'add',
-			animation : 'slide-in-right'
-		});
-		qiao.h.hide('list');
+		qiao.h.hide('list', 'slide-out-left');
+		qiao.h.show('add', 'slide-in-right');
 		qiao.h.indexPage().evalJS("changeTabHandler('add');");
 	});
 	window.addEventListener('swiperight', function(){
-		qiao.h.show('done');
-		qiao.h.hide('list');
+		qiao.h.hide('list', 'slide-out-right');
+		qiao.h.show('done', 'slide-in-left');
 		qiao.h.indexPage().evalJS("changeTabHandler('done');");
 	});
 });

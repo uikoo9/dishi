@@ -8,8 +8,8 @@ mui.plusReady(function(){
 	
 	// 滑动
 	window.addEventListener('swiperight', function(){
-		qiao.h.show('list');
-		qiao.h.hide('add');
+		qiao.h.hide('add', 'slide-out-right');
+		qiao.h.show('list', 'slide-in-left');
 		qiao.h.indexPage().evalJS("changeTabHandler('list');");
 	});
 });

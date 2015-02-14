@@ -15,8 +15,8 @@ mui.plusReady(function(){
 	
 	// 滑动
 	window.addEventListener('swipeleft', function(){
-		qiao.h.show('list');
-		qiao.h.hide('done');
+		qiao.h.hide('done', 'slide-out-left');
+		qiao.h.show('list', 'slide-in-right');
 		qiao.h.indexPage().evalJS("changeTabHandler('list');");
 	});
 });

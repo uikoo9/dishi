@@ -25,15 +25,11 @@ qiao.h.currentPage = function(){
 qiao.h.getPage = function(id){
 	return id ? plus.webview.getWebviewById(id) : null;
 };
-qiao.h.show = function(id ,flag){
-	if(id){
-		var view = plus.webview.getWebviewById(id);
-		view.show();
-		if(flag) view.reload(true);
-	}
+qiao.h.show = function(id, ani, time, func){
+	if(id) plus.webview.show(id, ani, time, func);
 };
-qiao.h.hide = function(id){
-	if(id) plus.webview.hide(id);
+qiao.h.hide = function(id, ani, time){
+	if(id) plus.webview.hide(id, ani, time);
 };
 qiao.h.fire = function(id, name, values){
 	mui.fire(qiao.h.getPage(id), name, values);
