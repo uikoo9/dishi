@@ -24,16 +24,13 @@ mui.plusReady(function(){
 	createPages('list');
 	
 	//选项卡点击事件
-	var activeTab = 'list';
 	qiao.on('.mytab', 'tap', function(){
-		var targetTab = $(this).data('id');
-		if(targetTab == activeTab){
-			return;	
-		}else{
-			qiao.h.show(targetTab);
-			qiao.h.hide(activeTab);
-	
-			activeTab = targetTab;
+		if(!$(this).hasClass('mui-active')){
+			var tapId = $(this).data('id');
+			qiao.h.show(tapId);
+			qiao.h.hide($('.mui-active').data('id'));
+			
+			changeTabHandler(tapId);
 		}
 	});
 	
