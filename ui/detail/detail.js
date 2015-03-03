@@ -1,5 +1,9 @@
 // 初始化
-mui.init();
+mui.init({
+	keyEventBind : {
+		backbutton : false
+	}
+});
 
 // 所有方法都放到这里
 mui.plusReady(function(){

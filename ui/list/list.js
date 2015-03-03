@@ -1,5 +1,12 @@
 // 初始化
-mui.init({gestureConfig:{longtap:true}});
+mui.init({
+	gestureConfig : {
+		longtap : true
+	},
+	keyEventBind : {
+		backbutton : false
+	}
+});
 
 // 所有的方法都放到这里
 mui.plusReady(function(){

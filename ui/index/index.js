@@ -12,6 +12,9 @@ mui.init({
 
 // 所有方法都放到这里
 mui.plusReady(function(){
+	// 退出
+	qiao.h.exit();
+	
 	// 等待界面
 	qiao.h.waiting();
 	

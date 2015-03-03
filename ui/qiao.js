@@ -153,20 +153,10 @@ qiao.h.query = function(db, sql, func){
 
 // 以下为功能封装------------------------------------------------------------------------------
 // 退出
-qiao.h.exittime = null;
 qiao.h.exit = function(){
 	mui.back = function() {
-		//首次按键，提示‘再按一次退出应用’
-		if(!qiao.h.exittime){
-			qiao.h.exittime = new Date().getTime();
-			mui.toast('再按一次退出应用');
-			setTimeout(function() {
-				qiao.h.exittime = null;
-			}, 1000);
-		}else{
-			if(new Date().getTime() - qiao.h.exittime < 1000){
-				plus.runtime.quit();
-			}
-		}
+		qiao.h.confirm('确定要退出吗？', function(){
+			plus.runtime.quit();
+		});
 	};
 };
