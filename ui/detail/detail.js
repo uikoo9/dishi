@@ -24,7 +24,7 @@ function detailItemHandler(event){
 			$('#detailTitle').text(data.plan_title);
 			$('#detailContent').text(data.plan_content);
 			
-			qiao.h.show('detail');
+			qiao.h.show('detail', 'slide-in-right');
 		}
 	});
 }
