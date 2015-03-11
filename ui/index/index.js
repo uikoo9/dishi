@@ -30,7 +30,6 @@ mui.plusReady(function(){
 	menu = mui.preload(qiao.h.page('menu', {left:0,width:'70%',zindex:-1}));
 	qiao.on('.menua', 'tap', opMenu);
 	main.addEventListener('maskClick', opMenu);
-	mui.menu = function(){if($('.maindiv').is(':visible')) opMenu();};
 	
 	// 显示添加页面
 	add = mui.preload(qiao.h.normalPage('add'));
@@ -70,14 +69,14 @@ function openMenu(){
 			mask: 'rgba(0,0,0,0.4)',
 			left: '70%',
 			transition: {
-				duration: 150
+				duration: 100
 			}
 		});
 		list.setStyle({
 			mask: 'rgba(0,0,0,0.4)',
 			left: '70%',
 			transition: {
-				duration: 150
+				duration: 100
 			}
 		});
 		showMenu = true;
@@ -88,14 +87,14 @@ function closeMenu(){
 		mask: 'none',
 		left: '0',
 		transition: {
-			duration: 200
+			duration: 100
 		}
 	});
 	list.setStyle({
 		mask: 'none',
 		left: '0',
 		transition: {
-			duration: 200
+			duration: 100
 		}
 	});
 	showMenu = false;

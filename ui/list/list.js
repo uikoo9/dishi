@@ -26,6 +26,11 @@ mui.plusReady(function(){
 		qiao.h.fire('menu', 'delItem', {todoId:id, title:title, content:content});
 	});
 	
+	// 菜单按键
+	mui.menu = function(){
+		qiao.h.indexPage().evalJS("opMenu();");
+	};
+	
 	// 添加
 	window.addEventListener('addItem', addItemHandler);
 });
