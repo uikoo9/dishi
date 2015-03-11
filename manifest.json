@@ -3,7 +3,7 @@
     "id": "H56296BDF",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "滴石",/*应用名称，程序桌面图标名称*/
     "version": {
-        "name": "0.2.1",/*应用版本名称*/
+        "name": "0.2.2",/*应用版本名称*/
         "code": ""
     },
     "description": "",/*应用描述信息*/
@@ -90,11 +90,11 @@
                     }
                 },
                 "android": {
-                    "mdpi": "", /*普通屏程序图标，分辨率：48x48*/
-                    "ldpi": "", /*大屏程序图标，分辨率：48x48*/
-                    "hdpi": "", /*高分屏程序图标，分辨率：72x72*/
-                    "xhdpi": "",/*720P高分屏程序图标，分辨率：96x96*/
-                    "xxhdpi": ""/*1080P 高分屏程序图标，分辨率：144x144*/
+                    "mdpi": "E:\\Download\\Android\\icon48副本.png", /*普通屏程序图标，分辨率：48x48*/
+                    "ldpi": "E:\\Download\\Android\\icon48副本.png", /*大屏程序图标，分辨率：48x48*/
+                    "hdpi": "E:\\Download\\Android\\icon72副本.png", /*高分屏程序图标，分辨率：72x72*/
+                    "xhdpi": "E:\\Download\\Android\\icon96副本.png",/*720P高分屏程序图标，分辨率：96x96*/
+                    "xxhdpi": "E:\\Download\\Android\\icon144副本.png"/*1080P 高分屏程序图标，分辨率：144x144*/
                 }
             },
             "splashscreen": {
@@ -119,11 +119,11 @@
                     }
                 },
                 "android": {
-                    "mdpi": "", /*普通屏启动图片，分辨率：240x282*/
-                    "ldpi": "", /*大屏启动图片，分辨率：320x442*/
-                    "hdpi": "", /*高分屏启动图片，分辨率：480x762*/
-                    "xhdpi": "", /*720P高分屏启动图片，分辨率：720x1242*/
-                    "xxhdpi": ""/*1080P高分屏启动图片，分辨率：1080x1882*/
+                    "mdpi": "E:\\Download\\Android\\240x282-splash-mdpi副本.png", /*普通屏启动图片，分辨率：240x282*/
+                    "ldpi": "E:\\Download\\Android\\320x442-splash-ldpi副本.png", /*大屏启动图片，分辨率：320x442*/
+                    "hdpi": "E:\\Download\\Android\\480x762-splash-hdpi_2345看图王.png", /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi": "E:\\Download\\Android\\720x1242splash-xhdpi副本.png", /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi": "E:\\Download\\Android\\1080x1882-splash-xxhdpi.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
             }
         }
