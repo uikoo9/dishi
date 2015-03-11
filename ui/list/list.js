@@ -13,27 +13,19 @@ mui.plusReady(function(){
 //	qiao.on('#todolist li', 'tap', function(){
 //		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
 //	});
-//	
-//	// 长按
-//	var tapId = null;
-//	qiao.on('#todolist li', 'longtap', function(){
-//		mui('.mui-popover').popover('toggle');
-//		tapId = $(this).data('id');
-//	});
-//	
-//	// 完成
-//	qiao.on('#doneBtn', 'tap', function(){
-//		mui('.mui-popover').popover('toggle');
-//		
-//		var $li = $('#todoli_'+tapId);
-//		var title = $li.data('title');
-//		var content = $li.data('content');
-//		$li.remove();
-//		showList($('#todolist'));
-//		
-//		qiao.h.fire('done', 'delItem', {todoId:tapId, title:title, content:content});
-//	});
-//	
+
+	// 完成
+	qiao.on('.doneBtn', 'tap', function(){
+		var $li = $(this).parent().parent();
+		var id = $li.data('id');
+		var title = $li.data('title');
+		var content = $li.data('content');
+		$li.remove();
+		showList($('#todolist'));
+		
+		qiao.h.fire('menu', 'delItem', {todoId:id, title:title, content:content});
+	});
+	
 	// 添加
 	window.addEventListener('addItem', addItemHandler);
 });
@@ -59,7 +51,7 @@ function genLi(data){
 	var li = 
 		'<li class="mui-table-view-cell" id="todoli_' + id + '" data-id="' + id + '" data-title="' + title + '" data-content="' + content + '">' +
 			'<div class="mui-slider-right mui-disabled">' + 
-				'<a class="mui-btn mui-btn-red">完成</a>' +
+				'<a class="mui-btn mui-btn-red doneBtn">完成</a>' +
 			'</div>' + 
 			'<div class="mui-slider-handle">' +
 				title + '<p class="mui-ellipsis">' + content + '</p>' + 

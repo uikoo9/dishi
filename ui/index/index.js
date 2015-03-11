@@ -6,6 +6,7 @@ mui.init({
 var main = null;
 var showMenu = false;
 var menu = null;
+var list = null;
 var add = null;
 
 // 所有方法都放到这里
@@ -14,7 +15,7 @@ mui.plusReady(function(){
 	initDb();
 	
 	// 创建页面
-	var list = mui.preload(qiao.h.normalPage('list'));
+	list = mui.preload(qiao.h.normalPage('list'));
 	list.show();
 	
 //	// 返回事件
@@ -72,11 +73,25 @@ function openMenu(){
 				duration: 150
 			}
 		});
+		list.setStyle({
+			mask: 'rgba(0,0,0,0.4)',
+			left: '70%',
+			transition: {
+				duration: 150
+			}
+		});
 		showMenu = true;
 	});
 }
 function closeMenu(){
 	main.setStyle({
+		mask: 'none',
+		left: '0',
+		transition: {
+			duration: 200
+		}
+	});
+	list.setStyle({
 		mask: 'none',
 		left: '0',
 		transition: {
