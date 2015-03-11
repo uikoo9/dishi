@@ -28,24 +28,26 @@ mui.plusReady(function(){
 	// 侧滑菜单
 	main = qiao.h.indexPage();
 	menu = mui.preload(qiao.h.page('menu', {left:0,width:'70%',zindex:-1}));
-	qiao.on('.menua', 'tap', opMenu);
+	qiao.on('.mui-icon-bars', 'tap', opMenu);
 	main.addEventListener('maskClick', opMenu);
+	mui.menu = opMenu;
 	
 	// 显示添加页面
 	add = mui.preload(qiao.h.normalPage('add'));
 	qiao.on('.adda', 'tap', showAdd);
+	qiao.on('.mui-icon-bars', 'tap', opMenu);
+	qiao.on('.mui-icon-back', 'tap', hideAdd);
 	
 	// 退出
 	mui.back = function(){
-		if(showMenu){
+		if($('.adda').is(':hidden')){
+			hideAdd();	
+		}else if(showMenu){
 			closeMenu();
 		}else{
 			qiao.h.exit();
 		}
 	};
-	
-	// 关闭等待
-	qmask.hide();
 });
 
 // 初始化数据库
@@ -65,20 +67,15 @@ function opMenu(){
 }
 function openMenu(){
 	menu.show('none', 0, function() {
+		list.hide();
 		main.setStyle({
 			mask: 'rgba(0,0,0,0.4)',
 			left: '70%',
 			transition: {
-				duration: 100
+				duration: 150
 			}
 		});
-		list.setStyle({
-			mask: 'rgba(0,0,0,0.4)',
-			left: '70%',
-			transition: {
-				duration: 100
-			}
-		});
+
 		showMenu = true;
 	});
 }
@@ -90,13 +87,10 @@ function closeMenu(){
 			duration: 100
 		}
 	});
-	list.setStyle({
-		mask: 'none',
-		left: '0',
-		transition: {
-			duration: 100
-		}
-	});
+	setTimeout(function(){
+		list.show();
+	}, 200);
+	
 	showMenu = false;
 	setTimeout(function() {
 		menu.hide();
@@ -107,7 +101,11 @@ function closeMenu(){
 function showAdd(){
 	$('.menua').removeClass('mui-icon-bars').addClass('mui-icon-back');
 	$('.adda').hide();
-	qiao.h.show('add', 'slide-in-bottom', 500);
+	qiao.h.show('add', 'slide-in-bottom', 300);
+}
+function hideAdd(){
+	qiao.h.getPage('add').hide();
+	resetBtns();
 }
 function resetBtns(){
 	$('.menua').removeClass('mui-icon-back').addClass('mui-icon-bars');

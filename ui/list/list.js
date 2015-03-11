@@ -46,7 +46,7 @@ function initList(){
 		showList($ul);
 	});
 	
-	qiao.h.closeWaiting();
+	qiao.h.indexPage().evalJS('qmask.hide();');
 }
 function genLi(data){
 	var id = data.id;
