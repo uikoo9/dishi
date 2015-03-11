@@ -1,0 +1,12 @@
+body,
+.mui-content {
+	background-color: #333;
+	color: #fff;
+}
+.title {
+	margin: 15px 15px 10px 0;
+	color: #bbb;
+	text-indent: 1em;
+	font-size: 17px;
+	line-height: 24px;
+}
