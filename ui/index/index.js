@@ -1,29 +1,21 @@
 // 初始化
-mui.init({
-	preloadPages : [qiao.h.normalPage('detail')]
-});
+mui.init({});
 
 var main = null;
 var showMenu = false;
 var menu = null;
 var list = null;
 var add = null;
+var detail = null;
 
 // 所有方法都放到这里
 mui.plusReady(function(){
 	// 初始化数据库
 	initDb();
 	
-	// 创建页面
+	// 列表
 	list = mui.preload(qiao.h.normalPage('list'));
 	list.show();
-	
-//	// 返回事件
-//	qiao.on('#backBtn', 'tap', function(){
-//		$(this).hide(50, function(){
-//			qiao.h.hide('detail');
-//		});
-//	});
 	
 	// 侧滑菜单
 	main = qiao.h.indexPage();
@@ -32,11 +24,14 @@ mui.plusReady(function(){
 	main.addEventListener('maskClick', opMenu);
 	mui.menu = opMenu;
 	
-	// 显示添加页面
+	// 添加
 	add = mui.preload(qiao.h.normalPage('add'));
 	qiao.on('.adda', 'tap', showAdd);
 	qiao.on('.mui-icon-bars', 'tap', opMenu);
 	qiao.on('.mui-icon-back', 'tap', hideAdd);
+	
+	// 详情
+	detail = mui.preload(qiao.h.normalPage('detail'));
 	
 	// 退出
 	mui.back = function(){
