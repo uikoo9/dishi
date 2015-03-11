@@ -34,20 +34,8 @@ mui.plusReady(function(){
 //		qiao.h.fire('done', 'delItem', {todoId:tapId, title:title, content:content});
 //	});
 //	
-//	// 添加
-//	window.addEventListener('addItem', addItemHandler);
-//	
-//	// 滑动
-//	window.addEventListener('swipeleft', function(){
-//		qiao.h.hide('list', 'slide-out-left');
-//		qiao.h.show('add', 'slide-in-right');
-//		qiao.h.indexPage().evalJS("changeTabHandler('add');");
-//	});
-//	window.addEventListener('swiperight', function(){
-//		qiao.h.hide('list', 'slide-out-right');
-//		qiao.h.show('done', 'slide-in-left');
-//		qiao.h.indexPage().evalJS("changeTabHandler('done');");
-//	});
+	// 添加
+	window.addEventListener('addItem', addItemHandler);
 });
 
 // 初始化待办事项
@@ -86,6 +74,9 @@ function showList(ul){
 
 // 添加待办事项
 function addItemHandler(event){
+	// 主界面按钮修改
+	qiao.h.indexPage().evalJS("resetBtns();");
+	
 	var db = qiao.h.db();
 	var title = event.detail.title;
 	var content = event.detail.content ? event.detail.content : '暂无内容！';

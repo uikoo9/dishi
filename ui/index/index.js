@@ -95,3 +95,7 @@ function showAdd(){
 	$('.adda').hide();
 	qiao.h.show('add', 'slide-in-bottom', 500);
 }
+function resetBtns(){
+	$('.menua').removeClass('mui-icon-back').addClass('mui-icon-bars');
+	$('.adda').show();
+}
