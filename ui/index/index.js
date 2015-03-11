@@ -1,6 +1,6 @@
 // 初始化
 mui.init({
-//	preloadPages : [qiao.h.normalPage('add')]
+	preloadPages : [qiao.h.normalPage('detail')]
 });
 
 var main = null;
@@ -99,15 +99,19 @@ function closeMenu(){
 
 // showAdd
 function showAdd(){
-	$('.menua').removeClass('mui-icon-bars').addClass('mui-icon-back');
-	$('.adda').hide();
+	showBackBtn();
 	qiao.h.show('add', 'slide-in-bottom', 300);
 }
 function hideAdd(){
+	hideBackBtn();
 	qiao.h.getPage('add').hide();
-	resetBtns();
+	qiao.h.getPage('detail').hide();
 }
-function resetBtns(){
+function showBackBtn(){
+	$('.menua').removeClass('mui-icon-bars').addClass('mui-icon-back');
+	$('.adda').hide();
+}
+function hideBackBtn(){
 	$('.menua').removeClass('mui-icon-back').addClass('mui-icon-bars');
 	$('.adda').show();
 }

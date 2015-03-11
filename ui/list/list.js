@@ -9,10 +9,18 @@ mui.init({
 mui.plusReady(function(){
 	initList();
 	
-//	// 查看详情
-//	qiao.on('#todolist li', 'tap', function(){
-//		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
-//	});
+	// 菜单
+	mui.menu = function(){
+		qiao.h.indexPage().evalJS("opMenu();");
+	};
+	window.addEventListener('swiperight', function(){
+		qiao.h.indexPage().evalJS("opMenu();");
+	});
+	
+	// 查看详情
+	qiao.on('#todolist li', 'tap', function(){
+		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id')});
+	});
 
 	// 完成
 	qiao.on('.doneBtn', 'tap', function(){
@@ -24,20 +32,11 @@ mui.plusReady(function(){
 		showList($('#todolist'));
 		
 		qiao.h.fire('menu', 'delItem', {todoId:id, title:title, content:content});
+		return false;
 	});
-	
-	// 菜单按键
-	mui.menu = function(){
-		qiao.h.indexPage().evalJS("opMenu();");
-	};
 	
 	// 添加
 	window.addEventListener('addItem', addItemHandler);
-	
-	// 滑动
-	window.addEventListener('swiperight', function(){
-		qiao.h.indexPage().evalJS("opMenu();");
-	});
 });
 
 // 初始化待办事项
@@ -77,7 +76,7 @@ function showList(ul){
 // 添加待办事项
 function addItemHandler(event){
 	// 主界面按钮修改
-	qiao.h.indexPage().evalJS("resetBtns();");
+	qiao.h.indexPage().evalJS("hideBackBtn();");
 	
 	var db = qiao.h.db();
 	var title = event.detail.title;

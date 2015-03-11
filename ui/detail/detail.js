@@ -12,7 +12,7 @@ mui.plusReady(function(){
 
 // 展示待办事项
 function detailItemHandler(event){
-	qiao.h.indexPage().evalJS("$('#backBtn').show();");
+	qiao.h.indexPage().evalJS("showBackBtn();");
 
 	var page = event.detail.page;
 	var detailId =event.detail.id;
@@ -24,7 +24,7 @@ function detailItemHandler(event){
 			$('#detailTitle').text(data.plan_title);
 			$('#detailContent').text(data.plan_content);
 			
-			qiao.h.show('detail', 'slide-in-right');
+			qiao.h.show('detail', 'slide-in-right', 300);
 		}
 	});
 }
