@@ -33,6 +33,11 @@ mui.plusReady(function(){
 	
 	// 添加
 	window.addEventListener('addItem', addItemHandler);
+	
+	// 滑动
+	window.addEventListener('swiperight', function(){
+		qiao.h.indexPage().evalJS("opMenu();");
+	});
 });
 
 // 初始化待办事项
