@@ -7,13 +7,18 @@ qiao.on = function(obj, event, func){
 qiao.h = {};
 
 // page相关
+qiao.h.normalPage = function(id){
+	return qiao.h.page(id, {top:'45px',bottom:0});
+};
+qiao.h.centerPage = function(id){
+	return qiao.h.page(id, {top:'45px',bottom:'50px'});
+};
 qiao.h.page = function(id, style){
 	var url = 'view/' + id + '.html';
-	var styles = style ? style : {top:'45px',bottom:'50px'};
 	return {
 		id : id,
 		url : url,
-		styles : styles
+		styles : style
 	};
 };
 qiao.h.indexPage = function(){

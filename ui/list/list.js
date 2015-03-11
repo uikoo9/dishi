@@ -1,8 +1,5 @@
 // 初始化
 mui.init({
-	gestureConfig : {
-		longtap : true
-	},
 	keyEventBind : {
 		backbutton : false
 	}
@@ -12,45 +9,45 @@ mui.init({
 mui.plusReady(function(){
 	initList();
 	
-	// 查看详情
-	qiao.on('#todolist li', 'tap', function(){
-		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
-	});
-	
-	// 长按
-	var tapId = null;
-	qiao.on('#todolist li', 'longtap', function(){
-		mui('.mui-popover').popover('toggle');
-		tapId = $(this).data('id');
-	});
-	
-	// 完成
-	qiao.on('#doneBtn', 'tap', function(){
-		mui('.mui-popover').popover('toggle');
-		
-		var $li = $('#todoli_'+tapId);
-		var title = $li.data('title');
-		var content = $li.data('content');
-		$li.remove();
-		showList($('#todolist'));
-		
-		qiao.h.fire('done', 'delItem', {todoId:tapId, title:title, content:content});
-	});
-	
-	// 添加
-	window.addEventListener('addItem', addItemHandler);
-	
-	// 滑动
-	window.addEventListener('swipeleft', function(){
-		qiao.h.hide('list', 'slide-out-left');
-		qiao.h.show('add', 'slide-in-right');
-		qiao.h.indexPage().evalJS("changeTabHandler('add');");
-	});
-	window.addEventListener('swiperight', function(){
-		qiao.h.hide('list', 'slide-out-right');
-		qiao.h.show('done', 'slide-in-left');
-		qiao.h.indexPage().evalJS("changeTabHandler('done');");
-	});
+//	// 查看详情
+//	qiao.on('#todolist li', 'tap', function(){
+//		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id'), page:'list'});
+//	});
+//	
+//	// 长按
+//	var tapId = null;
+//	qiao.on('#todolist li', 'longtap', function(){
+//		mui('.mui-popover').popover('toggle');
+//		tapId = $(this).data('id');
+//	});
+//	
+//	// 完成
+//	qiao.on('#doneBtn', 'tap', function(){
+//		mui('.mui-popover').popover('toggle');
+//		
+//		var $li = $('#todoli_'+tapId);
+//		var title = $li.data('title');
+//		var content = $li.data('content');
+//		$li.remove();
+//		showList($('#todolist'));
+//		
+//		qiao.h.fire('done', 'delItem', {todoId:tapId, title:title, content:content});
+//	});
+//	
+//	// 添加
+//	window.addEventListener('addItem', addItemHandler);
+//	
+//	// 滑动
+//	window.addEventListener('swipeleft', function(){
+//		qiao.h.hide('list', 'slide-out-left');
+//		qiao.h.show('add', 'slide-in-right');
+//		qiao.h.indexPage().evalJS("changeTabHandler('add');");
+//	});
+//	window.addEventListener('swiperight', function(){
+//		qiao.h.hide('list', 'slide-out-right');
+//		qiao.h.show('done', 'slide-in-left');
+//		qiao.h.indexPage().evalJS("changeTabHandler('done');");
+//	});
 });
 
 // 初始化待办事项
@@ -72,8 +69,11 @@ function genLi(data){
 	var content = data.plan_content;
 	
 	var li = 
-		'<li class="mui-table-view-cell mui-media" id="todoli_' + id + '" data-id="' + id + '" data-title="' + title + '" data-content="' + content + '">' +
-			'<div class="mui-media-body">' + 
+		'<li class="mui-table-view-cell" id="todoli_' + id + '" data-id="' + id + '" data-title="' + title + '" data-content="' + content + '">' +
+			'<div class="mui-slider-right mui-disabled">' + 
+				'<a class="mui-btn mui-btn-red">完成</a>' +
+			'</div>' + 
+			'<div class="mui-slider-handle">' +
 				title + '<p class="mui-ellipsis">' + content + '</p>' + 
 			'</div>' + 
 		'</li>';
