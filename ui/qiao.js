@@ -53,7 +53,6 @@ qiao.h.modaloptions = {
 	abtn	: '确定',
 	cbtn	: ['确定','取消'],
 	content	: 'content'
-	
 };
 qiao.h.alert = function(options, ok){
 	var opt = $.extend({}, qiao.h.modaloptions);
@@ -154,9 +153,7 @@ qiao.h.query = function(db, sql, func){
 // 以下为功能封装------------------------------------------------------------------------------
 // 退出
 qiao.h.exit = function(){
-	mui.back = function() {
-		qiao.h.confirm('确定要退出吗？', function(){
-			plus.runtime.quit();
-		});
-	};
+	qiao.h.confirm('确定要退出吗？', function(){
+		plus.runtime.quit();
+	});
 };

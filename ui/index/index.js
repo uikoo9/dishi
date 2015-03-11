@@ -1,51 +1,51 @@
 // 初始化
 mui.init({
-	preloadPages : [{
-		id : 'detail',
-		url : 'view/detail.html',
-		styles : {
-			top: '45px',
-			bottom: '50px'
-		}
-	}]
+//	preloadPages : [{
+//		id : 'detail',
+//		url : 'view/detail.html',
+//		styles : {
+//			top: '45px',
+//			bottom: '50px'
+//		}
+//	}]
 });
+
+var main=null;
+var menu=null;
+var showMenu = false;
 
 // 所有方法都放到这里
 mui.plusReady(function(){
+//	// 初始化数据库
+//	initDb();
+//	
+//	// 创建页面
+//	createPages('add');
+//	createPages('done');
+//	createPages('list');
+//	
+//	// 返回事件
+//	qiao.on('#backBtn', 'tap', function(){
+//		$(this).hide(50, function(){
+//			qiao.h.hide('detail');
+//		});
+//	});
+	
+	// 侧滑菜单
+	main = qiao.h.indexPage();
+	menu = mui.preload(qiao.h.page('menu', {left:0,width:'70%',zindex:-1}));
+	qiao.on('.menua', 'tap', opMenu);
+	main.addEventListener('maskClick', opMenu);
+	mui.menu = function(){if($('.maindiv').is(':visible')) opMenu();};
+	
 	// 退出
-	qiao.h.exit();
-	
-	// 等待界面
-	qiao.h.waiting();
-	
-	// 初始化数据库
-	initDb();
-	
-	// 创建页面
-	createPages('add');
-	createPages('done');
-	createPages('list');
-	
-	//选项卡点击事件
-	qiao.on('.mytab', 'tap', function(){
-		if(!$(this).hasClass('mui-active')){
-			var tapId = $(this).data('id');
-			qiao.h.show(tapId);
-			qiao.h.hide($('.mui-active').data('id'));
-			
-			changeTabHandler(tapId);
+	mui.back = function(){
+		if(showMenu){
+			closeMenu();
+		}else{
+			qiao.h.exit();
 		}
-	});
-	
-	// 返回事件
-	qiao.on('#backBtn', 'tap', function(){
-		$(this).hide(50, function(){
-			qiao.h.hide('detail');
-		});
-	});
-	
-	// 滑动切换tab
-	window.addEventListener('changeTab', changeTabHandler);
+	};
 });
 
 // 初始化数据库
@@ -65,10 +65,36 @@ function createPages(id){
 	}
 }
 
-// 滑动切换tab
-function changeTabHandler(page){
-	if(page && $('.mui-active').data('id') != page){
-		$('.mui-active').removeClass('mui-active');
-		$('.mytab[data-id="'+page+'"]').addClass('mui-active');
+// menu
+function opMenu(){
+	if(showMenu){
+		closeMenu();
+	}else{
+		openMenu();
 	}
+}
+function openMenu(){
+	menu.show('none', 0, function() {
+		main.setStyle({
+			mask: 'rgba(0,0,0,0.4)',
+			left: '70%',
+			transition: {
+				duration: 150
+			}
+		});
+		showMenu = true;
+	});
+}
+function closeMenu(){
+	main.setStyle({
+		mask: 'none',
+		left: '0',
+		transition: {
+			duration: 200
+		}
+	});
+	showMenu = false;
+	setTimeout(function() {
+		menu.hide();
+	}, 300);
 }
