@@ -26,12 +26,10 @@ mui.plusReady(function(){
 	qiao.on('.doneBtn', 'tap', function(){
 		var $li = $(this).parent().parent();
 		var id = $li.data('id');
-		var title = $li.data('title');
-		var content = $li.data('content');
 		$li.remove();
 		showList($('#todolist'));
 		
-		qiao.h.fire('menu', 'delItem', {todoId:id, title:title, content:content});
+		qiao.h.fire('menu', 'delItem', {todoId:id});
 		return false;
 	});
 	
@@ -55,16 +53,13 @@ function initList(){
 function genLi(data){
 	var id = data.id;
 	var title = data.plan_title;
-	var content = data.plan_content;
 	
 	var li = 
-		'<li class="mui-table-view-cell" id="todoli_' + id + '" data-id="' + id + '" data-title="' + title + '" data-content="' + content + '">' +
+		'<li class="mui-table-view-cell" id="todoli_' + id + '" data-id="' + id + '">' +
 			'<div class="mui-slider-right mui-disabled">' + 
 				'<a class="mui-btn mui-btn-red doneBtn">完成</a>' +
 			'</div>' + 
-			'<div class="mui-slider-handle">' +
-				title + '<p class="mui-ellipsis">' + content + '</p>' + 
-			'</div>' + 
+			'<div class="mui-slider-handle">' + title  + '</div>' + 
 		'</li>';
 		
 	return li;
@@ -86,6 +81,6 @@ function addItemHandler(event){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
 		qiao.h.update(db, 'insert into t_plan_day_todo (id, plan_title, plan_content) values (' + (id+1) + ', "' + title + '", "' + content + '")');
 		
-		$('#todolist').prepend(genLi({id:id+1, 'plan_title':title, 'plan_content':content})).show();
+		$('#todolist').prepend(genLi({id:id+1, 'plan_title':title})).show();
 	});
 }

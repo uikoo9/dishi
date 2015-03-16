@@ -59,7 +59,7 @@
                 "permissions": [
                 ]/*使用Native.js调用原生安卓API需要使用到的系统权限*/
             },
-            "orientation": ["portrait-primary","portrait-secondary","landscape-primary","landscape-secondary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+            "orientation": ["portrait-primary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
             "icons": {
                 "ios": {
                     "prerendered": true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
@@ -90,11 +90,11 @@
                     }
                 },
                 "android": {
-                    "mdpi": "E:\\Download\\Android\\icon48副本.png", /*普通屏程序图标，分辨率：48x48*/
-                    "ldpi": "E:\\Download\\Android\\icon48副本.png", /*大屏程序图标，分辨率：48x48*/
-                    "hdpi": "E:\\Download\\Android\\icon72副本.png", /*高分屏程序图标，分辨率：72x72*/
-                    "xhdpi": "E:\\Download\\Android\\icon96副本.png",/*720P高分屏程序图标，分辨率：96x96*/
-                    "xxhdpi": "E:\\Download\\Android\\icon144副本.png"/*1080P 高分屏程序图标，分辨率：144x144*/
+                    "mdpi": "Z:\\android\\滴石\\icon\\icon48.png", /*普通屏程序图标，分辨率：48x48*/
+                    "ldpi": "Z:\\android\\滴石\\icon\\icon48.png", /*大屏程序图标，分辨率：48x48*/
+                    "hdpi": "Z:\\android\\滴石\\icon\\icon72.png", /*高分屏程序图标，分辨率：72x72*/
+                    "xhdpi": "Z:\\android\\滴石\\icon\\icon96.png",/*720P高分屏程序图标，分辨率：96x96*/
+                    "xxhdpi": "Z:\\android\\滴石\\icon\\icon144.png"/*1080P 高分屏程序图标，分辨率：144x144*/
                 }
             },
             "splashscreen": {
@@ -119,11 +119,11 @@
                     }
                 },
                 "android": {
-                    "mdpi": "E:\\Download\\Android\\240x282-splash-mdpi副本.png", /*普通屏启动图片，分辨率：240x282*/
-                    "ldpi": "E:\\Download\\Android\\320x442-splash-ldpi副本.png", /*大屏启动图片，分辨率：320x442*/
-                    "hdpi": "E:\\Download\\Android\\480x762-splash-hdpi_2345看图王.png", /*高分屏启动图片，分辨率：480x762*/
-                    "xhdpi": "E:\\Download\\Android\\720x1242splash-xhdpi副本.png", /*720P高分屏启动图片，分辨率：720x1242*/
-                    "xxhdpi": "E:\\Download\\Android\\1080x1882-splash-xxhdpi.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
+                    "mdpi": "Z:\\android\\滴石\\icon\\240x282.png", /*普通屏启动图片，分辨率：240x282*/
+                    "ldpi": "Z:\\android\\滴石\\icon\\320x442.png", /*大屏启动图片，分辨率：320x442*/
+                    "hdpi": "Z:\\android\\滴石\\icon\\480x762.png", /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi": "Z:\\android\\滴石\\icon\\720x1242.png", /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi": "Z:\\android\\滴石\\icon\\1080x1882.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
             }
         }
