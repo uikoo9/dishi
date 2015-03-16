@@ -20,7 +20,7 @@ function detailItemHandler(event){
 		if(res.rows.length > 0){
 			var data = res.rows.item(0);
 			$('#detailTitle').text(data.plan_title);
-			$('#detailContent').text(data.plan_content);
+			$('#detailContent').html(data.plan_content);
 			
 			qiao.h.show('detail', 'slide-in-right', 300);
 		}

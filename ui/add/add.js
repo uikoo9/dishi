@@ -21,7 +21,7 @@ function resetPage(){
 // 添加待办事项
 function addItem(){
 	var title = $.trim($('#addTitle').val());
-	var content = $.trim($('#addContent').val());
+	var content = $.trim($('#addContent').val()).replace(/\n/g, '<br/>');
 	
 	if(!title){
 		qiao.h.alert('请填写待办事项标题！');		
