@@ -1,7 +1,8 @@
 // 初始化
 mui.init({
 	keyEventBind : {
-		backbutton : false
+		backbutton : false,
+		menubutton : false
 	}
 });
 
@@ -39,6 +40,8 @@ mui.plusReady(function(){
 
 // 初始化待办事项
 function initList(){
+	qmask.show();
+	
 	var $ul = $('#todolist').empty();
 	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo order by id desc', function(res){
 		for (i = 0; i < res.rows.length; i++) {
@@ -48,18 +51,24 @@ function initList(){
 		showList($ul);
 	});
 	
-	qiao.h.indexPage().evalJS('qmask.hide();');
+	qmask.hide();
 }
 function genLi(data){
 	var id = data.id;
 	var title = data.plan_title;
+	var content = data.plan_content;
 	
 	var li = 
 		'<li class="mui-table-view-cell" id="todoli_' + id + '" data-id="' + id + '">' +
 			'<div class="mui-slider-right mui-disabled">' + 
 				'<a class="mui-btn mui-btn-red doneBtn">完成</a>' +
 			'</div>' + 
-			'<div class="mui-slider-handle">' + title  + '</div>' + 
+			'<div class="mui-slider-handle">' + 
+				'<div class="mui-media-body">' + 
+					title + 
+					'<p class="mui-ellipsis">'+content+'</p>' + 
+				'</div>' + 
+			'</div>' +
 		'</li>';
 		
 	return li;
@@ -81,6 +90,6 @@ function addItemHandler(event){
 		var id = (res.rows.item(0).mid) ? res.rows.item(0).mid : 0;
 		qiao.h.update(db, 'insert into t_plan_day_todo (id, plan_title, plan_content) values (' + (id+1) + ', "' + title + '", "' + content + '")');
 		
-		$('#todolist').prepend(genLi({id:id+1, 'plan_title':title})).show();
+		$('#todolist').prepend(genLi({id:id+1, 'plan_title':title, 'plan_content':content})).show();
 	});
 }
