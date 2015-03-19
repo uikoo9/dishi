@@ -64,17 +64,19 @@ function opMenu(){
 	}
 }
 function openMenu(){
-	menu.show('none', 0, function() {
-		main.setStyle({
-			mask: 'rgba(0,0,0,0.4)',
-			left: '70%',
-			transition: {
-				duration: 150
-			}
+	if($('.adda').is(':visible')){
+		menu.show('none', 0, function() {
+			main.setStyle({
+				mask: 'rgba(0,0,0,0.4)',
+				left: '70%',
+				transition: {
+					duration: 150
+				}
+			});
+	
+			showMenu = true;
 		});
-
-		showMenu = true;
-	});
+	}
 }
 function closeMenu(){
 	main.setStyle({
