@@ -1,10 +1,11 @@
 // 初始化
-mui.init({});
+mui.init({
+	subpages : [qiao.h.normalPage('list')]
+});
 
 var main = null;
 var showMenu = false;
 var menu = null;
-var list = null;
 var add = null;
 var detail = null;
 
@@ -13,13 +14,16 @@ mui.plusReady(function(){
 	// 初始化数据库
 	initDb();
 	
-	// 列表
-	list = mui.preload(qiao.h.normalPage('list'));
-	list.show();
-	
 	// 侧滑菜单
 	main = qiao.h.indexPage();
-	menu = mui.preload(qiao.h.page('menu', {left:0,width:'70%',zindex:-1}));
+	var menuoptions = qiao.h.page('menu', {
+		styles : {
+			left:0,
+			width:'70%',
+			zindex:-1
+		}
+	});
+	menu = mui.preload(menuoptions);
 	qiao.on('.mui-icon-bars', 'tap', opMenu);
 	main.addEventListener('maskClick', opMenu);
 	mui.menu = opMenu;
@@ -61,7 +65,6 @@ function opMenu(){
 }
 function openMenu(){
 	menu.show('none', 0, function() {
-		list.hide();
 		main.setStyle({
 			mask: 'rgba(0,0,0,0.4)',
 			left: '70%',
@@ -81,9 +84,6 @@ function closeMenu(){
 			duration: 100
 		}
 	});
-	setTimeout(function(){
-		list.show();
-	}, 200);
 	
 	showMenu = false;
 	setTimeout(function() {

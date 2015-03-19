@@ -7,19 +7,20 @@ qiao.on = function(obj, event, func){
 qiao.h = {};
 
 // page相关
+qiao.h.normalStyle = {top:'45px',bottom:0};
+qiao.h.centerStyle = {top:'45px',bottom:'50px'};
 qiao.h.normalPage = function(id){
-	return qiao.h.page(id, {top:'45px',bottom:0});
+	return qiao.h.page(id, {styles : qiao.h.normalStyle});
 };
 qiao.h.centerPage = function(id){
-	return qiao.h.page(id, {top:'45px',bottom:'50px'});
+	return qiao.h.page(id, {styles:qiao.h.centerStyle});
 };
-qiao.h.page = function(id, style){
+qiao.h.page = function(id, options){
 	var url = 'view/' + id + '.html';
-	return {
-		id : id,
-		url : url,
-		styles : style
-	};
+
+	options.id = id;
+	options.url = url;
+	return options;
 };
 qiao.h.indexPage = function(){
 	return plus.webview.getWebviewById(plus.runtime.appid);
@@ -161,4 +162,9 @@ qiao.h.exit = function(){
 	qiao.h.confirm('确定要退出吗？', function(){
 		plus.runtime.quit();
 	});
+};
+// 刷新
+qiao.h.endDown = function(selector){
+	var sel = selector ? selector : '#refreshContainer';
+	mui(sel).pullRefresh().endPulldownToRefresh();
 };
