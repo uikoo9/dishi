@@ -27,7 +27,6 @@ mui.plusReady(function(){
 	// 添加
 	add = mui.preload(qiao.h.normalPage('add'));
 	qiao.on('.adda', 'tap', showAdd);
-	qiao.on('.mui-icon-bars', 'tap', opMenu);
 	qiao.on('.mui-icon-back', 'tap', hideAdd);
 	
 	// 详情

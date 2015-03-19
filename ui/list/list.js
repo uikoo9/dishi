@@ -8,12 +8,10 @@ mui.init({
 
 // 所有的方法都放到这里
 mui.plusReady(function(){
+	// 获取列表
 	initList();
 	
-	// 菜单
-	mui.menu = function(){
-		qiao.h.indexPage().evalJS("opMenu();");
-	};
+	// 右滑菜单
 	window.addEventListener('swiperight', function(){
 		qiao.h.indexPage().evalJS("opMenu();");
 	});
