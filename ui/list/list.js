@@ -3,9 +3,13 @@ mui.init({
 	keyEventBind : {
 		backbutton : false,
 		menubutton : false
+	},
+	gestureConfig : {
+		longtap:true
 	}
 });
 
+var tapId = null;
 // 所有的方法都放到这里
 mui.plusReady(function(){
 	// 获取列表
@@ -28,9 +32,18 @@ mui.plusReady(function(){
 		$li.remove();
 		showList($('#todolist'));
 		
-		qiao.h.fire('menu', 'delItem', {todoId:id});
+		qiao.h.fire('menu', 'doneItem', {todoId:id});
 		return false;
 	});
+	
+	// 长按
+	qiao.on('#todolist li', 'longtap', function(){
+		tapId = $(this).data('id');
+		qiao.h.pop();
+	});
+	
+	// 删除
+	qiao.on('.delli', 'tap', delItem);
 	
 	// 添加
 	window.addEventListener('addItem', addItemHandler);
@@ -102,4 +115,13 @@ function addItemHandler(event){
 		
 		$('#todolist').prepend(genLi({id:id+1, 'plan_title':title, 'plan_content':content})).show();
 	});
+}
+
+// 删除事项
+function delItem(){
+	if(tapId){
+		qiao.h.update(qiao.h.db(), 'delete from t_plan_day_todo where id=' + tapId);
+		qiao.h.pop();
+		initList();
+	}
 }

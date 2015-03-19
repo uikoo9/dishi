@@ -53,6 +53,11 @@ qiao.h.closeWaiting = function(){
 	plus.nativeUI.closeWaiting();
 };
 
+// popover
+qiao.h.pop = function(){
+	mui('.mui-popover').popover('toggle');
+};
+
 // 提示框相关
 qiao.h.modaloptions = {
 	title 	: 'title',

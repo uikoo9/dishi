@@ -11,7 +11,7 @@ mui.plusReady(function(){
 	initDoneList();
 	
 	// 添加已完成事项
-	window.addEventListener('delItem', delItemHandler);
+	window.addEventListener('doneItem', doneItemHandler);
 });
 
 // 初始化待办事项
@@ -33,7 +33,7 @@ function showList(ul){
 }
 
 // 添加已完成事项
-function delItemHandler(event){
+function doneItemHandler(event){
 	var todoId = event.detail.todoId;
 
 	var db = qiao.h.db();
