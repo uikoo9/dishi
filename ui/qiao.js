@@ -58,6 +58,24 @@ qiao.h.pop = function(){
 	mui('.mui-popover').popover('toggle');
 };
 
+// actionsheet
+qiao.h.sheet = function(title, btns,func){
+	if(title && btns && btns.length > 0){
+		var btnArray = [];
+		for(var i=0; i<btns.length; i++){
+			btnArray.push({title:btns[i]});
+		}
+		
+		plus.nativeUI.actionSheet({
+			title : title,
+			cancel : '取消',
+			buttons : btnArray
+		}, function(e){
+			if(func) func(e);
+		});
+	}
+};
+
 // 提示框相关
 qiao.h.modaloptions = {
 	title 	: 'title',
