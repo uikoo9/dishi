@@ -9,7 +9,7 @@ mui.init({
 // 所有的方法都放到这里
 mui.plusReady(function(){
 	// 获取列表
-	initList();
+	initHelp();
 	
 	// 右滑菜单
 	window.addEventListener('swiperight', function(){
@@ -36,6 +36,18 @@ mui.plusReady(function(){
 	window.addEventListener('addItem', addItemHandler);
 });
 
+function initHelp(){
+	var help = qiao.h.getItem('help');
+	if(help == 'first'){
+		var title = '使用说明';
+		var content = '1.点击查看详情<br>2.左滑完成事项<br>3.右上角添加事项<br>4.右滑显示已完成事项';
+		qiao.h.update(qiao.h.db(), 'insert into t_plan_day_todo (id, plan_title, plan_content) values (1, "' + title + '", "' + content + '")');
+		
+		qiao.h.insertItem('help','notfirst');
+	}
+	
+	initList();
+}
 // 初始化待办事项
 function initList(){
 	qmask.show();
