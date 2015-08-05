@@ -24,7 +24,7 @@ mui.plusReady(function(){
 	qiao.on('#todolist li', 'tap', function(){
 		qiao.h.fire('detail', 'detailItem', {id:$(this).data('id')});
 	});
-
+	
 	// 完成
 	qiao.on('.doneBtn', 'tap', function(){
 		var $li = $(this).parent().parent();
@@ -52,15 +52,29 @@ mui.plusReady(function(){
 function initHelp(){
 	var help = qiao.h.getItem('help');
 	if(help == 'first'){
-		var title = '使用说明';
-		var content = '1.点击查看详情<br>2.左滑完成事项<br>3.右上角添加事项<br>4.右滑显示已完成事项';
-		qiao.h.update(qiao.h.db(), 'insert into t_plan_day_todo (id, plan_title, plan_content) values (1, "' + title + '", "' + content + '")');
+		qiao.h.update(qiao.h.db(), getSql(1, '事项5', '待办事项5'));
+		qiao.h.update(qiao.h.db(), getSql(2, '事项4', '待办事项4'));
+		qiao.h.update(qiao.h.db(), getSql(3, '事项3', '待办事项3'));
+		qiao.h.update(qiao.h.db(), getSql(4, '事项2', '待办事项2'));
+		qiao.h.update(qiao.h.db(), getSql(5, '事项1', '待办事项1'));
+		qiao.h.update(qiao.h.db(), getSql(6, '功能8', '退出程序'));
+		qiao.h.update(qiao.h.db(), getSql(7, '功能7', '右滑菜单'));
+		qiao.h.update(qiao.h.db(), getSql(8, '功能6', '左上角查看完成事项'));
+		qiao.h.update(qiao.h.db(), getSql(9, '功能5', '右上角添加待办事项'));
+		qiao.h.update(qiao.h.db(), getSql(10, '功能4', '长按待办事项可以删除'));
+		qiao.h.update(qiao.h.db(), getSql(11, '功能3', '右滑待办事项可以完成'));
+		qiao.h.update(qiao.h.db(), getSql(12, '功能2', '点击待办事项可以查看详情'));
+		qiao.h.update(qiao.h.db(), getSql(13, '功能1', '首页显示待办事项列表'));
 		
 		qiao.h.insertItem('help','notfirst');
 	}
 	
 	initList();
 }
+function getSql(index, title, content){
+	return 'insert into t_plan_day_todo (id, plan_title, plan_content) values (' + index + ', "' + title + '", "' + content + '")';
+}
+
 // 初始化待办事项
 function initList(){
 	qmask.show();
