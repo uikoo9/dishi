@@ -11,6 +11,8 @@ var detail = null;
 
 // 所有方法都放到这里
 mui.plusReady(function(){
+	setColor("#f7f7f7");
+	
 	// 初始化数据库
 	initDb();
 	
@@ -70,6 +72,7 @@ function opMenu(){
 }
 function openMenu(){
 	if($('.adda').is(':visible')){
+		setColor("#333333");
 		menu.show('none', 0, function() {
 			main.setStyle({
 				mask: 'rgba(0,0,0,0.4)',
@@ -84,6 +87,7 @@ function openMenu(){
 	}
 }
 function closeMenu(){
+	setColor("#f7f7f7");
 	main.setStyle({
 		mask: 'none',
 		left: '0',
@@ -115,4 +119,9 @@ function showBackBtn(){
 function hideBackBtn(){
 	$('.menua').removeClass('mui-icon-back').addClass('mui-icon-bars');
 	$('.adda').show();
+}
+
+// set color
+function setColor(color){
+	if(mui.os.ios && color) plus.navigator.setStatusBarBackground(color);
 }
