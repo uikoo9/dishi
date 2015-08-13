@@ -13,7 +13,7 @@
 ---
 1. osc代码开源：[http://git.oschina.net/uikoo9/uikoo9-dishi](http://git.oschina.net/uikoo9/uikoo9-dishi)
 2. osc软件项目：[http://www.oschina.net/p/dishi](http://www.oschina.net/p/dishi)
-3. 官网：[http://uikoo9.com/dishi](http://uikoo9.com/project/dishi)
+3. 官网：[http://uikoo9.com/project/dishi](http://uikoo9.com/project/dishi)
 
 捐助
 ---
