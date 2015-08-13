@@ -1,4 +1,4 @@
-[滴石](http://uikoo9.com/dishi)
+[滴石](http://uikoo9.com/project/dishi)
 ==========================================
 1. 取水滴石穿之意
 2. 计划类app，一切始于计划成于计划
@@ -13,7 +13,7 @@
 ---
 1. osc代码开源：[http://git.oschina.net/uikoo9/uikoo9-dishi](http://git.oschina.net/uikoo9/uikoo9-dishi)
 2. osc软件项目：[http://www.oschina.net/p/dishi](http://www.oschina.net/p/dishi)
-3. 官网：[http://uikoo9.com/dishi](http://uikoo9.com/dishi)
+3. 官网：[http://uikoo9.com/dishi](http://uikoo9.com/project/dishi)
 
 捐助
 ---
