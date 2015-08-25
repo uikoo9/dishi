@@ -3,7 +3,7 @@
     "id": "H56296BDF",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "滴石",/*应用名称，程序桌面图标名称*/
     "version": {
-        "name": "0.2.9",/*应用版本名称*/
+        "name": "0.3.0",/*应用版本名称*/
         "code": ""
     },
     "description": "",/*应用描述信息*/
@@ -34,7 +34,7 @@
     "plus": {
         "splashscreen": {
             "autoclose": true,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
-            "waiting": true/*是否在程序启动界面显示等待雪花，true表示显示，false表示不显示。*/
+            "waiting": false/*是否在程序启动界面显示等待雪花，true表示显示，false表示不显示。*/
         },
         "popGesture": "close",/*设置应用默认侧滑返回关闭Webview窗口，"none"为无侧滑返回功能，"hide"为侧滑隐藏Webview窗口。参考http://ask.dcloud.net.cn/article/102*/
         "runmode": "normal",/*应用的首次启动运行模式，可取liberate或normal，liberate模式在第一次启动时将解压应用资源（Android平台File API才可正常访问_www目录）*/
