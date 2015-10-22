@@ -2,7 +2,7 @@ define(function (require, exports, module) {
     'use strict';
     
     // import
-    var qiao = require('../lib/qiao/qiao.js');
+    var qiao = require('../lib/qiao.h.js');
     
 	// 初始化
 	mui.init({
