@@ -51,9 +51,7 @@ mui.plusReady(function(){
 
 function initHelp(){
 	var help = qiao.h.getItem('help');
-	console.log(1);
 	if(help == null){
-		console.log(2);
 		var content = '1.右上角添加事项<br/>2.点击事项查看详情<br/>3.长按事项删除<br/>4.右滑事项完成<br/>5.左滑显示完成事项';
 		var sql = 'insert into t_plan_day_todo (id, plan_title, plan_content) values (1, "功能介绍", "' + content + '")';
 		qiao.h.update(qiao.h.db(), sql);
@@ -70,7 +68,6 @@ function initList(){
 	
 	var $ul = $('#todolist').empty();
 	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo order by id desc', function(res){
-		console.log(res.rows.length);
 		for (i = 0; i < res.rows.length; i++) {
 			$ul.append(genLi(res.rows.item(i)));
 		}
