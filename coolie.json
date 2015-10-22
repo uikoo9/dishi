@@ -1,0 +1,29 @@
+{
+  "js": {
+    "main": [
+      "./@/js/app/**/*.js"
+    ],
+    "dest": "./@/js/",
+    "coolie-config.js": "./@/js/coolie-config.js"
+  },
+  "css": {
+    "dest": "./@/css/"
+  },
+  "html": {
+    "src": [
+      "./**/*.html"
+    ],
+    "minify": true
+  },
+  "resource": {
+    "dest": "./@/res/",
+    "minify": true
+  },
+  "dest": {
+    "dirname": "unpackage",
+    "host": ""
+  },
+  "copy": [
+  	"version.txt"
+  ]
+}
