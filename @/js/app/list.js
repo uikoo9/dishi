@@ -64,8 +64,6 @@ function initHelp(){
 
 // 初始化待办事项
 function initList(){
-	qmask.show();
-	
 	var $ul = $('#todolist').empty();
 	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo order by id desc', function(res){
 		for (i = 0; i < res.rows.length; i++) {
@@ -74,8 +72,6 @@ function initList(){
 
 		showList($ul);
 	});
-	
-	qmask.hide();
 }
 function genLi(data){
 	var id = data.id;
