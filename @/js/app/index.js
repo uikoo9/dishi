@@ -1,6 +1,6 @@
 define(function (require, exports, module) {
     'use strict';
-    
+    console.log(1);
     // import
     var qiao = require('../lib/qiao.h.js');
     
