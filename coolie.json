@@ -20,7 +20,7 @@
     "minify": true
   },
   "dest": {
-    "dirname": "unpackage",
+    "dirname": "@pro",
     "host": ""
   },
   "copy": [
