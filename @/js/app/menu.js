@@ -23,7 +23,7 @@ define(function (require, exports, module) {
 	function initDoneList(){
 		var $ul = $('#donelist').empty();
 		qiao.query(qiao.db(), 'select * from t_plan_day_done order by id desc', function(res){
-			for (i = 0; i < res.rows.length; i++) {
+			for (var i = 0; i < res.rows.length; i++) {
 				$ul.append(genLi(res.rows.item(i).plan_title));
 			}
 	
