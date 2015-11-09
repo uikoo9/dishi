@@ -3,9 +3,7 @@ qiao.on = function(obj, event, func){
 	$(document).off(event, obj).on(event, obj, func);
 };
 
-// 对mui以及nativejs相关封装
-qiao.h = {};
-
+var qiao.h = {};
 // page相关
 qiao.h.normalStyle = {top:'45px',bottom:0};
 qiao.h.normalPage = function(id){
@@ -17,7 +15,7 @@ qiao.h.centerPage = function(id){
 };
 qiao.h.page = function(id, options){
 	var url = id + '.html';
-
+	
 	options.id = id;
 	options.url = url;
 	return options;
@@ -42,10 +40,12 @@ qiao.h.fire = function(id, name, values){
 };
 
 // 以下为UI封装------------------------------------------------------------------------------
-// nativeui相关
+// qiao.h.tip
 qiao.h.tip = function(msg, options){
 	plus.nativeUI.toast(msg,options);
 };
+
+// qiao.h.waiting
 qiao.h.waiting = function(titile, options){
 	plus.nativeUI.showWaiting(titile, options);
 };
