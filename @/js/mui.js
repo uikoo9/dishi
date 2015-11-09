@@ -1,6 +1,6 @@
 /*!
  * =====================================================
- * Mui v2.5.0 (http://dev.dcloud.net.cn/mui)
+ * Mui v1.9.0 (https://github.com/dcloudio/mui)
  * =====================================================
  */
 /**
@@ -191,6 +191,25 @@ var mui = (function(document, undefined) {
 		return this;
 	};
 	/**
+	 * map
+	 */
+	$.map = function(elements, callback) {
+		var value, values = [],
+			i, key;
+		if (typeof elements.length === 'number') { //TODO 此处逻辑不严谨，可能会有Object:{a:'b',length:1}的情况未处理
+			for (i = 0, len = elements.length; i < len; i++) {
+				value = callback(elements[i], i);
+				if (value != null) values.push(value);
+			}
+		} else {
+			for (key in elements) {
+				value = callback(elements[key], key);
+				if (value != null) values.push(value);
+			}
+		}
+		return values.length > 0 ? [].concat.apply([], values) : values;
+	};
+	/**
 	 * each
 	 * @param {type} elements
 	 * @param {type} callback
@@ -306,28 +325,19 @@ var mui = (function(document, undefined) {
 		}
 		return result;
 	};
-	$.hooks = {};
-	$.addAction = function(type, hook) {
-		var hooks = $.hooks[type];
-		if (!hooks) {
-			hooks = [];
+
+	$.registerHandler = function(type, handler) {
+		var handlers = $[type];
+		if (!handlers) {
+			handlers = [];
 		}
-		hook.index = hook.index || 1000;
-		hooks.push(hook);
-		hooks.sort(function(a, b) {
+		handler.index = handler.index || 1000;
+		handlers.push(handler);
+		handlers.sort(function(a, b) {
 			return a.index - b.index;
 		});
-		$.hooks[type] = hooks;
-		return $.hooks[type];
-	};
-	$.doAction = function(type, callback) {
-		if ($.isFunction(callback)) { //指定了callback
-			$.each($.hooks[type], callback);
-		} else { //未指定callback，直接执行
-			$.each($.hooks[type], function(index, hook) {
-				return !hook.handle();
-			});
-		}
+		$[type] = handlers;
+		return $[type];
 	};
 	/**
 	 * setTimeout封装
@@ -459,12 +469,6 @@ var mui = (function(document, undefined) {
 			$(function() {
 				document.body.classList.add('mui-plus');
 			});
-			if (ua.match(/StreamApp/i)) { //TODO 最好有流应用自己的标识
-				this.os.stream = true;
-				$(function() {
-					document.body.classList.add('mui-plus-stream');
-				});
-			}
 		}
 	}
 	detect.call($, navigator.userAgent);
@@ -568,32 +572,6 @@ var mui = (function(document, undefined) {
 		window.CustomEvent = CustomEvent;
 	}
 })();
-/*
-	A shim for non ES5 supporting browsers.
-	Adds function bind to Function prototype, so that you can do partial application.
-	Works even with the nasty thing, where the first word is the opposite of extranet, the second one is the profession of Columbus, and the version number is 9, flipped 180 degrees.
-*/
-
-Function.prototype.bind = Function.prototype.bind || function(to) {
-	// Make an array of our arguments, starting from second argument
-	var partial = Array.prototype.splice.call(arguments, 1),
-		// We'll need the original function.
-		fn = this;
-	var bound = function() {
-			// Join the already applied arguments to the now called ones (after converting to an array again).
-			var args = partial.concat(Array.prototype.splice.call(arguments, 0));
-			// If not being called as a constructor
-			if (!(this instanceof bound)) {
-				// return the result of the function called bound to target and partially applied.
-				return fn.apply(to, args);
-			}
-			// If being called as a constructor, apply the function bound to self.
-			fn.apply(this, args);
-		}
-		// Attach the prototype of the function to our newly created function.
-	bound.prototype = fn.prototype;
-	return bound;
-};
 /**
  * mui fixed classList
  * @param {type} document
@@ -755,8 +733,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				}
 			}
 			var target = e.target;
-			//TODO 需考虑所有键盘弹起的情况
-			if (target.tagName && (target.tagName === 'TEXTAREA' || (target.tagName === 'INPUT' && (target.type === 'text' || target.type === 'search' || target.type === 'number')))) {
+			if (target.tagName && target.tagName === 'INPUT' && (target.type === 'text' || target.type === 'search' || target.type === 'number')) {
 				if (target.disabled || target.readOnly) {
 					return;
 				}
@@ -868,7 +845,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	};
 	//简单的wrap对象_mid
 	var mid = function(obj) {
-		return obj && (obj._mid || (obj._mid = _mid++));
+		return obj._mid || (obj._mid = _mid++);
 	};
 	//事件委托对象绑定的事件回调列表
 	var delegateFns = {};
@@ -926,22 +903,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			}, true);
 		};
 	};
-	var findDelegateFn = function(element, event) {
-		var delegateCallbacks = delegateFns[mid(element)];
-		var result = false;
-		if (delegateCallbacks) {
-			result = [];
-			if (event) {
-				var filterFn = function(fn) {
-					return fn.type === event;
-				}
-				return delegateCallbacks.filter(filterFn);
-			} else {
-				result = delegateCallbacks;
-			}
-		}
-		return result;
-	};
 	var preventDefaultException = /^(INPUT|TEXTAREA|BUTTON|SELECT)$/;
 	/**
 	 * mui delegate events
@@ -964,16 +925,8 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			var delegateCallbacks = delegateCallbackObjs[selector] || (delegateCallbackObjs[selector] = []);
 			delegateCallbacks.push(callback);
 			if (isAddEventListener) {
-				var delegateFnArray = delegateFns[mid(element)];
-				if (!delegateFnArray) {
-					delegateFnArray = [];
-				}
-				var delegateCallback = delegateFn(element, event, selector, callback);
-				delegateFnArray.push(delegateCallback);
-				delegateCallback.i = delegateFnArray.length - 1;
-				delegateCallback.type = event;
-				delegateFns[mid(element)] = delegateFnArray;
-				element.addEventListener(event, delegateCallback);
+				delegateFns[mid(element)] = delegateFn(element, event, selector, callback);
+				element.addEventListener(event, delegateFns[mid(element)]);
 				if (event === 'tap') { //TODO 需要找个更好的解决方案
 					element.addEventListener('click', function(e) {
 						if (e.target) {
@@ -997,13 +950,11 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	$.fn.off = function(event, selector, callback) {
 		return this.each(function() {
 			var _mid = mid(this);
-			if (!event) { //mui(selector).off();
-				delegates[_mid] && delete delegates[_mid];
-			} else if (!selector) { //mui(selector).off(event);
-				delegates[_mid] && delete delegates[_mid][event];
-			} else if (!callback) { //mui(selector).off(event,selector);
-				delegates[_mid] && delegates[_mid][event] && delete delegates[_mid][event][selector];
-			} else { //mui(selector).off(event,selector,callback);
+			if (!callback) {
+				if (delegates[_mid] && delegates[_mid][event]) {
+					delete delegates[_mid][event][selector];
+				}
+			} else {
 				var delegateCallbacks = delegates[_mid] && delegates[_mid][event] && delegates[_mid][event][selector];
 				$.each(delegateCallbacks, function(index, delegateCallback) {
 					if (mid(delegateCallback) === mid(callback)) {
@@ -1012,23 +963,12 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					}
 				}, true);
 			}
-			if (delegates[_mid]) {
-				//如果off掉了所有当前element的指定的event事件，则remove掉当前element的delegate回调
-				if ((!delegates[_mid][event] || $.isEmptyObject(delegates[_mid][event]))) {
-					findDelegateFn(this, event).forEach(function(fn) {
-						this.removeEventListener(fn.type, fn);
-						delete delegateFns[_mid][fn.i];
-					}.bind(this));
-				}
-			} else {
-				//如果delegates[_mid]已不存在，删除所有
-				findDelegateFn(this).forEach(function(fn) {
-					this.removeEventListener(fn.type, fn);
-					delete delegateFns[_mid][fn.i];
-				}.bind(this));
+			//如果off掉了所有当前element的指定的event事件，则remove掉当前element的delegate回调
+			if (delegates[_mid] && $.isEmptyObject(delegates[_mid][event])) {
+				this.removeEventListener(event, delegateFns[_mid]);
+				delete delegateFns[_mid];
 			}
-		});
-
+		})
 	};
 })(mui);
 /**
@@ -1043,9 +983,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	$.EVENT_END = 'touchend';
 	$.EVENT_CANCEL = 'touchcancel';
 	$.EVENT_CLICK = 'click';
-	$.gestures = {
-		session: {}
-	};
 	/**
 	 * Gesture preventDefault
 	 * @param {type} e
@@ -1068,41 +1005,20 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 * @param {type} gesture
 	 * @returns {$.gestures}
 	 */
-	$.addGesture = function(gesture) {
-		return $.addAction('gestures', gesture);
+	$.registerGesture = function(gesture) {
+		return $.registerHandler('gestures', gesture);
 
 	};
-
-	var round = Math.round;
-	var abs = Math.abs;
-	var sqrt = Math.sqrt;
-	var atan = Math.atan;
-	var atan2 = Math.atan2;
 	/**
 	 * distance
 	 * @param {type} p1
 	 * @param {type} p2
 	 * @returns {Number}
 	 */
-	var getDistance = function(p1, p2, props) {
-		if (!props) {
-			props = ['x', 'y'];
-		}
-		var x = p2[props[0]] - p1[props[0]];
-		var y = p2[props[1]] - p1[props[1]];
-		return sqrt((x * x) + (y * y));
-	};
-	/**
-	 * scale
-	 * @param {Object} starts
-	 * @param {Object} moves
-	 */
-	var getScale = function(starts, moves) {
-		if (starts.length >= 2 && moves.length >= 2) {
-			var props = ['pageX', 'pageY'];
-			return getDistance(moves[1], moves[0], props) / getDistance(starts[1], starts[0], props);
-		}
-		return 1;
+	var getDistance = function(p1, p2) {
+		var x = p2.x - p1.x;
+		var y = p2.y - p1.y;
+		return Math.sqrt((x * x) + (y * y));
 	};
 	/**
 	 * angle
@@ -1110,48 +1026,25 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 * @param {type} p2
 	 * @returns {Number}
 	 */
-	var getAngle = function(p1, p2, props) {
-		if (!props) {
-			props = ['x', 'y'];
-		}
-		var x = p2[props[0]] - p1[props[0]];
-		var y = p2[props[1]] - p1[props[1]];
-		return atan2(y, x) * 180 / Math.PI;
+	var getAngle = function(p1, p2) {
+		return Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI;
 	};
 	/**
 	 * direction
-	 * @param {Object} x
-	 * @param {Object} y
+	 * @param {type} angle
+	 * @returns {unresolved}
 	 */
-	var getDirection = function(x, y) {
-		if (x === y) {
-			return '';
+	var getDirectionByAngle = function(angle) {
+		if (angle < -45 && angle > -135) {
+			return 'up';
+		} else if (angle >= 45 && angle < 135) {
+			return 'down';
+		} else if (angle >= 135 || angle <= -135) {
+			return 'left';
+		} else if (angle >= -45 && angle <= 45) {
+			return 'right';
 		}
-		if (abs(x) >= abs(y)) {
-			return x > 0 ? 'left' : 'right';
-		}
-		return y > 0 ? 'up' : 'down';
-	};
-	/**
-	 * rotation
-	 * @param {Object} start
-	 * @param {Object} end
-	 */
-	var getRotation = function(start, end) {
-		var props = ['pageX', 'pageY'];
-		return getAngle(end[1], end[0], props) - getAngle(start[1], start[0], props);
-	};
-	/**
-	 * px per ms
-	 * @param {Object} deltaTime
-	 * @param {Object} x
-	 * @param {Object} y
-	 */
-	var getVelocity = function(deltaTime, x, y) {
-		return {
-			x: x / deltaTime || 0,
-			y: y / deltaTime || 0
-		};
+		return null;
 	};
 	/**
 	 * detect gestures
@@ -1163,7 +1056,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		if ($.gestures.stoped) {
 			return;
 		}
-		$.doAction('gestures', function(index, gesture) {
+		$.each($.gestures, function(index, gesture) {
 			if (!$.gestures.stoped) {
 				if ($.options.gestureConfig[gesture.name] !== false) {
 					gesture.handle(event, touch);
@@ -1171,266 +1064,100 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			}
 		});
 	};
-	/**
-	 * 暂时无用
-	 * @param {Object} node
-	 * @param {Object} parent
-	 */
-	var hasParent = function(node, parent) {
-		while (node) {
-			if (node == parent) {
-				return true;
-			}
-			node = node.parentNode;
-		}
-		return false;
-	};
-
-	var uniqueArray = function(src, key, sort) {
-		var results = [];
-		var values = [];
-		var i = 0;
-
-		while (i < src.length) {
-			var val = key ? src[i][key] : src[i];
-			if (values.indexOf(val) < 0) {
-				results.push(src[i]);
-			}
-			values[i] = val;
-			i++;
-		}
-
-		if (sort) {
-			if (!key) {
-				results = results.sort();
-			} else {
-				results = results.sort(function sortUniqueArray(a, b) {
-					return a[key] > b[key];
-				});
-			}
-		}
-
-		return results;
-	};
-	var getMultiCenter = function(touches) {
-		var touchesLength = touches.length;
-		if (touchesLength === 1) {
-			return {
-				x: round(touches[0].pageX),
-				y: round(touches[0].pageY)
-			};
-		}
-
-		var x = 0;
-		var y = 0;
-		var i = 0;
-		while (i < touchesLength) {
-			x += touches[i].pageX;
-			y += touches[i].pageY;
-			i++;
-		}
-
-		return {
-			x: round(x / touchesLength),
-			y: round(y / touchesLength)
-		};
-	};
-	var multiTouch = function() {
-		return $.options.gestureConfig.pinch;
-	};
-	var copySimpleTouchData = function(touch) {
-		var touches = [];
-		var i = 0;
-		while (i < touch.touches.length) {
-			touches[i] = {
-				pageX: round(touch.touches[i].pageX),
-				pageY: round(touch.touches[i].pageY)
-			};
-			i++;
-		}
-		return {
-			timestamp: $.now(),
-			gesture: touch.gesture,
-			touches: touches,
-			center: getMultiCenter(touch.touches),
-			deltaX: touch.deltaX,
-			deltaY: touch.deltaY
-		};
-	};
-
-	var calDelta = function(touch) {
-		var session = $.gestures.session;
-		var center = touch.center;
-		var offset = session.offsetDelta || {};
-		var prevDelta = session.prevDelta || {};
-		var prevTouch = session.prevTouch || {};
-
-		if (touch.gesture.type === $.EVENT_START || touch.gesture.type === $.EVENT_END) {
-			prevDelta = session.prevDelta = {
-				x: prevTouch.deltaX || 0,
-				y: prevTouch.deltaY || 0
-			};
-
-			offset = session.offsetDelta = {
-				x: center.x,
-				y: center.y
-			};
-		}
-		touch.deltaX = prevDelta.x + (center.x - offset.x);
-		touch.deltaY = prevDelta.y + (center.y - offset.y);
-	};
-	var calTouchData = function(touch) {
-		var session = $.gestures.session;
-		var touches = touch.touches;
-		var touchesLength = touches.length;
-
-		if (!session.firstTouch) {
-			session.firstTouch = copySimpleTouchData(touch);
-		}
-
-		if (multiTouch() && touchesLength > 1 && !session.firstMultiTouch) {
-			session.firstMultiTouch = copySimpleTouchData(touch);
-		} else if (touchesLength === 1) {
-			session.firstMultiTouch = false;
-		}
-
-		var firstTouch = session.firstTouch;
-		var firstMultiTouch = session.firstMultiTouch;
-		var offsetCenter = firstMultiTouch ? firstMultiTouch.center : firstTouch.center;
-
-		var center = touch.center = getMultiCenter(touches);
-		touch.timestamp = $.now();
-		touch.deltaTime = touch.timestamp - firstTouch.timestamp;
-
-		touch.angle = getAngle(offsetCenter, center);
-		touch.distance = getDistance(offsetCenter, center);
-
-		calDelta(touch);
-
-		touch.offsetDirection = getDirection(touch.deltaX, touch.deltaY);
-
-		touch.scale = firstMultiTouch ? getScale(firstMultiTouch.touches, touches) : 1;
-		touch.rotation = firstMultiTouch ? getRotation(firstMultiTouch.touches, touches) : 0;
-
-		calIntervalTouchData(touch);
-
-	};
-	var CAL_INTERVAL = 25;
-	var calIntervalTouchData = function(touch) {
-		var session = $.gestures.session;
-		var last = session.lastInterval || touch;
-		var deltaTime = touch.timestamp - last.timestamp;
-		var velocity;
-		var velocityX;
-		var velocityY;
-		var direction;
-
-		if (touch.gesture.type != $.EVENT_CANCEL && (deltaTime > CAL_INTERVAL || last.velocity === undefined)) {
-			var deltaX = last.deltaX - touch.deltaX;
-			var deltaY = last.deltaY - touch.deltaY;
-
-			var v = getVelocity(deltaTime, deltaX, deltaY);
-			velocityX = v.x;
-			velocityY = v.y;
-			velocity = (abs(v.x) > abs(v.y)) ? v.x : v.y;
-			direction = getDirection(deltaX, deltaY) || last.direction;
-
-			session.lastInterval = touch;
-		} else {
-			velocity = last.velocity;
-			velocityX = last.velocityX;
-			velocityY = last.velocityY;
-			direction = last.direction;
-		}
-
-		touch.velocity = velocity;
-		touch.velocityX = velocityX;
-		touch.velocityY = velocityY;
-		touch.direction = direction;
-	};
-	var targetIds = {};
-	var getTouches = function(event, touch) {
-		var allTouches = $.slice.call(event.touches || event);
-
-		var type = event.type;
-
-		var targetTouches = [];
-		var changedTargetTouches = [];
-
-		//当touchstart或touchmove且touches长度为1，直接获得all和changed
-		if ((type === $.EVENT_START || type === $.EVENT_MOVE) && allTouches.length === 1) {
-			targetIds[allTouches[0].identifier] = true;
-			targetTouches = allTouches;
-			changedTargetTouches = allTouches;
-			touch.target = event.target;
-		} else {
-			var i = 0;
-			var targetTouches = [];
-			var changedTargetTouches = [];
-			var changedTouches = $.slice.call(event.changedTouches || event);
-
-			touch.target = event.target;
-			var sessionTarget = $.gestures.session.target || event.target;
-			targetTouches = allTouches.filter(function(touch) {
-				return hasParent(touch.target, sessionTarget);
-			});
-
-			if (type === $.EVENT_START) {
-				i = 0;
-				while (i < targetTouches.length) {
-					targetIds[targetTouches[i].identifier] = true;
-					i++;
-				}
-			}
-
-			i = 0;
-			while (i < changedTouches.length) {
-				if (targetIds[changedTouches[i].identifier]) {
-					changedTargetTouches.push(changedTouches[i]);
-				}
-				if (type === $.EVENT_END || type === $.EVENT_CANCEL) {
-					delete targetIds[changedTouches[i].identifier];
-				}
-				i++;
-			}
-
-			if (!changedTargetTouches.length) {
-				return false;
-			}
-		}
-		targetTouches = uniqueArray(targetTouches.concat(changedTargetTouches), 'identifier', true);
-		var touchesLength = targetTouches.length;
-		var changedTouchesLength = changedTargetTouches.length;
-
-		if (type === $.EVENT_START && touchesLength - changedTouchesLength === 0) { //first
-			touch.isFirst = true;
-			$.gestures.touch = $.gestures.session = {
-				target: event.target
-			};
-		}
-		touch.isFinal = ((type === $.EVENT_END || type === $.EVENT_CANCEL) && (touchesLength - changedTouchesLength === 0));
-
-		touch.touches = targetTouches;
-		touch.changedTouches = changedTargetTouches;
-		return true;
-
-	};
-	var handleTouchEvent = function(event) {
-		var touch = {
+	var detectTouchStart = function(event) {
+		$.gestures.stoped = false;
+		var now = $.now();
+		var point = event.touches ? event.touches[0] : event;
+		$.gestures.touch = {
+			target: event.target,
+			lastTarget: ($.gestures.touch && $.gestures.touch.lastTarget ? $.gestures.touch.lastTarget : null),
+			startTime: now,
+			touchTime: 0,
+			flickStartTime: now,
+			lastTapTime: ($.gestures.touch && $.gestures.touch.lastTapTime ? $.gestures.touch.lastTapTime : 0),
+			start: {
+				x: point.pageX,
+				y: point.pageY
+			},
+			flickStart: {
+				x: point.pageX,
+				y: point.pageY
+			},
+			flickDistanceX: 0,
+			flickDistanceY: 0,
+			move: {
+				x: 0,
+				y: 0
+			},
+			deltaX: 0,
+			deltaY: 0,
+			lastDeltaX: 0,
+			lastDeltaY: 0,
+			angle: '',
+			direction: '',
+			lockDirection: false,
+			startDirection: '',
+			distance: 0,
+			drag: false,
+			swipe: false,
+			hold: false,
 			gesture: event
 		};
-		var touches = getTouches(event, touch);
-		if (!touches) {
+
+		detect(event, $.gestures.touch);
+	};
+	var detectTouchMove = function(event) {
+		if ($.gestures.stoped || !$.gestures.touch) {
 			return;
 		}
-		calTouchData(touch);
+		var touch = $.gestures.touch;
+		if (event.target != touch.target) {
+			return;
+		}
+		var now = $.now();
+		var point = event.touches ? event.touches[0] : event;
+		touch.touchTime = now - touch.startTime;
+		touch.move = {
+			x: point.pageX,
+			y: point.pageY
+		};
+		if (now - touch.flickStartTime > 300) {
+			touch.flickStartTime = now;
+			touch.flickStart = touch.move;
+		}
+		touch.distance = getDistance(touch.start, touch.move);
+		touch.angle = getAngle(touch.start, touch.move);
+		touch.direction = getDirectionByAngle(touch.angle);
+		touch.lastDeltaX = touch.deltaX;
+		touch.lastDeltaY = touch.deltaY;
+		touch.deltaX = touch.move.x - touch.start.x;
+		touch.deltaY = touch.move.y - touch.start.y;
+		touch.gesture = event;
+
 		detect(event, touch);
-		$.gestures.session.prevTouch = touch;
 	};
-	window.addEventListener($.EVENT_START, handleTouchEvent);
-	window.addEventListener($.EVENT_MOVE, handleTouchEvent);
-	window.addEventListener($.EVENT_END, handleTouchEvent);
-	window.addEventListener($.EVENT_CANCEL, handleTouchEvent);
+	var detectTouchEnd = function(event) {
+		if ($.gestures.stoped || !$.gestures.touch) {
+			return;
+		}
+		var touch = $.gestures.touch;
+		if (event.target != touch.target) {
+			return;
+		}
+		var now = $.now();
+		touch.touchTime = now - touch.startTime;
+		touch.flickTime = now - touch.flickStartTime;
+		touch.flickDistanceX = touch.move.x - touch.flickStart.x;
+		touch.flickDistanceY = touch.move.y - touch.flickStart.y;
+		touch.gesture = event;
+
+		detect(event, touch);
+	};
+
+	window.addEventListener($.EVENT_START, detectTouchStart);
+	window.addEventListener($.EVENT_MOVE, detectTouchMove);
+	window.addEventListener($.EVENT_END, detectTouchEnd);
+	window.addEventListener($.EVENT_CANCEL, detectTouchEnd);
 	//fixed hashchange(android)
 	window.addEventListener($.EVENT_CLICK, function(e) {
 		//TODO 应该判断当前target是不是在targets.popover内部，而不是非要相等
@@ -1458,36 +1185,20 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  * @returns {undefined}
  */
 (function($, name) {
-	var flickStartTime = 0;
 	var handle = function(event, touch) {
-		var session = $.gestures.session;
-		var options = this.options;
-		var now = $.now();
-		switch (event.type) {
-			case $.EVENT_MOVE:
-				if (now - flickStartTime > 300) {
-					flickStartTime = now;
-					session.flickStart = touch.center;
-				}
-				break;
-			case $.EVENT_END:
-			case $.EVENT_CANCEL:
-				if (session.flickStart && options.flickMaxTime > (now - flickStartTime) && touch.distance > options.flickMinDistince) {
-					touch.flick = true;
-					touch.flickTime = now - flickStartTime;
-					touch.flickDistanceX = touch.center.x - session.flickStart.x;
-					touch.flickDistanceY = touch.center.y - session.flickStart.y;
-					$.trigger(session.target, name, touch);
-					$.trigger(session.target, name + touch.direction, touch);
-				}
-				break;
+		if (event.type === $.EVENT_END || event.type === $.EVENT_CANCEL) {
+			var options = this.options;
+			if (touch.direction && options.flickMaxTime > touch.flickTime && touch.distance > options.flickMinDistince) {
+				touch.flick = true;
+				$.trigger(event.target, name, touch);
+				$.trigger(event.target, name + touch.direction, touch);
+			}
 		}
-
 	};
 	/**
 	 * mui gesture flick
 	 */
-	$.addGesture({
+	$.registerGesture({
 		name: name,
 		index: 5,
 		handle: handle,
@@ -1505,21 +1216,18 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  */
 (function($, name) {
 	var handle = function(event, touch) {
-		var session = $.gestures.session;
 		if (event.type === $.EVENT_END || event.type === $.EVENT_CANCEL) {
 			var options = this.options;
-			//TODO 后续根据velocity计算
-			if (touch.direction && options.swipeMaxTime > touch.deltaTime && touch.distance > options.swipeMinDistince) {
+			if (touch.direction && options.swipeMaxTime > touch.touchTime && touch.distance > options.swipeMinDistince) {
 				touch.swipe = true;
-				$.trigger(session.target, name, touch);
-				$.trigger(session.target, name + touch.direction, touch);
+				$.trigger(event.target, name + touch.direction, touch);
 			}
 		}
 	};
 	/**
 	 * mui gesture swipe
 	 */
-	$.addGesture({
+	$.registerGesture({
 		name: name,
 		index: 10,
 		handle: handle,
@@ -1537,36 +1245,32 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  */
 (function($, name) {
 	var handle = function(event, touch) {
-		var session = $.gestures.session;
 		switch (event.type) {
-			case $.EVENT_START:
-				break;
 			case $.EVENT_MOVE:
-				if (!touch.direction) {
-					return;
-				}
-				//修正direction,可在session期间自行锁定拖拽方向，方便开发scroll类不同方向拖拽插件嵌套
-				if (session.lockDirection && session.startDirection) {
-					if (session.startDirection && session.startDirection !== touch.direction) {
-						if (session.startDirection === 'up' || session.startDirection === 'down') {
-							touch.direction = touch.deltaY < 0 ? 'up' : 'down';
-						} else {
-							touch.direction = touch.deltaX < 0 ? 'left' : 'right';
+				if (touch.direction) { //drag
+					//修正direction
+					//默认锁定单向drag(后续可能需要额外配置支持)
+					if (touch.lockDirection && touch.startDirection) {
+						if (touch.startDirection && touch.startDirection !== touch.direction) {
+							if (touch.startDirection === 'up' || touch.startDirection === 'down') {
+								touch.direction = touch.deltaY < 0 ? 'up' : 'down';
+							} else {
+								touch.direction = touch.deltaX < 0 ? 'left' : 'right';
+							}
 						}
 					}
+					if (!touch.drag) {
+						touch.drag = true;
+						$.trigger(event.target, name + 'start', touch);
+					}
+					$.trigger(event.target, name, touch);
+					$.trigger(event.target, name + touch.direction, touch);
 				}
-
-				if (!session.drag) {
-					session.drag = true;
-					$.trigger(session.target, name + 'start', touch);
-				}
-				$.trigger(session.target, name, touch);
-				$.trigger(session.target, name + touch.direction, touch);
 				break;
 			case $.EVENT_END:
 			case $.EVENT_CANCEL:
-				if (session.drag && touch.isFinal) {
-					$.trigger(session.target, name + 'end', touch);
+				if (touch.drag) {
+					$.trigger(event.target, name + 'end', touch);
 				}
 				break;
 		}
@@ -1574,13 +1278,11 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	/**
 	 * mui gesture drag
 	 */
-	$.addGesture({
+	$.registerGesture({
 		name: name,
 		index: 20,
 		handle: handle,
-		options: {
-			fingers: 1
-		}
+		options: {}
 	});
 })(mui, 'drag');
 /**
@@ -1590,45 +1292,33 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  * @returns {undefined}
  */
 (function($, name) {
-	var lastTarget;
-	var lastTapTime;
 	var handle = function(event, touch) {
-		var session = $.gestures.session;
-		var options = this.options;
-		switch (event.type) {
-			case $.EVENT_END:
-				if (!touch.isFinal) {
-					return;
-				}
-				var target = session.target;
-				if (!target || (target.disabled || (target.classList && target.classList.contains('mui-disabled')))) {
-					return;
-				}
-				if (touch.distance < options.tapMaxDistance && touch.deltaTime < options.tapMaxTime) {
-					if ($.options.gestureConfig.doubletap && lastTarget && (lastTarget === target)) { //same target
-						if (lastTapTime && (touch.timestamp - lastTapTime) < options.tapMaxInterval) {
-							$.trigger(target, 'doubletap', touch);
-							lastTapTime = $.now();
-							lastTarget = target;
-							return;
-						}
+		//if (event.type === $.EVENT_END || event.type === $.EVENT_CANCEL) {
+		if (event.type === $.EVENT_END) { //ignore touchcancel
+			var options = this.options;
+			if (touch.distance < options.tapMaxDistance && touch.touchTime < options.tapMaxTime) {
+				if ($.options.gestureConfig.doubletap && touch.lastTarget && (touch.lastTarget === event.target)) { //same target
+					if (touch.lastTapTime && (touch.startTime - touch.lastTapTime) < options.tapMaxInterval) {
+						$.trigger(event.target, 'doubletap', touch);
+						touch.lastTapTime = $.now();
+						touch.lastTarget = event.target;
+						return;
 					}
-					$.trigger(target, name, touch);
-					lastTapTime = $.now();
-					lastTarget = target;
 				}
-				break;
+				$.trigger(event.target, name, touch);
+				touch.lastTapTime = $.now();
+				touch.lastTarget = event.target;
+			}
 		}
 	};
 	/**
 	 * mui gesture tap
 	 */
-	$.addGesture({
+	$.registerGesture({
 		name: name,
 		index: 30,
 		handle: handle,
 		options: {
-			fingers: 1,
 			tapMaxInterval: 300,
 			tapMaxDistance: 5,
 			tapMaxTime: 250
@@ -1644,13 +1334,14 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 (function($, name) {
 	var timer;
 	var handle = function(event, touch) {
-		var session = $.gestures.session;
 		var options = this.options;
 		switch (event.type) {
 			case $.EVENT_START:
 				clearTimeout(timer);
 				timer = setTimeout(function() {
-					$.trigger(session.target, name, touch);
+					if (!touch.drag) {
+						$.trigger(event.target, name, touch);
+					}
 				}, options.holdTimeout);
 				break;
 			case $.EVENT_MOVE:
@@ -1667,12 +1358,11 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	/**
 	 * mui gesture longtap
 	 */
-	$.addGesture({
+	$.registerGesture({
 		name: name,
 		index: 10,
 		handle: handle,
 		options: {
-			fingers: 1,
 			holdTimeout: 500,
 			holdThreshold: 2
 		}
@@ -1687,25 +1377,22 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 (function($, name) {
 	var timer;
 	var handle = function(event, touch) {
-		var session = $.gestures.session;
 		var options = this.options;
 		switch (event.type) {
 			case $.EVENT_START:
-				if ($.options.gestureConfig.hold) {
-					timer && clearTimeout(timer);
-					timer = setTimeout(function() {
-						touch.hold = true;
-						$.trigger(session.target, name, touch);
-					}, options.holdTimeout);
-				}
+				clearTimeout(timer);
+				timer = setTimeout(function() {
+					touch.hold = true;
+					$.trigger(event.target, name, touch);
+				}, options.holdTimeout);
 				break;
 			case $.EVENT_MOVE:
 				break;
 			case $.EVENT_END:
 			case $.EVENT_CANCEL:
-				if (timer) {
-					clearTimeout(timer) && (timer = null);
-					$.trigger(session.target, 'release', touch);
+				clearTimeout(timer);
+				if ($.options.gestureConfig.hold && touch.hold) {
+					$.trigger(event.target, 'release', touch);
 				}
 				break;
 		}
@@ -1713,77 +1400,15 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	/**
 	 * mui gesture hold
 	 */
-	$.addGesture({
+	$.registerGesture({
 		name: name,
 		index: 10,
 		handle: handle,
 		options: {
-			fingers: 1,
 			holdTimeout: 0
 		}
 	});
 })(mui, 'hold');
-/**
- * mui gesture pinch
- * @param {type} $
- * @param {type} name
- * @returns {undefined}
- */
-(function($, name) {
-	var handle = function(event, touch) {
-		var options = this.options;
-		var session = $.gestures.session;
-		switch (event.type) {
-			case $.EVENT_START:
-				break;
-			case $.EVENT_MOVE:
-				if ($.options.gestureConfig.pinch) {
-					if (touch.touches.length < 2) {
-						return;
-					}
-					if (!session.pinch) { //start
-						session.pinch = true;
-						$.trigger(session.target, name + 'start', touch);
-					}
-					$.trigger(session.target, name, touch);
-					var scale = touch.scale;
-					var rotation = touch.rotation;
-					var lastScale = typeof touch.lastScale === 'undefined' ? 1 : touch.lastScale;
-					var scaleDiff = 0.000000000001; //防止scale与lastScale相等，不触发事件的情况。
-					if (scale > lastScale) { //out
-						lastScale = scale - scaleDiff;
-						$.trigger(session.target, name + 'out', touch);
-					} //in
-					else if (scale < lastScale) {
-						lastScale = scale + scaleDiff;
-						$.trigger(session.target, name + 'in', touch);
-					}
-					if (Math.abs(rotation) > options.minRotationAngle) {
-						$.trigger(session.target, 'rotate', touch);
-					}
-				}
-				break;
-			case $.EVENT_END:
-			case $.EVENT_CANCEL:
-				if ($.options.gestureConfig.pinch && session.pinch && touch.touches.length === 2) {
-					session.pinch = false;
-					$.trigger(session.target, name + 'end', touch);
-				}
-				break;
-		}
-	};
-	/**
-	 * mui gesture pinch
-	 */
-	$.addGesture({
-		name: name,
-		index: 10,
-		handle: handle,
-		options: {
-			minRotationAngle: 0
-		}
-	});
-})(mui, 'pinch');
 /**
  * mui.init
  * @param {type} $
@@ -1798,8 +1423,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			hold: false,
 			flick: true,
 			swipe: true,
-			drag: true,
-			pinch: false
+			drag: true
 		}
 	};
 	/**
@@ -1830,7 +1454,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		isInitialized = true;
 		$.options = $.extend(true, $.global, options || {});
 		$.ready(function() {
-			$.doAction('inits', function(index, init) {
+			$.each($.inits, function(index, init) {
 				var isInit = !!(!inits[init.name] || init.repeat);
 				if (isInit) {
 					init.handle.call($);
@@ -1845,8 +1469,8 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 * 增加初始化执行流程
 	 * @param {function} init
 	 */
-	$.addInit = function(init) {
-		return $.addAction('inits', init);
+	$.registerInit = function(init) {
+		return $.registerHandler('inits', init);
 	};
 	$(function() {
 		var classList = document.body.classList;
@@ -1923,7 +1547,10 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 * @returns {Object}
 	 */
 	$.waitingOptions = function(options) {
-		return $.extend(true,{},{autoShow: true,title: ''}, options);
+		return $.extend({
+			autoShow: true,
+			title: ''
+		}, options);
 	};
 	/**
 	 * 窗口显示配置
@@ -1931,7 +1558,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 * @returns {Object}
 	 */
 	$.showOptions = function(options) {
-		return $.extend(true,{},defaultShow, options);
+		return $.extend(defaultShow, options);
 	};
 	/**
 	 * 窗口默认配置
@@ -1970,13 +1597,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 */
 	$.fire = function(webview, eventType, data) {
 		if (webview) {
-			if (data !== '') {
-				data = data || {};
-				if ($.isPlainObject(data)) {
-					data = JSON.stringify(data || {}).replace(/\'/g, "\\u0027").replace(/\\/g, "\\u005c");
-				}
-			}
-			webview.evalJS("typeof mui!=='undefined'&&mui.receive('" + eventType + "','" + data + "')");
+			webview.evalJS("typeof mui!=='undefined'&&mui.receive('" + eventType + "','" + JSON.stringify(data || {}).replace(/\'/g, "\\u0027").replace(/\\/g, "\\u005c") + "')");
 		}
 	};
 	/**
@@ -1987,11 +1608,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 */
 	$.receive = function(eventType, data) {
 		if (eventType) {
-			try {
-				if (data) {
-					data = JSON.parse(data);
-				}
-			} catch (e) {}
+			data = JSON.parse(data);
 			$.trigger(document, eventType, data);
 		}
 	};
@@ -2049,17 +1666,20 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		}
 		options = options || {};
 		var params = options.params || {};
-		var webview = null,webviewCache = null, nShow, nWaiting;
-
-		if($.webviews[id]){
-			webviewCache = $.webviews[id];
-			//webview真实存在，才能获取
-			if(plus.webview.getWebviewById(id)){
-				webview = webviewCache.webview;
+		var webview, nShow, nWaiting;
+		if ($.webviews[id]) { //已缓存
+			var webviewCache = $.webviews[id];
+			webview = webviewCache.webview;
+			//需要处理用户手动关闭窗口的情况，此时webview应该是空的；
+			if (!webview || !webview.getURL()) {
+				//再次新建一个webview；
+				options = $.extend(options, {
+					id: id,
+					url: url,
+					preload: true
+				}, true);
+				webview = $.createWindow(options);
 			}
-		}
-
-		if (webviewCache&&webview) { //已缓存
 			//每次show都需要传递动画参数；
 			//预加载的动画参数优先级：openWindow配置>preloadPages配置>mui默认配置；
 			nShow = webviewCache.show;
@@ -2132,25 +1752,17 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				webview = $.webviews[id].webview;
 			} else { //新增预加载窗口
 				//preload
-				//判断是否携带createNew参数，默认为false
-				if (options.createNew !== true) {
-					webview = plus.webview.getWebviewById(id);
-				}
-
-				//之前没有，那就新创建	
-				if (!webview) {
-					webview = plus.webview.create(options.url, id, $.windowOptions(options.styles), $.extend({
-						preload: true
-					}, options.extras));
-					if (options.subpages) {
-						$.each(options.subpages, function(index, subpage) {
-							//TODO 子窗口也可能已经创建，比如公用模板的情况；
-							var subWebview = plus.webview.create(subpage.url, subpage.id || subpage.url, $.windowOptions(subpage.styles), $.extend({
-								preload: true
-							}, subpage.extras));
-							webview.append(subWebview);
-						});
-					}
+				webview = plus.webview.create(options.url, id, $.windowOptions(options.styles), $.extend({
+					preload: true
+				}, options.extras));
+				if (options.subpages) {
+					$.each(options.subpages, function(index, subpage) {
+						//TODO 子窗口也可能已经创建，比如公用模板的情况；
+						var subWebview = plus.webview.create(subpage.url, subpage.id || subpage.url, $.windowOptions(subpage.styles), $.extend({
+							preload: true
+						}, subpage.extras));
+						webview.append(subWebview);
+					});
 				}
 			}
 
@@ -2280,7 +1892,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	$.plusReady(function() {
 		$.currentWebview = plus.webview.currentWebview();
 	});
-	$.addInit({
+	$.registerInit({
 		name: '5+',
 		index: 100,
 		handle: function() {
@@ -2364,13 +1976,13 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 * @param {type} back
 	 * @returns {$.gestures}
 	 */
-	$.addBack = function(back) {
-		return $.addAction('backs', back);
+	$.registerBack = function(back) {
+		return $.registerHandler('backs', back);
 	};
 	/**
 	 * default
 	 */
-	$.addBack({
+	$.registerBack({
 		name: 'browser',
 		index: 100,
 		handle: function() {
@@ -2390,7 +2002,9 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				return;
 			}
 		}
-		$.doAction('backs');
+		$.each($.backs, function(index, back) {
+			return !back.handle();
+		});
 	};
 	window.addEventListener('tap', function(e) {
 		var action = $.targets.action;
@@ -2414,7 +2028,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  */
 (function($, window) {
 	if ($.os.plus && $.os.android) {
-		$.addBack({
+		$.registerBack({
 			name: 'mui',
 			index: 5,
 			handle: function() {
@@ -2429,18 +2043,13 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					$(offCanvas).offCanvas('close');
 					return true;
 				}
-				var previewImage = $.isFunction($.getPreviewImage) && $.getPreviewImage();
-				if (previewImage && previewImage.isShown()) {
-					previewImage.close();
-					return true;
-				}
 			}
 		});
 	}
 	/**
 	 * 5+ back
 	 */
-	$.addBack({
+	$.registerBack({
 		name: '5+',
 		index: 10,
 		handle: function() {
@@ -2509,7 +2118,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		}
 	});
 	//处理按键监听事件
-	$.addInit({
+	$.registerInit({
 		name: 'keyEventBind',
 		index: 1000,
 		handle: function() {
@@ -2531,7 +2140,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
  * @returns {undefined}
  */
 (function($) {
-	$.addInit({
+	$.registerInit({
 		name: 'pullrefresh',
 		index: 1000,
 		handle: function() {
@@ -3195,28 +2804,28 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			this.stopped = false;
 
 			this.options = $.extend(true, {
-				scrollY: true, //是否竖向滚动
-				scrollX: false, //是否横向滚动
-				startX: 0, //初始化时滚动至x
-				startY: 0, //初始化时滚动至y
-				indicators: true, //是否显示滚动条
+				scrollY: true,
+				scrollX: false,
+				startX: 0,
+				startY: 0,
+				indicators: true,
 				stopPropagation: false,
 				hardwareAccelerated: true,
 				fixedBadAndorid: false,
 				preventDefaultException: {
-					tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|VIDEO)$/
+					tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT)$/
 				},
 				momentum: true,
 
-				snap: false, //图片轮播，拖拽式选项卡
+				snap: false,
 
-				bounce: true, //是否启用回弹
-				bounceTime: 300, //回弹动画时间
-				bounceEasing: ease.circular.style, //回弹动画曲线
+				bounce: true,
+				bounceTime: 300,
+				bounceEasing: ease.circular.style,
 
 				directionLockThreshold: 5,
 
-				parallaxElement: false, //视差元素
+				parallaxElement: false,
 				parallaxRatio: 0.5
 			}, options);
 
@@ -3280,6 +2889,29 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				this.indicators.push(new Indicator(this, indicators[i]));
 			}
 
+			this.wrapper.addEventListener('scrollend', function() {
+				self.indicators.map(function(indicator) {
+					indicator.fade();
+				});
+			});
+
+			this.wrapper.addEventListener('scrollstart', function() {
+				self.indicators.map(function(indicator) {
+					indicator.fade(1);
+				});
+			});
+
+			//			this.wrapper.addEventListener('beforescrollstart', function() {
+			//				self.indicators.map(function(indicator) {
+			//					indicator.fade(1, true);
+			//				});
+			//			});
+
+			this.wrapper.addEventListener('refresh', function() {
+				self.indicators.map(function(indicator) {
+					indicator.refresh();
+				});
+			});
 		},
 		_initSnap: function() {
 			this.currentPage = {};
@@ -3358,48 +2990,26 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				pageX: 0
 			};
 		},
-		_initEvent: function(detach) {
-			var action = detach ? 'removeEventListener' : 'addEventListener';
-			window[action]('orientationchange', this);
-			window[action]('resize', this);
+		_initEvent: function() {
+			window.addEventListener('orientationchange', this);
+			window.addEventListener('resize', this);
 
-			this.scroller[action]('webkitTransitionEnd', this);
+			this.scroller.addEventListener('webkitTransitionEnd', this);
 
-			this.wrapper[action]('touchstart', this);
-			this.wrapper[action]('touchcancel', this);
-			this.wrapper[action]('touchend', this);
-			this.wrapper[action]('drag', this);
-			this.wrapper[action]('dragend', this);
-			this.wrapper[action]('flick', this);
-			this.wrapper[action]('scrollend', this);
+			this.wrapper.addEventListener('touchstart', this);
+			this.wrapper.addEventListener('touchcancel', this);
+			this.wrapper.addEventListener('touchend', this);
+			this.wrapper.addEventListener('drag', this);
+			this.wrapper.addEventListener('dragend', this);
+			this.wrapper.addEventListener('flick', this);
+			this.wrapper.addEventListener('scrollend', this);
 			if (this.options.scrollX) {
-				this.wrapper[action]('swiperight', this);
+				this.wrapper.addEventListener('swiperight', this);
 			}
 			var segmentedControl = this.wrapper.querySelector('.mui-segmented-control');
 			if (segmentedControl) { //靠，这个bug排查了一下午，阻止hash跳转，一旦hash跳转会导致可拖拽选项卡的tab不见
-				mui(segmentedControl)[detach ? 'off' : 'on']('click', 'a', $.preventDefault);
+				mui(segmentedControl).on('click', 'a', $.preventDefault);
 			}
-
-			this.wrapper[action]('scrollend', this._handleIndicatorScrollend.bind(this));
-
-			this.wrapper[action]('scrollstart', this._handleIndicatorScrollstart.bind(this));
-
-			this.wrapper[action]('refresh', this._handleIndicatorRefresh.bind(this));
-		},
-		_handleIndicatorScrollend: function() {
-			this.indicators.map(function(indicator) {
-				indicator.fade();
-			});
-		},
-		_handleIndicatorScrollstart: function() {
-			this.indicators.map(function(indicator) {
-				indicator.fade(1);
-			});
-		},
-		_handleIndicatorRefresh: function() {
-			this.indicators.map(function(indicator) {
-				indicator.refresh();
-			});
 		},
 		handleEvent: function(e) {
 			if (this.stopped) {
@@ -3444,12 +3054,12 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		_start: function(e) {
 			this.moved = this.needReset = false;
 			this._transitionTime();
-			if (this.isInTransition) {
+			if (this.isInTransition && this.moved) {
 				this.needReset = true;
 				this.isInTransition = false;
 				var pos = $.parseTranslateMatrix($.getStyles(this.scroller, 'webkitTransform'));
 				this.setTranslate(Math.round(pos.x), Math.round(pos.y));
-				//				this.resetPosition(); //reset
+				this.resetPosition(); //reset
 				$.trigger(this.scroller, 'scrollend', this);
 				//				e.stopPropagation();
 				e.preventDefault();
@@ -3495,8 +3105,8 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 						//						if (direction !== 'left' && direction !== 'right') {
 						//							isReturn = true;
 						//						} else {
-						$.gestures.session.lockDirection = true; //锁定方向
-						$.gestures.session.startDirection = detail.direction;
+						$.gestures.touch.lockDirection = true; //锁定方向
+						$.gestures.touch.startDirection = detail.direction;
 						//						}
 					}
 				} else if (this.options.scrollY && !this.moved) {
@@ -3511,8 +3121,8 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					//						}
 					//					}
 					if (!this.moved) {
-						$.gestures.session.lockDirection = true; //锁定方向
-						$.gestures.session.startDirection = detail.direction;
+						$.gestures.touch.lockDirection = true; //锁定方向
+						$.gestures.touch.startDirection = detail.direction;
 					}
 				} else if (this.options.scrollX && !this.moved) {
 					isReturn = true;
@@ -3520,7 +3130,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			} else {
 				isReturn = true;
 			}
-			if (this.moved || isPreventDefault) {
+			if (isPreventDefault) {
 				e.stopPropagation(); //阻止冒泡(scroll类嵌套)
 				detail.gesture && detail.gesture.preventDefault();
 			}
@@ -3538,8 +3148,8 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				deltaX = detail.deltaX;
 				deltaY = detail.deltaY;
 			} else { //move
-				deltaX = detail.deltaX - $.gestures.session.prevTouch.deltaX;
-				deltaY = detail.deltaY - $.gestures.session.prevTouch.deltaY;
+				deltaX = detail.deltaX - detail.lastDeltaX;
+				deltaY = detail.deltaY - detail.lastDeltaY;
 			}
 			var absDeltaX = Math.abs(detail.deltaX);
 			var absDeltaY = Math.abs(detail.deltaY);
@@ -3813,7 +3423,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			}
 			this.lastX = this.x;
 			this.lastY = this.y;
-			$.trigger(this.scroller, 'scroll', this);
 		},
 		reLayout: function() {
 			this.wrapper.offsetHeight;
@@ -3886,11 +3495,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		},
 		gotoPage: function(index) {
 			this._gotoPage(index);
-		},
-		destory: function() {
-			this._initEvent(true); //detach
-			delete $.data[this.wrapper.getAttribute('data-scroll')];
-			this.wrapper.setAttribute('data-scroll', '');
 		}
 	});
 	//Indicator
@@ -4086,10 +3690,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			}
 		},
 		_start: function(e) {
-			//仅下拉刷新在start阻止默认事件
-			if (e.touches && e.touches.length && e.touches[0].clientX > 30) {
-				e.target && !this._preventDefaultException(e.target, this.options.preventDefaultException) && e.preventDefault();
-			}
 			if (!this.loading) {
 				this.pulldown = this.pullPocket = this.pullCaption = this.pullLoading = false
 			}
@@ -4111,13 +3711,9 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		},
 		//API
 		resetPosition: function(time) {
-			if (this.pulldown) {
-				if (this.y >= this.options.down.height) {
-					this.pulldownLoading(undefined, time || 0);
-					return true;
-				} else {
-					!this.loading && this.topPocket.classList.remove(CLASS_VISIBILITY);
-				}
+			if (this.pulldown && this.y >= this.options.down.height) {
+				this.pulldownLoading(undefined, time || 0);
+				return true;
 			}
 			return this._super(time);
 		},
@@ -4166,7 +3762,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		},
 		endPullupToRefresh: function(finished) {
 			var self = this;
-			if (self.bottomPocket) { // && self.loading && !this.pulldown
+			if (self.bottomPocket && self.loading && !this.pulldown) {
 				self.loading = false;
 				if (finished) {
 					this.finished = true;
@@ -4176,26 +3772,18 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					self.wrapper.removeEventListener('scrollbottom', self);
 				} else {
 					self._setCaption(self.options.up.contentdown);
-					//					setTimeout(function() {
-					self.loading || self.bottomPocket.classList.remove(CLASS_VISIBILITY);
-					//					}, 300);
+					setTimeout(function() {
+						self.loading || self.bottomPocket.classList.remove(CLASS_VISIBILITY);
+					}, 350);
 				}
 			}
 		},
-		disablePullupToRefresh: function() {
-			this._initPullupRefresh();
-			this.bottomPocket.className = 'mui-pull-bottom-pocket' + ' ' + CLASS_HIDDEN;
-			this.wrapper.removeEventListener('scrollbottom', this);
-		},
-		enablePullupToRefresh: function() {
-			this._initPullupRefresh();
-			this.bottomPocket.classList.remove(CLASS_HIDDEN);
-			this._setCaption(this.options.up.contentdown);
-			this.wrapper.addEventListener('scrollbottom', this);
-		},
 		refresh: function(isReset) {
 			if (isReset && this.finished) {
-				this.enablePullupToRefresh();
+				this._initPullupRefresh();
+				this.bottomPocket.classList.remove(CLASS_HIDDEN);
+				this._setCaption(this.options.up.contentdown);
+				this.wrapper.addEventListener('scrollbottom', this);
 				this.finished = false;
 			}
 			this._super();
@@ -4214,9 +3802,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			} else {
 				pullRefreshApi = $.data[id];
 			}
-			if (options.down && options.down.auto) { //如果设置了auto，则自动下拉一次
-				pullRefreshApi.pulldownLoading(options.down.autoY);
-			} else if (options.up && options.up.auto) { //如果设置了auto，则自动上拉一次
+			if (options.up && options.up.auto) { //如果设置了auto，则自动上拉一次
 				pullRefreshApi.pullupLoading();
 			}
 			//暂不提供这种调用方式吧			
@@ -4250,17 +3836,16 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	var SELECTOR_SLIDER_INDICATOR = '.' + CLASS_SLIDER_INDICATOR;
 	var SELECTOR_SLIDER_PROGRESS_BAR = '.mui-slider-progress-bar';
 
-	var Slider = $.Slider = $.Scroll.extend({
+
+	var Slider = $.Scroll.extend({
 		init: function(element, options) {
 			this._super(element, $.extend(true, {
-				fingers: 1,
 				interval: 0, //设置为0，则不定时轮播
 				scrollY: false,
 				scrollX: true,
 				indicators: false,
 				bounceTime: 200,
 				startX: false,
-				slideTime: 0, //滑动动画时间
 				snap: SELECTOR_SLIDER_ITEM
 			}, options));
 			if (this.options.startX) {
@@ -4293,108 +3878,91 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				this._initTimer();
 			}
 		},
-		_triggerSlide: function() {
+		_initEvent: function() {
 			var self = this;
-			self.isInTransition = false;
-			var page = self.currentPage;
-			self.slideNumber = self._fixedSlideNumber();
-			if (self.loop) {
-				if (self.slideNumber === 0) {
-					self.setTranslate(self.pages[1][0].x, 0);
-				} else if (self.slideNumber === self.itemLength - 3) {
-					self.setTranslate(self.pages[self.itemLength - 2][0].x, 0);
+			self._super();
+			self.wrapper.addEventListener('swiperight', $.stopPropagation);
+			self.wrapper.addEventListener('scrollend', function() {
+				self.isInTransition = false;
+				var page = self.currentPage;
+				self.slideNumber = self._fixedSlideNumber();
+				if (self.loop) {
+					if (self.slideNumber === 0) {
+						self.setTranslate(self.pages[1][0].x, 0);
+					} else if (self.slideNumber === self.itemLength - 3) {
+						self.setTranslate(self.pages[self.itemLength - 2][0].x, 0);
+					}
 				}
-			}
-			if (self.lastSlideNumber != self.slideNumber) {
-				self.lastSlideNumber = self.slideNumber;
-				self.lastPage = self.currentPage;
-				$.trigger(self.wrapper, 'slide', {
-					slideNumber: self.slideNumber
-				});
-			}
-			self._initTimer();
-		},
-		_handleSlide: function(e) {
-			var self = this;
-			if (e.target !== self.wrapper) {
-				return;
-			}
-			var detail = e.detail;
-			detail.slideNumber = detail.slideNumber || 0;
-			var temps = self.scroller.querySelectorAll(SELECTOR_SLIDER_ITEM);
-			var items = [];
-			for (var i = 0, len = temps.length; i < len; i++) {
-				var item = temps[i];
-				if (item.parentNode === self.scroller) {
-					items.push(item);
+				if (self.lastSlideNumber != self.slideNumber) {
+					self.lastSlideNumber = self.slideNumber;
+					$.trigger(self.wrapper, 'slide', {
+						slideNumber: self.slideNumber
+					});
 				}
-			}
-			var _slideNumber = detail.slideNumber;
-			if (self.loop) {
-				_slideNumber += 1;
-			}
-			if (!self.wrapper.classList.contains('mui-segmented-control')) {
-				for (var i = 0, len = items.length; i < len; i++) {
-					var item = items[i];
-					if (item.parentNode === self.scroller) {
-						if (i === _slideNumber) {
-							item.classList.add(CLASS_ACTIVE);
-						} else {
-							item.classList.remove(CLASS_ACTIVE);
+				self._initTimer();
+			});
+
+			self.wrapper.addEventListener('slide', function(e) {
+				if (e.target !== self.wrapper) {
+					return;
+				}
+				var detail = e.detail;
+				detail.slideNumber = detail.slideNumber || 0;
+				var items = self.scroller.querySelectorAll(SELECTOR_SLIDER_ITEM);
+				var _slideNumber = detail.slideNumber;
+				if (self.loop) {
+					_slideNumber += 1;
+				}
+				if (!self.wrapper.classList.contains('mui-segmented-control')) {
+					for (var i = 0, len = items.length; i < len; i++) {
+						var item = items[i];
+						if (item.parentNode === self.scroller) {
+							if (i === _slideNumber) {
+								item.classList.add(CLASS_ACTIVE);
+							} else {
+								item.classList.remove(CLASS_ACTIVE);
+							}
 						}
 					}
 				}
-			}
-			var indicatorWrap = self.wrapper.querySelector('.mui-slider-indicator');
-			if (indicatorWrap) {
-				if (indicatorWrap.getAttribute('data-scroll')) { //scroll
-					$(indicatorWrap).scroll().gotoPage(detail.slideNumber);
-				}
-				var indicators = indicatorWrap.querySelectorAll('.mui-indicator');
-				if (indicators.length > 0) { //图片轮播
-					for (var i = 0, len = indicators.length; i < len; i++) {
-						indicators[i].classList[i === detail.slideNumber ? 'add' : 'remove'](CLASS_ACTIVE);
+				var indicatorWrap = self.wrapper.querySelector('.mui-slider-indicator');
+				if (indicatorWrap) {
+					if (indicatorWrap.getAttribute('data-scroll')) { //scroll
+						$(indicatorWrap).scroll().gotoPage(detail.slideNumber);
 					}
-				} else {
-					var number = indicatorWrap.querySelector('.mui-number span');
-					if (number) { //图文表格
-						number.innerText = (detail.slideNumber + 1);
-					} else { //segmented controls
-						var controlItems = self.wrapper.querySelectorAll('.mui-control-item');
-						for (var i = 0, len = controlItems.length; i < len; i++) {
-							controlItems[i].classList[i === detail.slideNumber ? 'add' : 'remove'](CLASS_ACTIVE);
+					var indicators = indicatorWrap.querySelectorAll('.mui-indicator');
+					if (indicators.length > 0) { //图片轮播
+						for (var i = 0, len = indicators.length; i < len; i++) {
+							indicators[i].classList[i === detail.slideNumber ? 'add' : 'remove'](CLASS_ACTIVE);
+						}
+					} else {
+						var number = indicatorWrap.querySelector('.mui-number span');
+						if (number) { //图文表格
+							number.innerText = (detail.slideNumber + 1);
+						} else { //segmented controls
+							var controlItems = self.wrapper.querySelectorAll('.mui-control-item');
+							for (var i = 0, len = controlItems.length; i < len; i++) {
+								controlItems[i].classList[i === detail.slideNumber ? 'add' : 'remove'](CLASS_ACTIVE);
+							}
 						}
 					}
 				}
-			}
-			e.stopPropagation();
-		},
-		_handleTabShow: function(e) {
-			var self = this;
-			self.gotoItem((e.detail.tabNumber || 0), self.options.slideTime);
-		},
-		_handleIndicatorTap: function(event) {
-			var self = this;
-			var target = event.target;
-			if (target.classList.contains(CLASS_ACTION_PREVIOUS) || target.classList.contains(CLASS_ACTION_NEXT)) {
-				self[target.classList.contains(CLASS_ACTION_PREVIOUS) ? 'prevItem' : 'nextItem']();
-				event.stopPropagation();
-			}
-		},
-		_initEvent: function(detach) {
-			var self = this;
-			self._super(detach);
-			var action = detach ? 'removeEventListener' : 'addEventListener';
-			self.wrapper[action]('swiperight', $.stopPropagation);
-			self.wrapper[action]('scrollend', self._triggerSlide.bind(this));
+				e.stopPropagation();
+			});
 
-			self.wrapper[action]('slide', self._handleSlide.bind(this));
-
-			self.wrapper[action]($.eventName('shown', 'tab'), self._handleTabShow.bind(this));
+			self.wrapper.addEventListener($.eventName('shown', 'tab'), function(e) { //tab
+				self.gotoItem((e.detail.tabNumber || 0), self.options.bounceTime);
+			});
 			//indicator
 			var indicator = self.wrapper.querySelector(SELECTOR_SLIDER_INDICATOR);
 			if (indicator) {
-				indicator[action]('tap', self._handleIndicatorTap.bind(this));
+				indicator.addEventListener('tap', function(event) {
+					var target = event.target;
+					if (target.classList.contains(CLASS_ACTION_PREVIOUS) || target.classList.contains(CLASS_ACTION_NEXT)) {
+						self[target.classList.contains(CLASS_ACTION_PREVIOUS) ? 'prevItem' : 'nextItem']();
+						event.stopPropagation();
+					}
+				});
 			}
 		},
 		_drag: function(e) {
@@ -4474,7 +4042,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			//				return;
 			//			}
 			if (e.type === 'flick') {
-				if (detail.deltaTime < 200) { //flick，太容易触发，额外校验一下deltaTime
+				if (detail.touchTime < 200) { //flick，太容易触发，额外校验一下touchtime
 					this.x = this._getPage((this.slideNumber + (direction === 'right' ? -1 : 1)), true).x;
 				}
 				this.resetPosition(this.options.bounceTime);
@@ -4577,11 +4145,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			} else {
 				this._super();
 			}
-		},
-		destory: function() {
-			this._initEvent(true); //detach
-			delete $.data[this.wrapper.getAttribute('data-slider')];
-			this.wrapper.setAttribute('data-slider', '');
 		}
 	});
 	$.fn.slider = function(options) {
@@ -4651,7 +4214,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			var self = this;
 			//			document.addEventListener('plusscrollbottom', this);
 			window.addEventListener('dragup', self);
-			document.addEventListener("plusscrollbottom", self);
 			self.scrollInterval = window.setInterval(function() {
 				if (self.isScroll && !self.loading) {
 					if (window.pageYOffset + window.innerHeight + 10 >= document.documentElement.scrollHeight) {
@@ -4719,7 +4281,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			//				}
 			//			}
 			self.isScroll = false;
-			if (e.type === 'dragup' || e.type === 'plusscrollbottom') {
+			if (e.type === 'dragup') {
 				self.isScroll = true;
 				setTimeout(function() {
 					self.isScroll = false;
@@ -4755,15 +4317,9 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				});
 			}
 		},
-		pulldownLoading: function() { //该方法是子页面调用的
+		pulldownLoading: function() {
 			var callback = $.options.pullRefresh.down.callback;
 			callback && callback.call(this);
-		},
-		_pulldownLoading: function() { //该方法是子页面调用的
-			var self = this;
-			$.plusReady(function() {
-				plus.webview.getWebviewById(self.options.webviewId).evalJS("mui&&mui.options.pullRefresh.down&&mui.options.pullRefresh.down.callback()");
-			});
 		},
 		endPulldownToRefresh: function() { //该方法是子页面调用的
 			var webview = plus.webview.currentWebview();
@@ -4813,8 +4369,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					self.pullCaption.innerHTML = self.options.up.contentnomore;
 					//					self.bottomPocket.classList.remove(CLASS_BLOCK);
 					//					self.bottomPocket.classList.add(CLASS_HIDDEN);
-					//取消5+的plusscrollbottom事件
-					document.removeEventListener('plusscrollbottom', self);
+					//					document.removeEventListener('plusscrollbottom', self);
 					window.removeEventListener('dragup', self);
 				} else { //初始化时隐藏，后续不再隐藏
 					self.pullCaption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_DOWN;
@@ -4825,25 +4380,16 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				}
 			}
 		},
-		disablePullupToRefresh: function() {
-			this._initPullupRefresh();
-			this.bottomPocket.className = 'mui-pull-bottom-pocket' + ' ' + CLASS_HIDDEN;
-			window.removeEventListener('dragup', this);
-		},
-		enablePullupToRefresh: function() {
-			this._initPullupRefresh();
-			this.bottomPocket.classList.remove(CLASS_HIDDEN);
-			this.pullCaption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_DOWN;
-			this.pullCaption.innerHTML = this.options.up.contentdown;
-			document.addEventListener("plusscrollbottom", this);
-			window.addEventListener('dragup', this);
-		},
 		scrollTo: function(x, y, time) {
-			$.scrollTo(y, time);
+			$.scrollTo(x, y, time);
 		},
 		refresh: function(isReset) {
 			if (isReset && this.finished) {
-				this.enablePullupToRefresh();
+				this._initPullupRefresh();
+				this.bottomPocket.classList.remove(CLASS_HIDDEN);
+				this.pullCaption.className = CLASS_PULL_CAPTION + ' ' + CLASS_PULL_CAPTION_DOWN;
+				this.pullCaption.innerHTML = this.options.up.contentdown;
+				window.addEventListener('dragup', this);
 				this.finished = false;
 			}
 		}
@@ -4876,9 +4422,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		} else {
 			pullRefreshApi = $.data[id];
 		}
-		if (options.down && options.down.auto) { //如果设置了auto，则自动下拉一次
-			pullRefreshApi._pulldownLoading(); //parent webview
-		} else if (options.up && options.up.auto) { //如果设置了auto，则自动上拉一次
+		if (options.up && options.up.auto) { //如果设置了auto，则自动上拉一次
 			pullRefreshApi.pullupLoading();
 		}
 		return pullRefreshApi;
@@ -4895,7 +4439,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 (function($, window, document, name) {
 	var CLASS_OFF_CANVAS_LEFT = 'mui-off-canvas-left';
 	var CLASS_OFF_CANVAS_RIGHT = 'mui-off-canvas-right';
-	var CLASS_ACTION_BACKDROP = 'mui-off-canvas-backdrop';
+	var CLASS_ACTION_BACKDEOP = 'mui-off-canvas-backdrop';
 	var CLASS_OFF_CANVAS_WRAP = 'mui-off-canvas-wrap';
 
 	var CLASS_SLIDE_IN = 'mui-slide-in';
@@ -4914,30 +4458,16 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			this.classList = this.wrapper.classList;
 			if (this.scroller) {
 				this.options = $.extend(true, {
-					dragThresholdX: 10,
-					scale: 0.8,
-					opacity: 0.1,
-					preventDefaultException: {
-						tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|VIDEO)$/
-					},
+					dragThresholdX: 10
 				}, options);
 				document.body.classList.add('mui-fullscreen'); //fullscreen
 				this.refresh();
 				this.initEvent();
 			}
 		},
-		_preventDefaultException: function(el, exceptions) {
-			for (var i in exceptions) {
-				if (exceptions[i].test(el[i])) {
-					return true;
-				}
-			}
-			return false;
-		},
 		refresh: function(offCanvas) {
 			//			offCanvas && !offCanvas.classList.contains(CLASS_ACTIVE) && this.classList.remove(CLASS_ACTIVE);
 			this.slideIn = this.classList.contains(CLASS_SLIDE_IN);
-			this.scalable = this.classList.contains('mui-scalable') && !this.slideIn;
 			this.scroller = this.wrapper.querySelector(SELECTOR_INNER_WRAP);
 			//			!offCanvas && this.scroller.classList.remove(CLASS_TRANSITIONING);
 			//			!offCanvas && this.scroller.setAttribute('style', '');
@@ -4969,7 +4499,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				//				this.offCanvasLeft.classList.remove(CLASS_ACTIVE);
 				//				this.offCanvasLeft.setAttribute('style', '');
 			}
-			this.backdrop = this.scroller.querySelector('.' + CLASS_ACTION_BACKDROP);
+			this.backdrop = this.scroller.querySelector('.' + CLASS_ACTION_BACKDEOP);
 
 			this.options.dragThresholdX = this.options.dragThresholdX || 10;
 
@@ -4982,7 +4512,10 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		handleEvent: function(e) {
 			switch (e.type) {
 				case 'touchstart':
-					e.target && !this._preventDefaultException(e.target, this.options.preventDefaultException) && e.preventDefault();
+					var tagName = e.target && e.target.tagName;
+					if (tagName !== 'INPUT' && tagName !== 'TEXTAREA' && tagName !== 'SELECT') {
+						e.preventDefault();
+					}
 					break;
 				case 'webkitTransitionEnd': //有个bug需要处理，需要考虑假设没有触发webkitTransitionEnd的情况
 					if (e.target === this.scroller) {
@@ -4992,60 +4525,32 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				case 'drag':
 					var detail = e.detail;
 					if (!this.startX) {
-						this.startX = detail.center.x;
+						this.startX = detail.move.x;
 						this.lastX = this.startX;
 					} else {
-						this.lastX = detail.center.x;
+						this.lastX = detail.move.x;
 					}
 					if (!this.isDragging && Math.abs(this.lastX - this.startX) > this.options.dragThresholdX && (detail.direction === 'left' || (detail.direction === 'right'))) {
 						if (this.slideIn) {
-							this.scroller = this.wrapper.querySelector(SELECTOR_INNER_WRAP);
 							if (this.classList.contains(CLASS_ACTIVE)) {
-								if (this.offCanvasRight && this.offCanvasRight.classList.contains(CLASS_ACTIVE)) {
-									this.offCanvas = this.offCanvasRight;
-									this.offCanvasWidth = this.offCanvasRightWidth;
-								} else {
-									this.offCanvas = this.offCanvasLeft;
-									this.offCanvasWidth = this.offCanvasLeftWidth;
-								}
+								this.scroller = this.offCanvasRight && this.offCanvasRight.classList.contains(CLASS_ACTIVE) ? this.offCanvasRight : this.offCanvasLeft;
 							} else {
 								if (detail.direction === 'left' && this.offCanvasRight) {
-									this.offCanvas = this.offCanvasRight;
-									this.offCanvasWidth = this.offCanvasRightWidth;
+									this.scroller = this.offCanvasRight;
 								} else if (detail.direction === 'right' && this.offCanvasLeft) {
-									this.offCanvas = this.offCanvasLeft;
-									this.offCanvasWidth = this.offCanvasLeftWidth;
+									this.scroller = this.offCanvasLeft;
 								} else {
 									this.scroller = null;
 								}
 							}
-						} else {
-							if (this.classList.contains(CLASS_ACTIVE)) {
-								if (detail.direction === 'left') {
-									this.offCanvas = this.offCanvasLeft;
-									this.offCanvasWidth = this.offCanvasLeftWidth;
-								} else {
-									this.offCanvas = this.offCanvasRight;
-									this.offCanvasWidth = this.offCanvasRightWidth;
-								}
-							} else {
-								if (detail.direction === 'right') {
-									this.offCanvas = this.offCanvasLeft;
-									this.offCanvasWidth = this.offCanvasLeftWidth;
-								} else {
-									this.offCanvas = this.offCanvasRight;
-									this.offCanvasWidth = this.offCanvasRightWidth;
-								}
-							}
 						}
-						if (this.offCanvas && this.scroller) {
+						if (this.scroller) {
 							this.startX = this.lastX;
 							this.isDragging = true;
 
-							$.gestures.session.lockDirection = true; //锁定方向
-							$.gestures.session.startDirection = detail.direction;
+							$.gestures.touch.lockDirection = true; //锁定方向
+							$.gestures.touch.startDirection = detail.direction;
 
-							this.offCanvas.classList.remove(CLASS_TRANSITIONING);
 							this.scroller.classList.remove(CLASS_TRANSITIONING);
 							this.offsetX = this.getTranslateX();
 							this._initOffCanvasVisible();
@@ -5062,10 +4567,10 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 						var detail = e.detail;
 						var direction = detail.direction;
 						this.isDragging = false;
-						this.offCanvas.classList.add(CLASS_TRANSITIONING);
 						this.scroller.classList.add(CLASS_TRANSITIONING);
 						var ratio = 0;
 						var x = this.getTranslateX();
+
 						if (!this.slideIn) {
 							if (x >= 0) {
 								ratio = (this.offCanvasLeftWidth && (x / this.offCanvasLeftWidth)) || 0;
@@ -5242,7 +4747,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 						}
 					}
 				} else {
-					if (this.offCanvas.classList.contains(CLASS_OFF_CANVAS_RIGHT)) {
+					if (this.scroller.classList.contains(CLASS_OFF_CANVAS_RIGHT)) {
 						if (x < 0) {
 							this.setTranslateX(0);
 							return;
@@ -5268,35 +4773,12 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		},
 		setTranslateX: $.animationFrame(function(x) {
 			if (this.scroller) {
-				if (this.scalable && this.offCanvas.parentNode === this.wrapper) {
-					var percent = Math.abs(x) / this.offCanvasWidth;
-					var zoomOutScale = 1 - (1 - this.options.scale) * percent;
-					var zoomInScale = this.options.scale + (1 - this.options.scale) * percent;
-					var zoomOutOpacity = 1 - (1 - this.options.opacity) * percent;
-					var zoomInOpacity = this.options.opacity + (1 - this.options.opacity) * percent;
-					if (this.offCanvas.classList.contains(CLASS_OFF_CANVAS_LEFT)) {
-						this.offCanvas.style.webkitTransformOrigin = '-100%';
-						this.scroller.style.webkitTransformOrigin = 'left';
-					} else {
-						this.offCanvas.style.webkitTransformOrigin = '200%';
-						this.scroller.style.webkitTransformOrigin = 'right';
-					}
-					this.offCanvas.style.opacity = zoomInOpacity;
-					this.offCanvas.style.webkitTransform = 'translate3d(0,0,0) scale(' + zoomInScale + ')';
-					this.scroller.style.webkitTransform = 'translate3d(' + x + 'px,0,0) scale(' + zoomOutScale + ')';
-				} else {
-					if (this.slideIn) {
-						this.offCanvas.style.webkitTransform = 'translate3d(' + x + 'px,0,0)';
-					} else {
-						this.scroller.style.webkitTransform = 'translate3d(' + x + 'px,0,0)';
-					}
-				}
+				this.scroller.style.webkitTransform = 'translate3d(' + x + 'px,0,0)';
 			}
 		}),
 		getTranslateX: function() {
-			if (this.offCanvas) {
-				var scroller = this.slideIn ? this.offCanvas : this.scroller;
-				var result = $.parseTranslateMatrix($.getStyles(scroller, 'webkitTransform'));
+			if (this.scroller) {
+				var result = $.parseTranslateMatrix($.getStyles(this.scroller, 'webkitTransform'));
 				return (result && result.x) || 0;
 			}
 			return 0;
@@ -5325,11 +4807,10 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		},
 		close: function() {
 			this._initOffCanvasVisible();
-			this.offCanvas = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT + '.' + CLASS_ACTIVE) || this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_LEFT + '.' + CLASS_ACTIVE);
-			this.offCanvasWidth = this.offCanvas.offsetWidth;
+			if (this.slideIn) {
+				this.scroller = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT + '.' + CLASS_ACTIVE) || this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_LEFT + '.' + CLASS_ACTIVE);
+			}
 			if (this.scroller) {
-				this.offCanvas.offsetHeight;
-				this.offCanvas.classList.add(CLASS_TRANSITIONING);
 				this.scroller.classList.add(CLASS_TRANSITIONING);
 				this.openPercentage(0);
 			}
@@ -5342,16 +4823,10 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			if (!direction) {
 				direction = this.wrapper.querySelector('.' + CLASS_OFF_CANVAS_RIGHT) ? 'right' : 'left';
 			}
-			if (direction === 'right') {
-				this.offCanvas = this.offCanvasRight;
-				this.offCanvasWidth = this.offCanvasRightWidth;
-			} else {
-				this.offCanvas = this.offCanvasLeft;
-				this.offCanvasWidth = this.offCanvasLeftWidth;
+			if (this.slideIn) {
+				this.scroller = direction === 'right' ? this.offCanvasRight : this.offCanvasLeft;
 			}
 			if (this.scroller) {
-				this.offCanvas.offsetHeight;
-				this.offCanvas.classList.add(CLASS_TRANSITIONING);
 				this.scroller.classList.add(CLASS_TRANSITIONING);
 				this.openPercentage(direction === 'left' ? 100 : -100);
 			}
@@ -5414,7 +4889,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		var target = e.target;
 		for (; target && target !== document; target = target.parentNode) {
 			if (target.tagName === 'A' && target.hash && target.hash === ('#' + $.targets.offcanvas.id)) {
-				e.detail && e.detail.gesture && e.detail.gesture.preventDefault(); //fixed hashchange
+				e.detail.gesture.preventDefault(); //fixed hashchange
 				$($.targets._container).offCanvas().toggle($.targets.offcanvas);
 				$.targets.offcanvas = $.targets._container = null;
 				break;
@@ -5460,11 +4935,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	var CLASS_ACTION = 'mui-action';
 
 	var handle = function(event, target) {
-		var className = target.className || '';
-		if (typeof className !== 'string') { //svg className(SVGAnimatedString)
-			className = '';
-		}
-		if (className && ~className.indexOf(CLASS_ACTION)) {
+		if (target.className && ~target.className.indexOf(CLASS_ACTION)) {
 			if (target.classList.contains('mui-action-back')) {
 				event.preventDefault();
 			}
@@ -5599,11 +5070,10 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 
 		return element;
 	}());
-	var removeBackdropTimer;
 	var removeBackdrop = function(popover) {
 		backdrop.setAttribute('style', 'opacity:0');
 		$.targets.popover = $.targets._popover = null; //reset
-		removeBackdropTimer = $.later(function() {
+		setTimeout(function() {
 			if (!popover.classList.contains(CLASS_ACTIVE) && backdrop.parentNode && backdrop.parentNode === document.body) {
 				document.body.removeChild(backdrop);
 			}
@@ -5628,7 +5098,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	});
 
 	var togglePopover = function(popover, anchor) {
-		removeBackdropTimer && removeBackdropTimer.cancel(); //取消remove的timer
 		//remove一遍，以免来回快速切换，导致webkitTransitionEnd不触发，无法remove
 		popover.removeEventListener('webkitTransitionEnd', onPopoverShown);
 		popover.removeEventListener('webkitTransitionEnd', onPopoverHidden);
@@ -5689,18 +5158,15 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		if (!popover || !anchor) {
 			return;
 		}
-
-		if (isActionSheet) { //actionsheet
-			setStyle(popover, 'block')
-			return;
-		}
-
 		var wWidth = window.innerWidth;
 		var wHeight = window.innerHeight;
 
 		var pWidth = popover.offsetWidth;
 		var pHeight = popover.offsetHeight;
-
+		if (isActionSheet) { //actionsheet
+			setStyle(popover, 'block', (wHeight - pHeight + window.pageYOffset), (wWidth - pWidth) / 2)
+			return;
+		}
 		var aWidth = anchor.offsetWidth;
 		var aHeight = anchor.offsetHeight;
 		var offset = $.offset(anchor);
@@ -5815,7 +5281,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 
 	var CLASS_CONTROL_ITEM = 'mui-control-item';
 	var CLASS_SEGMENTED_CONTROL = 'mui-segmented-control';
-	var CLASS_SEGMENTED_CONTROL_VERTICAL = 'mui-segmented-control-vertical';
 	var CLASS_CONTROL_CONTENT = 'mui-control-content';
 	var CLASS_TAB_BAR = 'mui-bar-tab';
 	var CLASS_TAB_ITEM = 'mui-tab-item';
@@ -5823,11 +5288,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 
 	var handle = function(event, target) {
 		if (target.classList && (target.classList.contains(CLASS_CONTROL_ITEM) || target.classList.contains(CLASS_TAB_ITEM))) {
-			if (target.parentNode && target.parentNode.classList && target.parentNode.classList.contains(CLASS_SEGMENTED_CONTROL_VERTICAL)) {
-				//vertical 如果preventDefault会导致无法滚动
-			} else {
-				event.preventDefault(); //stop hash change				
-			}
+			event.preventDefault(); //stop hash change
 			//			if (target.hash) {
 			return target;
 			//			}
@@ -5877,6 +5338,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		if (!targetTab.hash) {
 			return;
 		}
+
 		targetBody = document.getElementById(targetTab.hash.replace('#', ''));
 
 		if (!targetBody) {
@@ -6218,7 +5680,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 							timer = $.later(function() {
 								toggleActive(true);
 							}, 100);
-						} else {
+						} else{
 							toggleActive(true);
 						}
 					}
@@ -6499,8 +5961,8 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 		sliderHandle && toggleEvents(cell, true);
 	});
 	var radioOrCheckboxClick = function(event) {
-		var type = event.target && event.target.type || '';
-		if (type === 'radio' || type === 'checkbox') {
+		var type = event.target&&event.target.type||'';
+		if(type==='radio'||type==='checkbox'){
 			return;
 		}
 		var classList = cell.classList;
@@ -6508,19 +5970,13 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			var input = cell.querySelector('input[type=radio]');
 			if (input) {
 				//				input.click();
-				if (!input.disabled && !input.readOnly) {
-					input.checked = !input.checked;
-					$.trigger(input, 'change');
-				}
+				input.checked = !input.checked;
 			}
 		} else if (classList.contains('mui-checkbox')) {
 			var input = cell.querySelector('input[type=checkbox]');
 			if (input) {
 				//				input.click();
-				if (!input.disabled && !input.readOnly) {
-					input.checked = !input.checked;
-					$.trigger(input, 'change');
-				}
+				input.checked = !input.checked;
 			}
 		}
 	};
@@ -6596,25 +6052,23 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	/**
 	 * 警告消息框
 	 */
-	$.alert = function(message, title, btnValue, callback) {
+	$.alert = function(message,title,btnValue,callback) {
 		if ($.os.plus) {
-			if (typeof message === undefined) {
+			if(typeof message === undefined){
 				return;
-			} else {
-				if (typeof title === 'function') {
+			}else{
+				if(typeof title ==='function'){
 					callback = title;
 					title = null;
 					btnValue = '确定';
-				} else if (typeof btnValue === 'function') {
+				}else if(typeof btnValue ==='function'){
 					callback = btnValue;
 					btnValue = null;
 				}
-				$.plusReady(function() {
-					plus.nativeUI.alert(message, callback, title, btnValue);
-				});
+				plus.nativeUI.alert(message,callback,title,btnValue);
 			}
 
-		} else {
+		}else{
 			//TODO H5版本
 			window.alert(message);
 		}
@@ -6638,9 +6092,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					callback = btnArray;
 					btnArray = null;
 				}
-				$.plusReady(function() {
-					plus.nativeUI.confirm(message, callback, title, btnArray);
-				});
+				plus.nativeUI.confirm(message, callback, title, btnArray);
 			}
 
 		} else {
@@ -6681,9 +6133,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 					callback = btnArray;
 					btnArray = null;
 				}
-				$.plusReady(function() {
-					plus.nativeUI.prompt(text, callback, title, defaultText, btnArray);
-				});
+				plus.nativeUI.prompt(text, callback, title, defaultText, btnArray);
 			}
 
 		} else {
@@ -6709,21 +6159,17 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	 * 自动消失提示框
 	 */
 	$.toast = function(message) {
-		if ($.os.plus) {
+		if($.os.plus){
 			//默认显示在底部；
-			$.plusReady(function() {
-				plus.nativeUI.toast(message, {
-					verticalAlign: 'bottom'
-				});
-			});
-		} else {
+			plus.nativeUI.toast(message,{verticalAlign:'bottom'});
+		}else{
 			var toast = document.createElement('div');
 			toast.classList.add('mui-toast-container');
-			toast.innerHTML = '<div class="' + 'mui-toast-message' + '">' + message + '</div>';
+			toast.innerHTML = '<div class="'+'mui-toast-message'+'">'+message+'</div>';
 			document.body.appendChild(toast);
-			setTimeout(function() {
-				document.body.removeChild(toast);
-			}, 2000);
+			setTimeout(function(){
+		  		document.body.removeChild(toast);
+			},2000);
 		}
 	};
 
@@ -6768,7 +6214,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			this.sliderActionSelector = SELECTOR_TOOLTIP;
 		} else { //clear,speech,search
 			if (~this.options.actions.indexOf('clear')) {
-				this.clearActionClass = CLASS_ICON + ' ' + CLASS_ICON_CLEAR + ' ' + CLASS_HIDDEN;
+				this.clearActionClass = CLASS_ICON + ' ' + CLASS_ICON_CLEAR +' '+ CLASS_HIDDEN;
 				this.clearActionSelector = SELECTOR_ICON_CLOSE;
 			}
 			if (~this.options.actions.indexOf('speech')) { //only for 5+
@@ -6849,7 +6295,7 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			var showTip = function() {
 				tooltip.classList.remove(CLASS_HIDDEN);
 				tooltipWidth = tooltipWidth || tooltip.offsetWidth;
-				var scaleWidth = (width / distince) * Math.abs(element.value - element.min);
+				var scaleWidth = Math.abs(element.value) / distince * width;
 				tooltip.style.left = (14 + offsetLeft + scaleWidth - tooltipWidth / 2) + 'px';
 				tooltip.innerText = element.value;
 				if (timer) {
@@ -6994,15 +6440,16 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 	var inputClassName = 'mui-numbox-input';
 
 	var Numbox = $.Numbox = $.Class.extend({
-		/**
-		 * 构造函数
-		 **/
 		init: function(holder, options) {
 			var self = this;
 			if (!holder) {
 				throw "构造 numbox 时缺少容器元素";
 			}
 			self.holder = holder;
+			//避免重复初始化开始
+			if (self.holder.__numbox_inited) return;
+			self.holder.__numbox_inited = true;
+			//避免重复初始化结束
 			options = options || {};
 			options.step = parseInt(options.step || 1);
 			self.options = options;
@@ -7012,9 +6459,6 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			self.checkValue();
 			self.initEvent();
 		},
-		/**
-		 * 初始化事件绑定
-		 **/
 		initEvent: function() {
 			var self = this;
 			self.plus.addEventListener(tapEventName, function(event) {
@@ -7029,23 +6473,8 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 			});
 			self.input.addEventListener(changeEventName, function(event) {
 				self.checkValue();
-				var val = parseInt(self.input.value);
-				//触发顶层容器
-				$.trigger(self.holder, changeEventName, {
-					value: val
-				});
 			});
 		},
-		/**
-		 * 获取当前值
-		 **/
-		getValue: function() {
-			var self = this;
-			return parseInt(self.input.value);
-		},
-		/**
-		 * 验证当前值是法合法
-		 **/
 		checkValue: function() {
 			var self = this;
 			var val = self.input.value;
@@ -7068,38 +6497,28 @@ Function.prototype.bind = Function.prototype.bind || function(to) {
 				}
 				self.input.value = val;
 			}
-		},
-		/**
-		 * 更新选项
-		 **/
-		setOption: function(name, value) {
-			var self = this;
-			self.options[name] = value;
 		}
 	});
 
 	$.fn.numbox = function(options) {
-		var instanceArray = [];
 		//遍历选择的元素
 		this.each(function(i, element) {
-			if (element.numbox) return;
 			if (options) {
-				element.numbox = new Numbox(element, options);
+				new Numbox(element, options);
 			} else {
 				var optionsText = element.getAttribute('data-numbox-options');
 				var options = optionsText ? JSON.parse(optionsText) : {};
 				options.step = element.getAttribute('data-numbox-step') || options.step;
 				options.min = element.getAttribute('data-numbox-min') || options.min;
 				options.max = element.getAttribute('data-numbox-max') || options.max;
-				element.numbox = new Numbox(element, options);
+				new Numbox(element, options);
 			}
 		});
-		return this[0] ? this[0].numbox : null;
+		return this;
 	}
 
 	//自动处理 class='mui-locker' 的 dom
 	$.ready(function() {
 		$('.' + holderClassName).numbox();
 	});
-
 }(mui))
