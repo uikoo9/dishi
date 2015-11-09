@@ -10,7 +10,7 @@ qiao.juicer = function(el, data, callback){
 	}
 };
 
-var qiao.h = {};
+qiao.h = {};
 // page相关
 qiao.h.normalStyle = {top:'45px',bottom:0};
 qiao.h.normalPage = function(id){

@@ -71,7 +71,7 @@ function initList(){
 		console.log(res.rows.length);
 //		qiao.juicer('#template', json);
 		for (i = 0; i < res.rows.length; i++) {
-			$ul.append(genLi(res.rows.item[i]));
+			$ul.append(genLi(res.rows.item(i)));
 		}
 
 		showList($ul);
