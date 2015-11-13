@@ -33,9 +33,7 @@
         "Events": {
             "description": "应用扩展事件"
         },
-        "File": {
-            "description": "访问本地文件系统"
-        },
+        
         
         
         "Invocation": {
@@ -62,12 +60,8 @@
         "NativeUI":{
         	"description": "原生UI控件"
         },
-        "Navigator":{
-        	"description": "浏览器信息"
-        },
-        "NativeObj":{
-        	"description": "原生对象"
-        }
+        
+        "Device":{}
     },
     "plus": {
         "splashscreen": {
@@ -92,7 +86,7 @@
                 "keystore": "",/*Android应用打包使用的密钥库文件*/
                 "password": "",/*Android应用打包使用密钥库中证书的密码*/
                 "aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-               "permissions": []
+               "permissions": ["<uses-permission android:name=\"android.permission.READ_PHONE_STATE\"/>","<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\"/>","<uses-permission android:name=\"android.permission.VIBRATE\"/>","<uses-permission android:name=\"android.permission.WAKE_LOCK\"/>","<uses-permission android:name=\"android.permission.CALL_PHONE\"/>","<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\"/>"]
 				/*使用Native.js调用原生安卓API需要使用到的系统权限*/
             },
             "orientation": [
