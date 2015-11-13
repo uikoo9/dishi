@@ -1,6 +1,6 @@
 ﻿{
-    "@platforms": ["android"],
-    "id": "H56296BDF",/*应用的标识，创建应用时自动生成，勿手动修改*/
+    "@platforms": ["android", "iPhone", "iPad"],
+    "id": "H5B55B609",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "滴石",/*应用名称，程序桌面图标名称*/
     "version": {
         "name": "0.2.11",/*应用版本名称*/
@@ -12,25 +12,63 @@
     },
     "launch_path": "views/index.html",/*应用的入口页面，默认为根目录下的index.html；支持网络地址，必须以http://或https://开头*/
     "developer": {
-        "name": "uikoo9",/*开发者名称*/
-        "email": "uikoo9@qq.com",/*开发者邮箱地址*/
-        "url": "http://uikoo9.com"/*开发者个人主页地址*/
+        "name": "",/*开发者名称*/
+        "email": "",/*开发者邮箱地址*/
+        "url": ""/*开发者个人主页地址*/
     },
     "permissions": {
-		"Events": {
-			"description": "应用扩展事件"
-		},
-		"Invocation": {
-			"description": "调用Native JS桥功能"
-		},
-		"Storage": {
-			"description": "管理应用本地数据"
-		},
-		"UI": {},
-		"Runtime": {
-			"description": "访问运行期环境"
-		},"Webview":{},"NativeUI":{},"Navigator":{}
-	},
+        
+        
+        
+        "Cache": {
+            "description": "管理应用缓存"
+        },
+        
+        "Console": {
+            "description": "跟踪调试输出日志"
+        },
+        
+        
+        
+        "Events": {
+            "description": "应用扩展事件"
+        },
+        "File": {
+            "description": "访问本地文件系统"
+        },
+        
+        
+        "Invocation": {
+            "description": "使用Native.js能力"
+        },
+        
+        
+        "Storage": {
+            "description": "管理应用本地数据"
+        },
+        
+        
+        "Runtime": {
+            "description": "访问运行期环境"
+        },
+        
+        
+        
+        
+        
+        "Webview":{
+        	"description": "窗口管理"
+        },
+        "NativeUI":{
+        	"description": "原生UI控件"
+        },
+        "Navigator":{
+        	"description": "浏览器信息"
+        },
+        "NativeObj":{
+        	"description": "原生对象"
+        }
+    },
     "plus": {
         "splashscreen": {
             "autoclose": true,/*是否自动关闭程序启动界面，true表示应用加载应用入口页面后自动关闭；false则需调plus.navigator.closeSplashscreen()关闭*/
@@ -45,7 +83,7 @@
                 "mobileprovision": "",/*iOS应用打包配置文件*/
                 "password": "",/*iOS应用打包个人证书导入密码*/
                 "p12": "",/*iOS应用打包个人证书，打包配置文件关联的个人证书*/
-                "devices": "",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
+                "devices": "universal",/*iOS应用支持的设备类型，可取值iphone/ipad/universal*/
                 "frameworks":[
                 ]/*调用Native.js调用原生Objective-c API需要引用的FrameWork，如需调用GameCenter，则添加"GameKit.framework"*/
             },
@@ -54,10 +92,12 @@
                 "keystore": "",/*Android应用打包使用的密钥库文件*/
                 "password": "",/*Android应用打包使用密钥库中证书的密码*/
                 "aliasname": "",/*Android应用打包使用密钥库中证书的别名*/
-                "permissions": [
-                ]/*使用Native.js调用原生安卓API需要使用到的系统权限*/
+               "permissions": []
+				/*使用Native.js调用原生安卓API需要使用到的系统权限*/
             },
-            "orientation": ["portrait-primary"],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
+            "orientation": [
+                "portrait-primary"
+            ],/*应用支持的方向，portrait-primary：竖屏正方向；portrait-secondary：竖屏反方向；landscape-primary：横屏正方向；landscape-secondary：横屏反方向*/
             "icons": {
                 "ios": {
                     "prerendered": true, /*应用图标是否已经高亮处理，在iOS6及以下设备上有效*/
@@ -123,7 +163,7 @@
                     "xhdpi": "Z:/files/01_docs/img/info/图标新/png/720x1242.png", /*720P高分屏启动图片，分辨率：720x1242*/
                     "xxhdpi": "Z:/files/01_docs/img/info/图标新/png/1080x1882.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
-            }
+            },"debug":true
         }
     }
 }
