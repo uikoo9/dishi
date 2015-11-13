@@ -31,12 +31,12 @@ mui.plusReady(function(){
 	mui.menu = opMenu;
 	
 	// 添加
-	add = mui.preload(qiao.h.normalPage('add'));
+	add = mui.preload(qiao.h.normalPage('add', {popGesture:'none'}));
 	qiao.on('.adda', 'tap', showAdd);
 	qiao.on('.mui-icon-back', 'tap', hideAdd);
 	
 	// 详情
-	detail = mui.preload(qiao.h.normalPage('detail'));
+	detail = mui.preload(qiao.h.normalPage('detail', {popGesture:'none'}));
 	
 	// 退出
 	mui.back = function(){

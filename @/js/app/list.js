@@ -2,7 +2,8 @@
 mui.init({
 	keyEventBind : {
 		backbutton : false,
-		menubutton : false
+		menubutton : false,
+		
 	},
 	gestureConfig : {
 		longtap:true

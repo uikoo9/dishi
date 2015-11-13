@@ -13,12 +13,14 @@ qiao.juicer = function(el, data, callback){
 qiao.h = {};
 // page相关
 qiao.h.normalStyle = {top:'45px',bottom:0};
-qiao.h.normalPage = function(id){
-	return qiao.h.page(id, {styles : qiao.h.normalStyle});
-};
 qiao.h.centerStyle = {top:'45px',bottom:'50px'};
-qiao.h.centerPage = function(id){
-	return qiao.h.page(id, {styles:qiao.h.centerStyle});
+qiao.h.normalPage = function(id, options){
+	var opt = $.extend({}, options, qiao.h.normalStyle);
+	return qiao.h.page(id, {styles : opt});
+};
+qiao.h.centerPage = function(id, options){
+	var opt = $.extend({}, options, qiao.h.normalStyle);
+	return qiao.h.page(id, {styles : opt});
 };
 qiao.h.page = function(id, options){
 	var url = id + '.html';
