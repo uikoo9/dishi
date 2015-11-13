@@ -15,7 +15,7 @@ mui.plusReady(function(){
 function detailItemHandler(event){
 	qiao.h.indexPage().evalJS("showBackBtn();");
 
-	var detailId =event.detail.id;
+	var detailId = event.detail.id;
 	var sql = 'select * from t_plan_day_todo where id=' + detailId;
 	qiao.h.query(qiao.h.db(), sql, function(res){
 		if(res.rows.length > 0){

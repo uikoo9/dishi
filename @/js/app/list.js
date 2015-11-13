@@ -68,8 +68,6 @@ function initList(){
 	
 	var $ul = $('#todolist').empty();
 	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo order by id desc', function(res){
-		console.log(res.rows.length);
-//		qiao.juicer('#template', json);
 		for (i = 0; i < res.rows.length; i++) {
 			$ul.append(genLi(res.rows.item(i)));
 		}
