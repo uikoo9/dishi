@@ -51,10 +51,8 @@ mui.plusReady(function(){
 });
 
 function initHelp(){
-	console.log(1);
 	var help = qiao.h.getItem('help');
 	if(help == null){
-		
 		qiao.h.update(db, 'create table if not exists t_plan_day_todo (id unique, plan_title, plan_content)');
 		qiao.h.update(db, 'create table if not exists t_plan_day_done (id unique, plan_title, plan_content)');
 		
@@ -62,7 +60,7 @@ function initHelp(){
 		var sql = 'insert into t_plan_day_todo (id, plan_title, plan_content) values (1, "功能介绍", "' + content + '")';
 		qiao.h.update(db, sql);
 		
-//		qiao.h.insertItem('help','notfirst');
+		qiao.h.insertItem('help','notfirst');
 	}
 	
 	initList();
