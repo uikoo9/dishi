@@ -176,7 +176,9 @@ qiao.h.db = function(name, size){
 	return openDatabase(db_name, '1.0', 'db_test', db_size * 1024 * 1024);
 };
 qiao.h.update = function(db, sql){
-	if(db &&sql) db.transaction(function(tx){tx.executeSql(sql);});
+	if(db &&sql){
+		db.transaction(function(tx){tx.executeSql(sql);});	
+	}
 };
 qiao.h.query = function(db, sql, func){
 	if(db && sql){
@@ -200,3 +202,6 @@ qiao.h.endDown = function(selector){
 	var sel = selector ? selector : '#refreshContainer';
 	mui(sel).pullRefresh().endPulldownToRefresh();
 };
+
+// init
+var db = qiao.h.db();

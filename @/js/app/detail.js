@@ -17,7 +17,7 @@ function detailItemHandler(event){
 
 	var detailId = event.detail.id;
 	var sql = 'select * from t_plan_day_todo where id=' + detailId;
-	qiao.h.query(qiao.h.db(), sql, function(res){
+	qiao.h.query(db, sql, function(res){
 		if(res.rows.length > 0){
 			var data = res.rows.item(0);
 			$('#detailTitle').text(data.plan_title);

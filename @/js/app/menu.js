@@ -17,7 +17,7 @@ mui.plusReady(function(){
 // 初始化待办事项
 function initDoneList(){
 	var $ul = $('#donelist').empty();
-	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_done order by id desc', function(res){
+	qiao.h.query(db, 'select * from t_plan_day_done order by id desc', function(res){
 		for (i = 0; i < res.rows.length; i++) {
 			$ul.append(genLi(res.rows.item(i).plan_title));
 		}
@@ -36,7 +36,6 @@ function showList(ul){
 function doneItemHandler(event){
 	var todoId = event.detail.todoId;
 
-	var db = qiao.h.db();
 	qiao.h.query(db, 'select * from t_plan_day_todo where id=' + todoId, function(res){
 		if(res.rows.length > 0){
 			var data = res.rows.item(0);

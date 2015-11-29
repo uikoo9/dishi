@@ -51,13 +51,18 @@ mui.plusReady(function(){
 });
 
 function initHelp(){
+	console.log(1);
 	var help = qiao.h.getItem('help');
 	if(help == null){
+		
+		qiao.h.update(db, 'create table if not exists t_plan_day_todo (id unique, plan_title, plan_content)');
+		qiao.h.update(db, 'create table if not exists t_plan_day_done (id unique, plan_title, plan_content)');
+		
 		var content = '1.右上角添加事项<br/>2.点击事项查看详情<br/>3.长按事项删除<br/>4.右滑事项完成<br/>5.左滑显示完成事项';
 		var sql = 'insert into t_plan_day_todo (id, plan_title, plan_content) values (1, "功能介绍", "' + content + '")';
-		qiao.h.update(qiao.h.db(), sql);
+		qiao.h.update(db, sql);
 		
-		qiao.h.insertItem('help','notfirst');
+//		qiao.h.insertItem('help','notfirst');
 	}
 	
 	initList();
@@ -68,7 +73,7 @@ function initList(){
 	qmask.show();
 	
 	var $ul = $('#todolist').empty();
-	qiao.h.query(qiao.h.db(), 'select * from t_plan_day_todo order by id desc', function(res){
+	qiao.h.query(db, 'select * from t_plan_day_todo order by id desc', function(res){
 		for (i = 0; i < res.rows.length; i++) {
 			$ul.append(genLi(res.rows.item(i)));
 		}
@@ -107,7 +112,6 @@ function addItemHandler(event){
 	// 主界面按钮修改
 	qiao.h.indexPage().evalJS("hideBackBtn();");
 	
-	var db = qiao.h.db();
 	var title = event.detail.title;
 	var content = event.detail.content ? event.detail.content : '暂无内容！';
 	
@@ -122,7 +126,7 @@ function addItemHandler(event){
 // 删除事项
 function delItem(){
 	if(tapId){
-		qiao.h.update(qiao.h.db(), 'delete from t_plan_day_todo where id=' + tapId);
+		qiao.h.update(db, 'delete from t_plan_day_todo where id=' + tapId);
 		qiao.h.pop();
 		initList();
 	}
