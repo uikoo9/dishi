@@ -3,7 +3,7 @@
     "id": "H5B55B609",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "滴石",/*应用名称，程序桌面图标名称*/
     "version": {
-        "name": "0.2.11",/*应用版本名称*/
+        "name": "0.2.12",/*应用版本名称*/
         "code": ""
     },
     "description": "",/*应用描述信息*/
@@ -61,7 +61,7 @@
         	"description": "原生UI控件"
         },
         
-        "Device":{}
+        "Device":{},"NativeObj":{},"Navigator":{}
     },
     "plus": {
         "splashscreen": {
@@ -157,7 +157,7 @@
                     "xhdpi": "Z:/files/01_docs/img/info/图标新/png/720x1242.png", /*720P高分屏启动图片，分辨率：720x1242*/
                     "xxhdpi": "Z:/files/01_docs/img/info/图标新/png/1080x1882.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
-            },"debug":true
+            },"debug":false
         }
     }
 }
