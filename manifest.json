@@ -1,4 +1,4 @@
-﻿{
+{
     "@platforms": ["android", "iPhone", "iPad"],
     "id": "H5B55B609",/*应用的标识，创建应用时自动生成，勿手动修改*/
     "name": "滴石",/*应用名称，程序桌面图标名称*/
@@ -132,32 +132,117 @@
             "splashscreen": {
                 "ios": {
                     "iphone": {
-                        "default": "Z:/files/01_docs/img/info/图标新/png/320x480.png", /*iPhone3启动图片选，分辨率：320x480*/
-                        "retina35": "Z:/files/01_docs/img/info/图标新/png/640x960.png",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
-                        "retina40": "Z:/files/01_docs/img/info/图标新/png/640x1136.png",/*4.0 英寸设备(iPhone5/iPhone5s)启动图片，分辨率：640x1136*/
-                        "retina47": "Z:/files/01_docs/img/info/图标新/png/750x1334.png",/*4.7 英寸设备(iPhone6)启动图片，分辨率：750x1334*/
-                        "retina55": "Z:/files/01_docs/img/info/图标新/png/1242x2208.png",/*5.5 英寸设备(iPhone6 Plus)启动图片，分辨率：1242x2208*/
-                        "retina55l": "Z:/files/01_docs/img/info/图标新/png/P6+2208x1242横屏.png"/*5.5 英寸设备(iPhone6 Plus)横屏启动图片，分辨率：2208x1242*/
+                        "default": "Z:/files/01_docs/img/info/引导页/320x480.png", /*iPhone3启动图片选，分辨率：320x480*/
+                        "retina35": "Z:/files/01_docs/img/info/引导页/640x960.png",/*3.5英寸设备(iPhone4)启动图片，分辨率：640x960*/
+                        "retina40": "Z:/files/01_docs/img/info/引导页/640x1136.png",/*4.0 英寸设备(iPhone5/iPhone5s)启动图片，分辨率：640x1136*/
+                        "retina47": "Z:/files/01_docs/img/info/引导页/750x1334.png",/*4.7 英寸设备(iPhone6)启动图片，分辨率：750x1334*/
+                        "retina55": "Z:/files/01_docs/img/info/引导页/1242x2208.png",/*5.5 英寸设备(iPhone6 Plus)启动图片，分辨率：1242x2208*/
+                        "retina55l": "Z:/files/01_docs/img/info/引导页/P6+2208x1242横屏.png"/*5.5 英寸设备(iPhone6 Plus)横屏启动图片，分辨率：2208x1242*/
                     },
                     "ipad": {
-                        "portrait": "Z:/files/01_docs/img/info/图标新/png/IPad768x1004竖屏.png", /*iPad竖屏启动图片，分辨率：768x1004*/
-                        "portrait-retina": "Z:/files/01_docs/img/info/图标新/png/IPad高分辨率1536x2208竖屏.png",/*iPad高分屏竖屏图片，分辨率：1536x2008*/
-                        "landscape": "Z:/files/01_docs/img/info/图标新/png/IPad1024x748横屏.png", /*iPad横屏启动图片，分辨率：1024x748*/
-                        "landscape-retina": "Z:/files/01_docs/img/info/图标新/png/IPad高分辨率2048x1496横屏.png", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
-                        "portrait7": "Z:/files/01_docs/img/info/图标新/png/IPadIOS768x1024竖屏.png", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
-                        "portrait-retina7": "Z:/files/01_docs/img/info/图标新/png/IPadIOS高分辨率1536x2048竖屏.png",/*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
-                        "landscape7": "Z:/files/01_docs/img/info/图标新/png/IPadIOS1024x768横屏.png", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
-                        "landscape-retina7": "Z:/files/01_docs/img/info/图标新/png/IPadIOS高分辨率2048x1536横屏.png"/*iPad iOS7高分屏横屏启动图片，分辨率：2048x1536*/
+                        "portrait": "Z:/files/01_docs/img/info/引导页/IPad768x1004竖屏.png", /*iPad竖屏启动图片，分辨率：768x1004*/
+                        "portrait-retina": "Z:/files/01_docs/img/info/引导页/IPad高分辨率1536x2208竖屏.png",/*iPad高分屏竖屏图片，分辨率：1536x2008*/
+                        "landscape": "Z:/files/01_docs/img/info/引导页/IPad1024x748横屏.png", /*iPad横屏启动图片，分辨率：1024x748*/
+                        "landscape-retina": "Z:/files/01_docs/img/info/引导页/IPad高分辨率2048x1496横屏.png", /*iPad高分屏横屏启动图片，分辨率：2048x1496*/
+                        "portrait7": "Z:/files/01_docs/img/info/引导页/IPadIOS768x1024竖屏.png", /*iPad iOS7竖屏启动图片，分辨率：768x1024*/
+                        "portrait-retina7": "Z:/files/01_docs/img/info/引导页/IPadIOS高分辨率1536x2048竖屏.png",/*iPad iOS7高分屏竖屏图片，分辨率：1536x2048*/
+                        "landscape7": "Z:/files/01_docs/img/info/引导页/IPadIOS1024x768横屏.png", /*iPad iOS7横屏启动图片，分辨率：1024x768*/
+                        "landscape-retina7": "Z:/files/01_docs/img/info/引导页/IPadIOS高分辨率2048x1536横屏.png"/*iPad iOS7高分屏横屏启动图片，分辨率：2048x1536*/
                     }
                 },
                 "android": {
-                    "mdpi": "Z:/files/01_docs/img/info/图标新/png/240x282.png", /*普通屏启动图片，分辨率：240x282*/
-                    "ldpi": "Z:/files/01_docs/img/info/图标新/png/320x442.png", /*大屏启动图片，分辨率：320x442*/
-                    "hdpi": "Z:/files/01_docs/img/info/图标新/png/480x762.png", /*高分屏启动图片，分辨率：480x762*/
-                    "xhdpi": "Z:/files/01_docs/img/info/图标新/png/720x1242.png", /*720P高分屏启动图片，分辨率：720x1242*/
-                    "xxhdpi": "Z:/files/01_docs/img/info/图标新/png/1080x1882.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
+                    "mdpi": "Z:/files/01_docs/img/info/引导页/240x282.png", /*普通屏启动图片，分辨率：240x282*/
+                    "ldpi": "Z:/files/01_docs/img/info/引导页/320x442.png", /*大屏启动图片，分辨率：320x442*/
+                    "hdpi": "Z:/files/01_docs/img/info/引导页/480x762.png", /*高分屏启动图片，分辨率：480x762*/
+                    "xhdpi": "Z:/files/01_docs/img/info/引导页/720x1242.png", /*720P高分屏启动图片，分辨率：720x1242*/
+                    "xxhdpi": "Z:/files/01_docs/img/info/引导页/1080x1882.png"/*1080P高分屏启动图片，分辨率：1080x1882*/
                 }
             },"debug":false
         }
-    }
+    },
+	"dependencies":{
+	  "pages": {
+	    "views/index.html": {
+	      "href": "views/index.html",
+	      "resources": [
+	        "@/js/lib/qiao/qiao.h.js",
+	        "@/js/app/index.js",
+	        "@/css/mui.min.css",
+	        "@/fonts/mui.ttf",
+	        "@/js/mui.min.js",
+	        "@/js/lib/jquery/jquery-1.11.2.min.js",
+	        "views/list.html"
+	      ],
+	      "priority": 0,
+	      "refer": [
+	        "views/add.html",
+	        "views/detail.html",
+	        "views/menu.html"
+	      ]
+	    },
+	    "views/add.html": {
+	      "priority": 0,
+	      "resources": [
+	        "@/css/mui.min.css",
+	        "@/js/mui.min.js",
+	        "@/js/lib/jquery/jquery-1.11.2.min.js",
+	        "@/js/lib/qiao/qiao.h.js",
+	        "@/js/app/add.js",
+	        "@/fonts/mui.ttf"
+	      ],
+	      "refer": []
+	    },
+	    "views/detail.html": {
+	      "priority": 0,
+	      "resources": [
+	        "@/css/mui.min.css",
+	        "@/fonts/mui.ttf",
+	        "@/js/app/detail.js",
+	        "@/js/lib/jquery/jquery-1.11.2.min.js",
+	        "@/js/lib/qiao/qiao.h.js",
+	        "@/js/mui.min.js"
+	      ],
+	      "refer": []
+	    },
+	    "views/list.html": {
+	      "priority": 0,
+	      "resources": [
+	        "@/css/mui.min.css",
+	        "@/fonts/mui.ttf",
+	        "@/js/lib/jquery/jquery-1.11.2.min.js",
+	        "@/js/lib/qiao/qiao.h.js",
+	        "@/js/lib/qmask/qmask-3.0.css",
+	        "@/js/lib/qmask/qmask-3.0.js",
+	        "@/js/app/list.js",
+	        "@/js/mui.min.js"
+	      ],
+	      "refer": []
+	    },
+	    "views/menu.html": {
+	      "priority": 0,
+	      "resources": [
+	        "@/css/app/menu.css",
+	        "@/css/mui.min.css",
+	        "@/fonts/mui.ttf",
+	        "@/js/app/menu.js",
+	        "@/js/lib/jquery/jquery-1.11.2.min.js",
+	        "@/js/lib/qiao/qiao.h.js",
+	        "@/js/mui.min.js"
+	      ],
+	      "refer": []
+	    }
+	  },
+	  "idle": {
+	    "resources": [
+	      "LICENSE",
+	      "version.txt",
+	      "README.md"
+	    ]
+	  }
+	},
+	"unpackage":[
+	  "LICENSE",
+	  "README.md",
+	  "version.txt"
+	]
 }
