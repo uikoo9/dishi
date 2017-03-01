@@ -161,84 +161,97 @@
         }
     },
 	"dependencies":{
-	  "pages": {
-	    "views/index.html": {
-	      "href": "views/index.html",
-	      "resources": [
-	        "@/js/lib/qiao/qiao.h.js",
-	        "@/js/app/index.js",
-	        "@/css/mui.min.css",
-	        "@/fonts/mui.ttf",
-	        "@/js/mui.min.js",
-	        "@/js/lib/jquery/jquery-1.11.2.min.js",
-	        "views/list.html"
-	      ],
-	      "priority": 0,
-	      "refer": [
-	        "views/add.html",
-	        "views/detail.html",
-	        "views/menu.html"
-	      ]
-	    },
-	    "views/add.html": {
-	      "priority": 0,
-	      "resources": [
-	        "@/css/mui.min.css",
-	        "@/js/mui.min.js",
-	        "@/js/lib/jquery/jquery-1.11.2.min.js",
-	        "@/js/lib/qiao/qiao.h.js",
-	        "@/js/app/add.js",
-	        "@/fonts/mui.ttf"
-	      ],
-	      "refer": []
-	    },
-	    "views/detail.html": {
-	      "priority": 0,
-	      "resources": [
-	        "@/css/mui.min.css",
-	        "@/fonts/mui.ttf",
-	        "@/js/app/detail.js",
-	        "@/js/lib/jquery/jquery-1.11.2.min.js",
-	        "@/js/lib/qiao/qiao.h.js",
-	        "@/js/mui.min.js"
-	      ],
-	      "refer": []
-	    },
-	    "views/list.html": {
-	      "priority": 0,
-	      "resources": [
-	        "@/css/mui.min.css",
-	        "@/fonts/mui.ttf",
-	        "@/js/lib/jquery/jquery-1.11.2.min.js",
-	        "@/js/lib/qiao/qiao.h.js",
-	        "@/js/lib/qmask/qmask-3.0.css",
-	        "@/js/lib/qmask/qmask-3.0.js",
-	        "@/js/app/list.js",
-	        "@/js/mui.min.js"
-	      ],
-	      "refer": []
-	    },
-	    "views/menu.html": {
-	      "priority": 0,
-	      "resources": [
-	        "@/css/app/menu.css",
-	        "@/css/mui.min.css",
-	        "@/fonts/mui.ttf",
-	        "@/js/app/menu.js",
-	        "@/js/lib/jquery/jquery-1.11.2.min.js",
-	        "@/js/lib/qiao/qiao.h.js",
-	        "@/js/mui.min.js"
-	      ],
-	      "refer": []
-	    }
-	  },
-	  "idle": {
-	    "resources": [
-	      "LICENSE",
-	      "version.txt",
-	      "README.md"
-	    ]
-	  }
+		"pages": {
+			"views/index.html": {
+				"href": "views/index.html",
+				"resources": [
+					"static/js/lib/qiao/qiao.h.js",
+					"static/js/app/index.js",
+					"static/css/mui.min.css",
+					"static/fonts/mui.ttf",
+					"static/js/mui.min.js",
+					"static/js/lib/jquery/jquery-1.11.2.min.js",
+					"views/list.html",
+					"static/js/mui.min.js",
+					"static/js/app/index.js",
+					"static/js/lib/qiao/qiao.h.js",
+					"static/fonts/mui.ttf",
+					"static/js/lib/jquery/jquery-1.11.2.min.js",
+					"static/css/mui.min.css"
+				],
+				"priority": 0,
+				"refer": [
+					"views/add.html",
+					"views/detail.html",
+					"views/menu.html"
+				]
+			},
+			"views/add.html": {
+				"priority": 0,
+				"resources": [
+					"static/css/mui.min.css",
+					"static/js/mui.min.js",
+					"static/js/lib/jquery/jquery-1.11.2.min.js",
+					"static/js/lib/qiao/qiao.h.js",
+					"static/js/app/add.js",
+					"static/fonts/mui.ttf",
+					"static/js/app/add.js"
+				],
+				"refer": []
+			},
+			"views/detail.html": {
+				"priority": 0,
+				"resources": [
+					"static/css/mui.min.css",
+					"static/fonts/mui.ttf",
+					"static/js/app/detail.js",
+					"static/js/lib/jquery/jquery-1.11.2.min.js",
+					"static/js/lib/qiao/qiao.h.js",
+					"static/js/mui.min.js",
+					"static/js/app/detail.js"
+				],
+				"refer": []
+			},
+			"views/list.html": {
+				"priority": 0,
+				"resources": [
+					"static/css/mui.min.css",
+					"static/fonts/mui.ttf",
+					"static/js/lib/jquery/jquery-1.11.2.min.js",
+					"static/js/lib/qiao/qiao.h.js",
+					"static/js/lib/qmask/qmask-3.0.css",
+					"static/js/lib/qmask/qmask-3.0.js",
+					"static/js/app/list.js",
+					"static/js/mui.min.js",
+					"static/js/app/list.js",
+					"static/js/lib/qmask/qmask-3.0.js",
+					"static/js/lib/qmask/qmask-3.0.css"
+				],
+				"refer": []
+			},
+			"views/menu.html": {
+				"priority": 0,
+				"resources": [
+					"static/css/app/menu.css",
+					"static/css/mui.min.css",
+					"static/fonts/mui.ttf",
+					"static/js/app/menu.js",
+					"static/js/lib/jquery/jquery-1.11.2.min.js",
+					"static/js/lib/qiao/qiao.h.js",
+					"static/js/mui.min.js",
+					"static/js/app/menu.js",
+					"static/css/app/menu.css"
+				],
+				"refer": []
+			}
+		},
+		"idle": {
+			"resources": [
+				"LICENSE",
+				"version.txt",
+				"README.md"
+			]
+		}
 	},
 	"unpackage":[
 	  "LICENSE",
